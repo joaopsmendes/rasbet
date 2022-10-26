@@ -1,16 +1,17 @@
 package rasbetUI;
 
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class Game {
     String id;
     String homeTeam;
     String awayTeam;
-    String commenceTime;
+    LocalDateTime commenceTime;
     boolean completed;
     String scores;
-    Bookmakers[] bookmakers;
+    Bookmaker[] bookmakers;
 
 
     public String getId() {
@@ -37,12 +38,13 @@ public class Game {
         this.awayTeam = awayTeam;
     }
 
-    public String getCommenceTime() {
+    public LocalDateTime getCommenceTime() {
         return commenceTime;
     }
 
     public void setCommenceTime(String commenceTime) {
-        this.commenceTime = commenceTime;
+        System.out.println(commenceTime.substring(0,19));
+        this.commenceTime = LocalDateTime.parse(commenceTime.substring(0,19));
     }
 
     public boolean isCompleted() {
@@ -61,11 +63,11 @@ public class Game {
         this.scores = scores;
     }
 
-    public Bookmakers[] getBookmakers() {
+    public Bookmaker[] getBookmakers() {
         return bookmakers;
     }
 
-    public void setBookmakers(Bookmakers[] bookmakers) {
+    public void setBookmakers(Bookmaker[] bookmakers) {
         this.bookmakers = bookmakers;
     }
 

@@ -1,4 +1,4 @@
-package RasbetLN;
+package rasbetLN;
 
 public interface IRasbetLN {
 }

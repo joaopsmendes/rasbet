@@ -2,6 +2,7 @@ package rasbetUI;
 
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Market {
     String key;
@@ -21,6 +22,10 @@ public class Market {
 
     public void setOutcomes(Outcome[] outcomes) {
         this.outcomes = outcomes;
+    }
+
+    public Object[] order(){
+        return Arrays.stream(this.outcomes).sorted(Comparator.comparing(o -> o.price)).toArray();
     }
 
     @Override

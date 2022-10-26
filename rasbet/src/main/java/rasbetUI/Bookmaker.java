@@ -2,7 +2,7 @@ package rasbetUI;
 
 import java.util.Arrays;
 
-public class Bookmakers {
+public class Bookmaker {
     String key;
     String lastUpdate;
     Market[] markets;

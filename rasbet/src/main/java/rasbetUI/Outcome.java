@@ -3,7 +3,7 @@ package rasbetUI;
 
 public class Outcome {
     String name;
-    String price;
+    Float price;
 
     public String getName() {
         return name;
@@ -13,12 +13,12 @@ public class Outcome {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Float getPrice() {
         return price;
     }
 
     public void setPrice(String price) {
-        this.price = price;
+        this.price = Float.parseFloat(price);
     }
 
     @Override

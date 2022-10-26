@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @SpringBootApplication
@@ -20,9 +21,13 @@ public class RasbetApplication {
 	// Get Games from Stor's API
 	@RequestMapping("games")
 	public Game[] hello(){
+
+
 		RestService rest = new RestService(new RestTemplateBuilder());
 		//Gson gson = new Gson();
 		Game[] games = rest.getPostsPlainJSON();
+		// Adicionar cada jogo na base de dados
+		// Decidir escolha de odd
 		for (Game game : games){
 			System.out.println(game.id);
 		}
@@ -37,13 +42,9 @@ public class RasbetApplication {
 		return userRegister.email;
 	}
 
+
 	@PostMapping(path = "login")
-	public String login (@RequestBody UserLogin userLogin){
-		System.out.println(userLogin.email +" -> " + userLogin.password);
-		return userLogin.email;
-	}
-	@PostMapping(path = "login2")
-	public void login2(@RequestBody Map<String, String> myJsonRequest) {
+	public void login(@RequestBody Map<String, String> myJsonRequest) {
 		System.out.println(myJsonRequest.get("email"));
 		System.out.println(myJsonRequest.get("password"));
 	}

@@ -75,4 +75,8 @@ public class Jogo {
     public void setData(LocalDateTime data) {
         this.data = data;
     }
+
+    public Jogo clone() {
+        return new Jogo(this);
+    }
 }
