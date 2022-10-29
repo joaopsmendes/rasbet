@@ -1,11 +1,14 @@
 package rasbetUI;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bookmaker {
     String key;
     String lastUpdate;
-    Market[] markets;
+    //Market[] markets;
+    Map<String,Market> mapMarkets;
 
     public String getKey() {
         return key;
@@ -23,20 +26,28 @@ public class Bookmaker {
         this.lastUpdate = lastUpdate;
     }
 
-    public Market[] getMarkets() {
-        return markets;
-    }
 
     public void setMarkets(Market[] markets) {
-        this.markets = markets;
+        mapMarkets = new HashMap<>();
+        for (Market market : markets){
+            mapMarkets.put(market.key,market);
+        }
+    }
+
+    public Map<String, Market> getMapMarkets() {
+        return mapMarkets;
+    }
+
+    public void setMapMarkets(Map<String, Market> mapMarkets) {
+        this.mapMarkets = mapMarkets;
     }
 
     @Override
     public String toString() {
-        return "Bookmakers{" +
+        return "Bookmaker{" +
                 "key='" + key + '\'' +
                 ", lastUpdate='" + lastUpdate + '\'' +
-                ", markets=" + Arrays.toString(markets) +
+                ", mapMarkets=" + mapMarkets +
                 '}';
     }
 }

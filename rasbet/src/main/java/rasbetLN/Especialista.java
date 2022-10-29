@@ -6,7 +6,6 @@ public class Especialista extends Utilizador{
         super();
     }
 
-    
 
 
 }

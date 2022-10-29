@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
@@ -18,21 +19,10 @@ public class RasbetApplication {
 		SpringApplication.run(RasbetApplication.class, args);
 	}
 
-	// Get Games from Stor's API
+	// Get Games from Database
 	@RequestMapping("games")
-	public Game[] hello(){
+	public void getGames(){
 
-
-		RestService rest = new RestService(new RestTemplateBuilder());
-		//Gson gson = new Gson();
-		Game[] games = rest.getPostsPlainJSON();
-		// Adicionar cada jogo na base de dados
-		// Decidir escolha de odd
-		for (Game game : games){
-			System.out.println(game.id);
-		}
-		return games;
-		//return gson.fromJson(rest.getPostsPlainJSON(),Object[].class);
 	}
 
 	// Register
@@ -59,5 +49,48 @@ public class RasbetApplication {
 	public void showGames(@RequestBody Map<String, String> myJsonRequest) {
 		System.out.println(myJsonRequest.get("desporto"));
 	}
+
+	@PostMapping(path = "showGamesToAdd")
+	public List<Game> showGamesToAdd(@RequestBody Map<String, String> myJsonRequest) {
+		// Check if there's new games to add
+		RestService rest = new RestService(new RestTemplateBuilder());
+		Map<String,Game> games = rest.getPostsPlainJSON();
+
+		List<Game> toAdd = new ArrayList<>();
+		for (Game g: games.values()){
+			//Check if game is at Database
+			//LN.exists - add to List if not
+		}
+		return toAdd;
+	}
+	@PostMapping(path = "addGame")
+	public void addGame(@RequestBody Map<String, String> myJsonRequest) {
+		String id =  myJsonRequest.get("gameId");
+		String keyB = myJsonRequest.get("keyBookmaker");
+		RestService rest = new RestService(new RestTemplateBuilder());
+		Map<String,Game> mapGames  = rest.getPostsPlainJSON();
+		Game game = mapGames.get(id);
+
+	}
+
+	@PostMapping(path = "changeProfile")
+	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+	}
+
+	//pre-condition: deposit was valid
+	@PostMapping(path = "deposit")
+	public void deposit(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+		Float value = Float.parseFloat(myJsonRequest.get("value"));
+		//
+
+	}
+
+
+
+
+
+
 
 }

@@ -3,6 +3,8 @@ package rasbetUI;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Game {
     String id;
@@ -11,7 +13,8 @@ public class Game {
     LocalDateTime commenceTime;
     boolean completed;
     String scores;
-    Bookmaker[] bookmakers;
+    Map<String,Bookmaker> mapBookmakers;
+    //Bookmaker[] bookmakers;
 
 
     public String getId() {
@@ -63,12 +66,25 @@ public class Game {
         this.scores = scores;
     }
 
-    public Bookmaker[] getBookmakers() {
-        return bookmakers;
+
+    public Map<String, Bookmaker> getMapBookmakers() {
+        return mapBookmakers;
+    }
+    public void setBookmakers(Bookmaker[] bookmakers) {
+        mapBookmakers = new HashMap<>();
+        for (Bookmaker bookmaker : bookmakers){
+            mapBookmakers.put(bookmaker.key,bookmaker);
+        }
     }
 
-    public void setBookmakers(Bookmaker[] bookmakers) {
-        this.bookmakers = bookmakers;
+    public String whoWon (){
+        if (!completed || scores == null ) return "NOT PLAYED"; // EXCEPTION
+        String[] goals = scores.split("x");
+        int homeGoals = Integer.parseInt(goals[0]);
+        int awayGoals = Integer.parseInt(goals[1]);
+        if (homeGoals == awayGoals) return "Draw";
+        if (homeGoals > awayGoals) return homeTeam;
+        return awayTeam;
     }
 
     @Override
@@ -76,11 +92,11 @@ public class Game {
         return "Game{" +
                 "id='" + id + '\'' +
                 ", homeTeam='" + homeTeam + '\'' +
-                ", awayteam='" + awayTeam + '\'' +
-                ", commenceTime='" + commenceTime + '\'' +
+                ", awayTeam='" + awayTeam + '\'' +
+                ", commenceTime=" + commenceTime +
                 ", completed=" + completed +
                 ", scores='" + scores + '\'' +
-                ", bookmarkers=" + Arrays.toString(bookmakers) +
+                ", mapBookmakers=" + mapBookmakers +
                 '}';
     }
 }
