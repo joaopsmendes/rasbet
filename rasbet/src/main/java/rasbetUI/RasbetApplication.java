@@ -39,6 +39,7 @@ public class RasbetApplication {
 		System.out.println(myJsonRequest.get("password"));
 	}
 
+
 	@PostMapping(path = "aposta")
 	public void aposta(@RequestBody Map<String, String> myJsonRequest) {
 		System.out.println(myJsonRequest.get("gameId"));
@@ -63,6 +64,7 @@ public class RasbetApplication {
 		}
 		return toAdd;
 	}
+
 	@PostMapping(path = "addGame")
 	public void addGame(@RequestBody Map<String, String> myJsonRequest) {
 		String id =  myJsonRequest.get("gameId");
@@ -73,10 +75,12 @@ public class RasbetApplication {
 
 	}
 
+
 	@PostMapping(path = "changeProfile")
 	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
 	}
+
 
 	//pre-condition: deposit was valid
 	@PostMapping(path = "deposit")
@@ -84,13 +88,26 @@ public class RasbetApplication {
 		String id = myJsonRequest.get("id");
 		Float value = Float.parseFloat(myJsonRequest.get("value"));
 		//
-
+	}
+		
+	@PostMapping(path = "withdraw")
+	public void withdraw(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+		Float value = Float.parseFloat(myJsonRequest.get("value"));
+		//
 	}
 
+	@PostMapping(path = "addFavorito")
+	public void add(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+		String fav= myJsonRequest.get("value");
+		//
+	}
 
+	@RequestMapping("favorites")
+	public void getFavorites(){
+		//Get List of favorites
 
-
-
-
+	}
 
 }

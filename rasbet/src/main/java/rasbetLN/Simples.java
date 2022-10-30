@@ -4,11 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Simples extends Aposta {
-    public Simples() {
-        super();
-    }
+    private Odd odd;
 
-    public Simples(int  idAposta, double montante, LocalDateTime dataAposta, List<Jogo> jogos) {
-        super(idAposta, montante, dataAposta, jogos);
-    }
 }

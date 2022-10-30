@@ -1,39 +1,27 @@
 package rasbetLN;
 
-import java.time.LocalDateTime;
-
 public class Carteira {
-    private int valor;
-    private LocalDateTime data;
+    private float valor;
+    private float freeBets;
 
     public Carteira() {
         this.valor = 0;
-        this.data = LocalDateTime.now();
+        freeBets = 10;
     }
 
-    public Carteira(int valor, LocalDateTime data) {
-        this.valor = valor;
-        this.data = data;
-    }
-
-    public Carteira(Carteira carteira){
-        this.valor = carteira.getValor();
-        this.data = carteira.getData();
-    }
-
-    public int getValor() {
-        return valor;
+    public float getValor() {
+        return this.valor;
     }
 
     public void setValor(int valor) {
         this.valor = valor;
     }
 
-    public LocalDateTime getData() {
-        return data;
+    public float getFreeBets() {
+        return freeBets;
     }
 
-    public void setData(LocalDateTime data) {
-        this.data = data;
+    public void setFreeBets(float freeBets) {
+        this.freeBets = freeBets;
     }
 }

@@ -1,6 +1,6 @@
 package rasbetLN;
 
+public class Deposito extends Transacao {
 
-public class Deposito {
-    private int valor;
+
 }

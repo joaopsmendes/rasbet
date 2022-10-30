@@ -1,5 +1,7 @@
 package rasbetLN;
 
+import java.time.LocalDate;
+
 public abstract class Utilizador {
     private int id;
     private String email;

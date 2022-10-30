@@ -9,7 +9,6 @@ public class Jogo {
     private int idJogo;
     private Desporto desporto;
     private List<Odd> odds;
-    private Resultado resultado;
     private LocalDateTime data;
 
     public Jogo() {
