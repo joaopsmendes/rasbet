@@ -14,7 +14,7 @@ public class GestaoUtilizadores implements IRasbetUtilizador{
     }
 
     public void newUser(String email, LocalDate dataNAscimento, String nif, String password, String tipo) throws SQLException {
-        utilizadores.create(email,dataNAscimento,nif,password, tipo );
+        //utilizadores.create(email,dataNAscimento,nif,password, tipo );
     }
 
     public void logIn(String email, String password) throws SQLException{
@@ -26,7 +26,7 @@ public class GestaoUtilizadores implements IRasbetUtilizador{
         utilizadores.logOut(email);
     }
 
-    void replace(String email, Utilizador user) throws SQLException{
+    public void replace(String email, Utilizador user) throws SQLException{
         //replaceNome
         //replaceEmail
         //replaceTelemovel

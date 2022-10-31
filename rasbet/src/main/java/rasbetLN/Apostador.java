@@ -9,10 +9,11 @@ public class Apostador extends Utilizador {
     private Carteira carteira;
     private List<Favorito> listaFavoritos;
     private Map<Integer, Aposta> historicoApostas;
+
     private Map<Integer, Aposta> apostasAtivas;
 
     public Apostador(String email, String password, String dataNascimento, String NIF, String nome) {
-        super(email, password, dataNascimento, NIF, nome);
+        super(email, password, dataNascimento, NIF);
         this.carteira = new Carteira();
         this.listaFavoritos = new ArrayList<>();
         this.historicoApostas = new HashMap<>();
@@ -26,6 +27,12 @@ public class Apostador extends Utilizador {
             lista.add(f.clone());
         return lista;
     }
+
+    public void addAposta(Aposta aposta){
+        int num = apostasAtivas.size();
+        apostasAtivas.put(num,aposta);
+    }
+
 /*
     public Map<String, Aposta> getHistoricoApostas() {
         Map<String, Aposta> lista = new HashMap<>();
@@ -51,6 +58,10 @@ public class Apostador extends Utilizador {
     }
  */
 
+
+    public void addToFavoritos(Favorito favorito){
+        listaFavoritos.add(favorito);
+    }
 
 
 

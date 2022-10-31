@@ -2,10 +2,12 @@ package rasbetUI;
 
 
 
+import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
+import rasbetLN.Apostador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +40,18 @@ public class RasbetApplication {
 		System.out.println(myJsonRequest.get("password"));
 	}
 
+	@PostMapping(path = "apostaSimples")
+	public void apostaSimples(@RequestBody ApostaRequest apostaRequest) {
+		//System.out.println(apostaRequest.gameId);
+		System.out.println(apostaRequest);
 
-	@PostMapping(path = "aposta")
-	public void aposta(@RequestBody Map<String, String> myJsonRequest) {
-		System.out.println(myJsonRequest.get("gameId"));
-		System.out.println(myJsonRequest.get("value"));
+
+	}
+
+	@PostMapping(path = "apostaMultipla")
+	public void apostaMultipla(@RequestBody ApostaRequest apostaRequest){
+		System.out.println(apostaRequest);
+
 	}
 
 	@PostMapping(path = "showGames")

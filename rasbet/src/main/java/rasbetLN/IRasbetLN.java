@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
 
 import java.time.LocalDate;
@@ -10,6 +11,8 @@ public interface IRasbetLN {
 
 
     // Class Apostador
-    public void addFavorito(String id,String desporto,String f);
+    void addFavorito(String id,String desporto,String f);
+
+    void apostaSimples(ApostaRequest apostaRequest);
 
     }

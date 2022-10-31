@@ -35,43 +35,70 @@ public class DBUtilizadores {
         return new Apostador(email, password, dataNascimento.toString(), nif, nome);
     }
 
-    public Utilizador logIn(String email, String password){ //refazer
-//        String query = "UPDATE utilizador SET LoggedIn = ? WHERE email = ? AND password = ?";
-//        PreparedStatement ps;
-//        ps = c.prepareStatement(query);
-//        ps.setString(1,email);
-//        ps.setString(2,password);
-//        int i = ps.executeUpdate();
-//        if (i  == 0){
-//            throw new SQLException("Utilizador não existe");
-//        }
-//        else {
-//            System.out.println("Login feito com sucesso");
-//            return getUtilizador(email);
-//        }
+    public Utilizador logIn(String email, String password) throws SQLException{
+        String query = "SELECT Utilizador.email, Utilizador.pass FROM Utilizador WHERE email = ? AND password = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,email);
+        ps.setString(2,password);
+        int i = ps.executeUpdate();
+        if (i  == 0){
+            throw new SQLException("Utilizador não existe");
+        }
+        else {
+            System.out.println("Login feito com sucesso");
+            return getUtilizador(email);
+        }
     }
 
-    private Utilizador getUtilizador(String email) throws SQLException{//fazer
-        String query1 = "SELECT * FROM TipoUtilizador where email = ?";
-        //...
-
-        String query = "SELECT * FROM utilizador WHERE email = ?";
+    private Utilizador getUtilizador(String email) throws SQLException{//incompleta
+        String query = "SELECT Utilizador.nome, TipoUtilizador.tipo FROM Utilizador" +
+                            " INNER JOIN TipoUtilizador ON Utilizador.email = TipoUtilizador.Utilizador_email" +
+                            " WHERE email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            String password = rs.getString("pass");
-            String dataNascimento = rs.getString("dataNascimento");
-            String nif = rs.getString("NIF");
             String nome = rs.getString("nome");
+//            String password = rs.getString("pass");
+//            String dataNascimento = rs.getString("dataNascimento");
+//            String nif = rs.getString("nif");
+            String tipo = rs.getString("tipo");
+
 //            return new Utilizador(email, password, dataNascimento, nif, nome);
 
         }
         throw new SQLException("Can't get user");
     }
 
+//    public void replacePassword(String email, String password) throws SQLException{
+//        String query = "UPDATE utilizador SET Pass = ? WHERE Email = ?";
+//        PreparedStatement ps;
+//        ps = c.prepareStatement(query);
+//        ps.setString(1,password);
+//        ps.setString(2,email);
+//        ps.execute();
+//    }
+
+    public void replaceNome(String email, String nome) throws SQLException {
+        String query = "UPDATE utilizador SET Nome = ? WHERE Email = ?";
+        PreparedStatement ps;
+        ps = c.prepareStatement(query);
+        ps.setString(1, nome);
+        ps.setString(2, email);
+        ps.execute();
+}
+
+    public void replaceEmail(String email, String nome) throws SQLException {
+        String query = "UPDATE utilizador SET Email = ? WHERE Nome = ?";
+        PreparedStatement ps;
+        ps = c.prepareStatement(query);
+        ps.setString(2, nome);
+        ps.setString(1, email);
+        ps.execute();
+    }
 
     public Utilizador logOut(String email){
+        return null;
 
     }
 }

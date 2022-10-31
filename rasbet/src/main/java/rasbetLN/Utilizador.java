@@ -1,7 +1,5 @@
 package rasbetLN;
 
-import java.time.LocalDate;
-
 public abstract class Utilizador {
     private String email;
     private String password;
@@ -19,7 +17,7 @@ public abstract class Utilizador {
 
     }
 
-    public Utilizador(String email, String password, String dataNascimento, String nif, String nome) {
+    public Utilizador(String email, String password, String dataNascimento, String nif) {
         this.email = email;
         this.password = password;
         this.dataNascimento = dataNascimento;
