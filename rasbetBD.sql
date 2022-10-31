@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Aposta` (
   INDEX `fk_Aposta_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
   CONSTRAINT `fk_Aposta_Utilizador1`
     FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`NIF`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -70,11 +70,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Carteira` (
   `saldo` DOUBLE NOT NULL,
   `freebets` DOUBLE NOT NULL,
   `Utilizador_email` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`Utilizador_email`),
-  INDEX `fk_Carteira_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
+  `Utilizador_email1` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Utilizador_email`, `Utilizador_email1`),
+  INDEX `fk_Carteira_Utilizador1_idx` (`Utilizador_email1` ASC) VISIBLE,
   CONSTRAINT `fk_Carteira_Utilizador1`
-    FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`NIF`)
+    FOREIGN KEY (`Utilizador_email1`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -87,11 +88,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Transação` (
   `idTransação` INT NOT NULL,
   `valor` DOUBLE NOT NULL,
   `dataTransacao` DATE NOT NULL,
-  `Carteira_Utilizador_NIF` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idTransação`, `Carteira_Utilizador_NIF`),
-  INDEX `fk_Transação_Carteira1_idx` (`Carteira_Utilizador_NIF` ASC) VISIBLE,
+  `Carteira_Utilizador_email` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idTransação`, `Carteira_Utilizador_email`),
+  INDEX `fk_Transação_Carteira1_idx` (`Carteira_Utilizador_email` ASC) VISIBLE,
   CONSTRAINT `fk_Transação_Carteira1`
-    FOREIGN KEY (`Carteira_Utilizador_NIF`)
+    FOREIGN KEY (`Carteira_Utilizador_email`)
     REFERENCES `mydb`.`Carteira` (`Utilizador_email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -109,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Favorito` (
   INDEX `fk_Favorito_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
   CONSTRAINT `fk_Favorito_Utilizador1`
     FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`NIF`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -175,10 +176,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TipoUtilizador` (
   `Tipo` VARCHAR(45) NOT NULL,
   `Utilizador_email` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Utilizador_email`),
-  INDEX `fk_TipoUtilizador_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
   CONSTRAINT `fk_TipoUtilizador_Utilizador1`
     FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`NIF`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Notificação` (
   INDEX `fk_Notificação_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
   CONSTRAINT `fk_Notificação_Utilizador1`
     FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`NIF`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
