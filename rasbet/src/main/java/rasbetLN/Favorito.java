@@ -10,7 +10,8 @@ public class Favorito {
     }
 
     public Favorito(Favorito f) {
-        this.nome = f.
+        this.nome = f.nome;
+        this.desporto = f.desporto;
     }
 
 

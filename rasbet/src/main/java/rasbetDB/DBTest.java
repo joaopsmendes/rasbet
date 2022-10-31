@@ -8,6 +8,7 @@ import java.sql.SQLException;
 public class DBTest {
     Connection connection;
 
+
     public DBTest(Connection connection) throws SQLException {
         this.connection = DriverManager.getConnection("jdbc:mysql://localhost/","root","root");
     }

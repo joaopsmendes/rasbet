@@ -6,76 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Jogo {
-    private int idJogo;
+    private String idJogo;
     private Desporto desporto;
     private List<Odd> odds;
     private LocalDateTime data;
+    private Estado estado;
 
-    public Jogo() {
-        this.idJogo = 0;
-        this.desporto = null;
+    private enum Estado{
+        ATIVO,SUSPENSO,FECHADO
+    }
+
+
+    public Jogo(String id, Desporto d, LocalDateTime commenceTime) {
+        this.idJogo = id;
+        this.desporto = d;
         this.odds = new ArrayList<>();
-        this.resultado =  new Resultado();
-        this.data = LocalDateTime.now();
+        this.data = commenceTime;
+        this.estado= Estado.ATIVO;
     }
 
-    public Jogo(int idJogo, Desporto desporto, List<Odd> odds, Resultado resultado, LocalDateTime data) {
-        this.idJogo = idJogo;
-        this.desporto = desporto;
-        this.odds = odds;
-        this.resultado = resultado;
-        this.data = data;
+
+    void addOdd(Odd odd){
+        odds.add(odd);
     }
 
-    public Jogo(Jogo jogo) {
-        this.idJogo = jogo.getIdJogo();
-        this.desporto = jogo.getDesporto();
-        this.odds = jogo.getOdds();
-        this.resultado = jogo.getResultado();
-        this.data = jogo.getData();
-    }
 
-    public int getIdJogo() {
-        return idJogo;
-    }
 
-    public void setIdJogo(int idJogo) {
-        this.idJogo = idJogo;
-    }
 
-    public Desporto getDesporto() {
-        return desporto;
-    }
-
-    public void setDesporto(Desporto desporto) {
-        this.desporto = desporto;
-    }
-
-    public List<Odd> getOdds() {
-        return odds;
-    }
-
-    public void setOdds(List<Odd> odds) {
-        this.odds = odds;
-    }
-
-    public Resultado getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(Resultado resultado) {
-        this.resultado = resultado;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
-
-    public Jogo clone() {
-        return new Jogo(this);
-    }
 }

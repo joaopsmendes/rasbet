@@ -3,43 +3,40 @@ package rasbetLN;
 import java.time.LocalDate;
 
 public abstract class Utilizador {
-    private int id;
     private String email;
     private String password;
     private String dataNascimento;
     private String NIF;
+    private String nome;
+
 
     public Utilizador() {
-        this.id = 0;
         this.email = null;
         this.password = null;
         this.dataNascimento = null;
         this.NIF = null;
+        this.nome = null;
+
     }
 
-    public Utilizador(int id, String email, String password, String dataNascimento, String nif) {
-        this.id = id;
+    public Utilizador(String email, String password, String dataNascimento, String nif, String nome) {
         this.email = email;
         this.password = password;
         this.dataNascimento = dataNascimento;
         this.NIF = nif;
+        this.nome = nome;
+
     }
 
     public Utilizador(Utilizador u){
-        this.id = u.getId();
         this.email = u.getEmail();
         this.password = u.getPassword();
         this.dataNascimento = u.getDataNascimento();
         this.NIF = u.getNIF();
+        this.nome = u.getNome();
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -71,6 +68,14 @@ public abstract class Utilizador {
 
     public void setNIF(String NIF) {
         this.NIF = NIF;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
 

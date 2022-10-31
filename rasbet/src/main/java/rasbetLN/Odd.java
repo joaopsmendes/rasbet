@@ -1,41 +1,21 @@
 package rasbetLN;
 
 public class Odd {
-    private int idOdd;
-    private  double valor;
+    private float valor;
     private String opcao;
+    private Jogo jogo;
 
-    public Odd() {
-        this.idOdd = 0;
-        this.valor = 0;
-        this.opcao = null;
-    }
-
-    public Odd(int idOdd, double valor, String opcao) {
-        this.idOdd = idOdd;
+    public Odd(float valor, String opcao, Jogo jogo) {
         this.valor = valor;
         this.opcao = opcao;
+        this.jogo = jogo;
     }
 
-    public Odd(Odd o) {
-        this.idOdd = o.getIdOdd();
-        this.valor = o.getValor();
-        this.opcao = o.getOpcao();
-    }
-
-    public int getIdOdd() {
-        return idOdd;
-    }
-
-    public void setIdOdd(int idOdd) {
-        this.idOdd = idOdd;
-    }
-
-    public double getValor() {
+    public float getValor() {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(float valor) {
         this.valor = valor;
     }
 
@@ -47,9 +27,11 @@ public class Odd {
         this.opcao = opcao;
     }
 
-    public Odd clone() {
-        return new Odd(this);
+    public Jogo getJogo() {
+        return jogo;
     }
 
-
+    public void setJogo(Jogo jogo) {
+        this.jogo = jogo;
+    }
 }

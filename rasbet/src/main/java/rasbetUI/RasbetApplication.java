@@ -22,7 +22,6 @@ public class RasbetApplication {
 	// Get Games from Database
 	@RequestMapping("games")
 	public void getGames(){
-
 	}
 
 	// Register

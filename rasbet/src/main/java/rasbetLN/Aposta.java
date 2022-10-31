@@ -7,6 +7,10 @@ public abstract class Aposta {
     private LocalDateTime dataAposta;
     boolean resultado;
 
+    private enum Estado{
+
+    }
+
     private static int GetId() {
         return idAposta++;
     }
@@ -41,9 +45,8 @@ public abstract class Aposta {
         return dataAposta;
     }
 
-    public Aposta clone() {
-        return new Aposta(this);
-    }
+
+
 
 
 }

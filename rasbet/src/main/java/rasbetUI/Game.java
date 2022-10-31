@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 public class Game {
     String id;
     String homeTeam;
@@ -15,7 +17,7 @@ public class Game {
     String scores;
     Map<String,Bookmaker> mapBookmakers;
     //Bookmaker[] bookmakers;
-
+    private static final String market = "h2h";
 
     public String getId() {
         return id;
@@ -77,6 +79,12 @@ public class Game {
         }
     }
 
+    public Outcome[] getOutcomes (String bookmaker){
+        Bookmaker b = mapBookmakers.get(bookmaker);
+        Market m = b.mapMarkets.get(market);
+        return m.outcomes;
+
+    }
     public String whoWon (){
         if (!completed || scores == null ) return "NOT PLAYED"; // EXCEPTION
         String[] goals = scores.split("x");

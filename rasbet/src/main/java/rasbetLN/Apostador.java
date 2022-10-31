@@ -11,13 +11,14 @@ public class Apostador extends Utilizador {
     private Map<Integer, Aposta> historicoApostas;
     private Map<Integer, Aposta> apostasAtivas;
 
-    public Apostador(int id, String email, String password, String dataNascimento, String NIF) {
-        super(id, email, password, dataNascimento, NIF);
+    public Apostador(String email, String password, String dataNascimento, String NIF, String nome) {
+        super(email, password, dataNascimento, NIF, nome);
         this.carteira = new Carteira();
         this.listaFavoritos = new ArrayList<>();
         this.historicoApostas = new HashMap<>();
         this.apostasAtivas = new HashMap<>();
     }
+
 
     public List<Favorito> getListaFavoritos() {
         ArrayList<Favorito> lista = new ArrayList<>();
@@ -25,7 +26,7 @@ public class Apostador extends Utilizador {
             lista.add(f.clone());
         return lista;
     }
-
+/*
     public Map<String, Aposta> getHistoricoApostas() {
         Map<String, Aposta> lista = new HashMap<>();
         for(Map.Entry<Integer, Aposta> e : this.historicoApostas.entrySet())
@@ -48,6 +49,7 @@ public class Apostador extends Utilizador {
     public Apostador clone() {
         return new Apostador(this);
     }
+ */
 
 
 
