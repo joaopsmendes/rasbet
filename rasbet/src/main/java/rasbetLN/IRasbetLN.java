@@ -14,5 +14,7 @@ public interface IRasbetLN {
     void addFavorito(String id,String desporto,String f);
 
     void apostaSimples(ApostaRequest apostaRequest);
+    void apostaMultipla(ApostaRequest apostaRequest);
+
 
     }

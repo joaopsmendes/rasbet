@@ -50,8 +50,8 @@ public class DBUtilizadores {
         }
     }
 
-    private Utilizador getUtilizador(String email) throws SQLException{//incompleta
-        String query = "SELECT Utilizador.nome, TipoUtilizador.tipo FROM Utilizador" +
+    private Utilizador getUtilizador(String email) throws SQLException{//duvidas no return
+        String query = "SELECT Utilizador.nome, Utilizador.pass, Utilizador.dataNAscimento, Utilizador.nif, TipoUtilizador.tipo FROM Utilizador" +
                             " INNER JOIN TipoUtilizador ON Utilizador.email = TipoUtilizador.Utilizador_email" +
                             " WHERE email = ?";
         PreparedStatement ps = c.prepareStatement(query);
@@ -59,9 +59,9 @@ public class DBUtilizadores {
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             String nome = rs.getString("nome");
-//            String password = rs.getString("pass");
-//            String dataNascimento = rs.getString("dataNascimento");
-//            String nif = rs.getString("nif");
+            String password = rs.getString("pass");
+            String dataNascimento = rs.getString("dataNascimento");
+            String nif = rs.getString("nif");
             String tipo = rs.getString("tipo");
 
 //            return new Utilizador(email, password, dataNascimento, nif, nome);
@@ -88,17 +88,32 @@ public class DBUtilizadores {
         ps.execute();
 }
 
-    public void replaceEmail(String email, String nome) throws SQLException {
-        String query = "UPDATE utilizador SET Email = ? WHERE Nome = ?";
+    public void replaceEmail(String email, String nif) throws SQLException {
+        String query = "UPDATE utilizador SET Email = ? WHERE nif = ?";
         PreparedStatement ps;
         ps = c.prepareStatement(query);
-        ps.setString(2, nome);
         ps.setString(1, email);
+        ps.setString(2, nif);
         ps.execute();
     }
 
-    public Utilizador logOut(String email){
-        return null;
+//    public void replaceTelemovel(String email, String nif) throws SQLException {
+//
+//    }
+//
+//    public void replaceMorada(String email, String nif) throws SQLException {
+//
+//    }
 
+    public Utilizador logOut(String email) throws SQLException{ //duvidas
+        String query = "SELECT Utilizador.email FROM Utilizador WHERE email = ? ";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,email);
+        int i = ps.executeUpdate();
+        if (i == 0){
+            System.out.println("Logout falhado");
+        }
+        else System.out.println("Logout efetuado");
+        return null;
     }
 }

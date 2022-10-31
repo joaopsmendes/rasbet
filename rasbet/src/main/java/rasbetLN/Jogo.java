@@ -15,7 +15,9 @@ public class Jogo {
     private Estado estado;
 
     private enum Estado{
-        ATIVO,SUSPENSO,FECHADO
+        ATIVO, //0
+        SUSPENSO, //1
+        FECHADO //2
     }
 
 
@@ -27,6 +29,13 @@ public class Jogo {
         this.estado= Estado.ATIVO;
     }
 
+    public Estado getEstado() {
+        return this.estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
 
     void addOdd(Odd odd){
         mapOdds.put(odd.getOpcao(),odd);
@@ -39,4 +48,10 @@ public class Jogo {
     public Odd getOdd(String oddValor){
         return mapOdds.get(oddValor);
     }
+
+//    public void updateEstado(String estado) extends estadoException { //duvidas
+//        if(estado.equals(Estado.FECHADO)) throw estadoException(??);
+//        else if(estado.equals(Estado.ATIVO)) this.setEstado(Estado.SUSPENSO);
+//
+//    }
 }
