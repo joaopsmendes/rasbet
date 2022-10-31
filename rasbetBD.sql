@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Utilizador` (
   `dataNascimento` DATE NOT NULL,
   `NIF` VARCHAR(45) NOT NULL,
   `pass` VARCHAR(45) NOT NULL,
+  `nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`NIF`))
 ENGINE = InnoDB;
 
