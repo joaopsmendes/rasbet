@@ -10,7 +10,6 @@ public class Apostador extends Utilizador {
     private Carteira carteira;
     private List<Favorito> listaFavoritos;
     private Map<Integer, Aposta> historicoApostas;
-
     private Map<Integer, Aposta> apostasAtivas;
 
     public Apostador(String email, String password, LocalDate dataNascimento, String NIF, String nome) {

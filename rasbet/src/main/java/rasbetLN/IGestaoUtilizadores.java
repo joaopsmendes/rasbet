@@ -12,5 +12,9 @@ public interface IGestaoUtilizadores {
 
     void addFavorito(String userId, Favorito favorito) throws SQLException;
 
-    void removeFavorito(String id, Favorito fav);
+    void removeFavorito(String id, Favorito fav) throws SQLException;
+
+    void deposito(String userId,Deposito deposito) throws SQLException;
+
+    void levantamento(String userId,Levantamento levantamento) throws SQLException;
 }

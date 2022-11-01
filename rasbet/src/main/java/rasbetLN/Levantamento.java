@@ -8,6 +8,10 @@ public class Levantamento extends Transacao {
         super(valor, data);
     }
 
+    public Levantamento(float valor){
+        super(valor);
+    }
+
     public Levantamento(Transacao transacao) {
         super(transacao.getValor(),transacao.getData());
     }

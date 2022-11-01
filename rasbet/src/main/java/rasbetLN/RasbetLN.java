@@ -60,7 +60,7 @@ public class RasbetLN implements IRasbetLN{
     public void removeFavorito(String id,String desporto,String f) {
         Desporto d = mapDesportos.get(desporto);
         Favorito fav = new Favorito(f,d);
-        gestaoUtilizadores.removeFavorito(id,fav);
+        //gestaoUtilizadores.removeFavorito(id,fav);
     }
 
 
@@ -92,6 +92,16 @@ public class RasbetLN implements IRasbetLN{
         //apostador.addAposta(multipla);
 
         //ADD TO DATABASE
+    }
+
+    public void deposito(String userId, float valor) throws SQLException {
+        Deposito deposito = new Deposito(valor);
+        gestaoUtilizadores.deposito(userId,deposito);
+    }
+
+    public void levantamento(String userId, float valor) throws SQLException{
+        Levantamento levantamento = new Levantamento(valor);
+        gestaoUtilizadores.levantamento(userId, levantamento);
     }
 
 

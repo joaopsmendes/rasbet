@@ -42,13 +42,33 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     @Override
-    public void addFavorito(String userId, Favorito favorito) {
-
+    public void addFavorito(String userId, Favorito favorito) throws SQLException {
+        utilizadores.addFavorito(userId, favorito);
     }
 
     @Override
-    public void removeFavorito(String id, Favorito fav) {
+    public void removeFavorito(String id, Favorito fav) throws SQLException {
+        utilizadores.removeFavorito(id, fav);
+    }
 
+    @Override
+    public void deposito(String userId,Deposito deposito) throws SQLException {
+        float saldo = utilizadores.getSaldo(userId);
+        saldo += deposito.getValor();
+        utilizadores.updateSaldo(saldo, userId);
+        utilizadores.novoDeposito(deposito, userId);
+    }
+
+    public void levantamento(String userId, Levantamento levantamento) throws SQLException{
+        float saldo = utilizadores.getSaldo(userId);
+        if (levantamento.getValor() > saldo){
+            /*criar exceção*/
+        }
+        else {
+            saldo = saldo - levantamento.getValor();
+            utilizadores.updateSaldo(saldo, userId);
+            utilizadores.novoLevantamento(levantamento, userId);
+        }
     }
 
 

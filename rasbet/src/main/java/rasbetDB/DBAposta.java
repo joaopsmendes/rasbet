@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DBAposta {
     private Connection c;
@@ -25,10 +26,12 @@ public class DBAposta {
         pstmt2.setInt(2, 0);
         pstmt2.execute();
 
+        insereOdd();
+
         return new Simples(aposta.getIdAposta(),  aposta.getMontante(),  aposta.getDataAposta(),  idUtilizador, aposta.getResultado());
     }
 
-    public Aposta createMultipla(Aposta aposta, String idUtilizador) throws SQLException{
+    public Aposta createMultipla(Aposta aposta, String idUtilizador, List<String> listaOdd) throws SQLException{
         createAposta(aposta, idUtilizador, 1);
 
         String query2 = "INSERT INTO TipoAposta(TipoAposta, idTipoAposta)VALUES(?,?)";
@@ -37,7 +40,15 @@ public class DBAposta {
         pstmt2.setInt(2, 1);
         pstmt2.execute();
 
+        for (){
+            insereOdd();
+        }
+
         return new Multipla(aposta.getIdAposta(),  aposta.getMontante(),  aposta.getDataAposta(),  idUtilizador, aposta.getResultado());
+    }
+
+    public void insereOdd(String idOdd,int idAposta) throws SQLExecption{
+        String query = "";
     }
 
     private void createAposta(Aposta aposta, String idUtilizador, int tipo) throws SQLException {
@@ -52,8 +63,9 @@ public class DBAposta {
         pstmt1.execute();
     }
 
-    public Aposta getAposta(String email){
-        return null;
+    public Aposta getAposta(String idAposta, String email){
+        String query =" ";
+
     }
 
 

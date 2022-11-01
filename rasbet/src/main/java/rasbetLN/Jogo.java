@@ -11,7 +11,7 @@ public class Jogo {
     private LocalDateTime data;
     private Estado estado;
 
-    private enum Estado{
+    public enum Estado{
         ATIVO, //0
         SUSPENSO, //1
         FECHADO //2
@@ -46,9 +46,7 @@ public class Jogo {
         return mapOdds.get(oddValor);
     }
 
-//    public void updateEstado(String estado) extends estadoException { //duvidas
-//        if(estado.equals(Estado.FECHADO)) throw estadoException(??);
-//        else if(estado.equals(Estado.ATIVO)) this.setEstado(Estado.SUSPENSO);
-//
-//    }
+    public void updateEstado(Estado estado) { //duvidas
+
+    }
 }

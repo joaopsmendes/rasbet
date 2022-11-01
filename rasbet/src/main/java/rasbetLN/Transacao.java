@@ -7,8 +7,8 @@ public abstract class Transacao {
     private float valor;
     private LocalDateTime data;
 
-    public Transacao() {
-        this.valor = 0;
+    public Transacao(float valor) {
+        this.valor = valor;
         this.data = LocalDateTime.now();
     }
 
