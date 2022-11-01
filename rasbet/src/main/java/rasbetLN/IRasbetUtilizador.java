@@ -8,4 +8,5 @@ public interface IRasbetUtilizador {
     void logIn(String email, String password) throws SQLException;
     void logOut(String email) throws SQLException;
     void replace(String email, Utilizador user) throws SQLException;
+    Utilizador getByEmail(String email) throws SQLException;
 }

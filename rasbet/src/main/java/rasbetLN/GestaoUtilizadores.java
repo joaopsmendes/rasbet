@@ -27,10 +27,19 @@ public class GestaoUtilizadores implements IRasbetUtilizador{
     }
 
     public void replace(String email, Utilizador user) throws SQLException{
-        //replaceNome
-        //replaceEmail
+        Utilizador  oldUser = utilizadores.getUtilizador(email);
+        utilizadores.replaceNome(email, selectString( oldUser.getNome(), user.getNome()));
+        utilizadores.replaceEmail(email, selectString( oldUser.getEmail(), user.getEmail()));
         //replaceTelemovel
         //replaceMorada
+    }
+    private String selectString (String one,String two){
+        if (two != null && !two.isEmpty()) return two;
+        return one;
+    }
+
+    public Utilizador getByEmail(String email) throws SQLException {
+        return utilizadores.getUtilizador(email);
     }
 
 

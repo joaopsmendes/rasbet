@@ -50,7 +50,7 @@ public class DBUtilizadores {
         }
     }
 
-    private Utilizador getUtilizador(String email) throws SQLException{//duvidas no return
+    public Utilizador getUtilizador(String email) throws SQLException{//duvidas no return
         String query = "SELECT Utilizador.nome, Utilizador.pass, Utilizador.dataNAscimento, Utilizador.nif, TipoUtilizador.tipo FROM Utilizador" +
                             " INNER JOIN TipoUtilizador ON Utilizador.email = TipoUtilizador.Utilizador_email" +
                             " WHERE email = ?";
