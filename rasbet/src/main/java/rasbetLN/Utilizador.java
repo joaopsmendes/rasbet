@@ -1,9 +1,11 @@
 package rasbetLN;
 
+import java.time.LocalDate;
+
 public abstract class Utilizador {
     private String email;
     private String password;
-    private String dataNascimento;
+    private LocalDate dataNascimento;
     private String NIF;
     private String nome;
 
@@ -17,7 +19,7 @@ public abstract class Utilizador {
 
     }
 
-    public Utilizador(String email, String password, String dataNascimento, String nif) {
+    public Utilizador(String email, String password, LocalDate dataNascimento, String nif, String nome) {
         this.email = email;
         this.password = password;
         this.dataNascimento = dataNascimento;
@@ -52,11 +54,11 @@ public abstract class Utilizador {
         this.password = password;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

@@ -2,5 +2,14 @@ package rasbetLN;
 
 public class Desporto {
     private String modalidade;
-    private Integer tipoDesporto; // 0 -> Coletivo 1 -> Individual
+    private int idDesporto;
+
+    public Desporto(int idDesporto,String modalidade) {
+        this.modalidade = modalidade;
+        this.idDesporto = idDesporto;
+    }
+
+    public int getIdDesporto() {
+        return idDesporto;
+    }
 }

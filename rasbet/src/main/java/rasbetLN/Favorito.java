@@ -14,7 +14,13 @@ public class Favorito {
         this.desporto = f.desporto;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public Desporto getDesporto() {
+        return desporto;
+    }
 
     public Favorito clone() {
         return new Favorito(this);

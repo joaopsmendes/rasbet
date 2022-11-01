@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
 import rasbetLN.Apostador;
+import rasbetLN.IRasbetLN;
+import rasbetLN.RasbetLN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Map;
 @RestController
 public class RasbetApplication {
 
+	IRasbetLN rasbetLN = new RasbetLN();
 	public static void main(String[] args) {
 		SpringApplication.run(RasbetApplication.class, args);
 	}
@@ -24,6 +27,7 @@ public class RasbetApplication {
 	// Get Games from Database
 	@RequestMapping("games")
 	public void getGames(){
+
 	}
 
 	// Register

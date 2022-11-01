@@ -6,15 +6,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class GestaoUtilizadores implements IRasbetUtilizador{
+public class GestaoUtilizadores implements IGestaoUtilizadores {
     private DBUtilizadores utilizadores;
 
     public GestaoUtilizadores(Connection connection){
         this.utilizadores = new DBUtilizadores(connection);
     }
 
-    public void newUser(String email, LocalDate dataNAscimento, String nif, String password, String tipo) throws SQLException {
-        //utilizadores.create(email,dataNAscimento,nif,password, tipo );
+    public void newApostador(String email, LocalDate dataNAscimento, String nif, String password, String tipo, String nome) throws SQLException {
+        utilizadores.createApostador(email,dataNAscimento,nif,password, tipo, nome );
     }
 
     public void logIn(String email, String password) throws SQLException{
@@ -42,6 +42,15 @@ public class GestaoUtilizadores implements IRasbetUtilizador{
         return utilizadores.getUtilizador(email);
     }
 
+    @Override
+    public void addFavorito(String userId, Favorito favorito) {
+
+    }
+
+    @Override
+    public void removeFavorito(String id, Favorito fav) {
+
+    }
 
 
 }

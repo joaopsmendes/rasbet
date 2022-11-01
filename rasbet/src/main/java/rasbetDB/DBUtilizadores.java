@@ -1,11 +1,11 @@
 package rasbetDB;
 
-import rasbetLN.Apostador;
-import rasbetLN.Utilizador;
+import rasbetLN.*;
 
 import java.sql.*;
 import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class DBUtilizadores {
@@ -23,16 +23,15 @@ public class DBUtilizadores {
         pstmt1.setString(3, nif);
         pstmt1.setString(4, password);
         pstmt1.setString(5, nome);
-
         pstmt1.execute();
 
         String query2 = "INSERT INTO TipoUtilizador(Tipo, Utilizador_NIF)VALUES(?,?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
         pstmt2.setString(1, tipo);
         pstmt2.setString(2, nif);
-        pstmt1.execute();
+        pstmt2.execute();
 
-        return new Apostador(email, password, dataNascimento.toString(), nif, nome);
+        return new Apostador(email, password, dataNascimento, nif, nome);
     }
 
     public Utilizador logIn(String email, String password) throws SQLException{
@@ -50,7 +49,7 @@ public class DBUtilizadores {
         }
     }
 
-    public Utilizador getUtilizador(String email) throws SQLException{//duvidas no return
+    public Utilizador getUtilizador(String email) throws SQLException{
         String query = "SELECT Utilizador.nome, Utilizador.pass, Utilizador.dataNAscimento, Utilizador.nif, TipoUtilizador.tipo FROM Utilizador" +
                             " INNER JOIN TipoUtilizador ON Utilizador.email = TipoUtilizador.Utilizador_email" +
                             " WHERE email = ?";
@@ -60,11 +59,16 @@ public class DBUtilizadores {
         while (rs.next()) {
             String nome = rs.getString("nome");
             String password = rs.getString("pass");
-            String dataNascimento = rs.getString("dataNascimento");
+            LocalDate dataNascimento = rs.getDate("dataNascimento").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             String nif = rs.getString("nif");
             String tipo = rs.getString("tipo");
-
-//            return new Utilizador(email, password, dataNascimento, nif, nome);
+            if(tipo.equals("Apostador")){
+                return new Apostador(email, password, dataNascimento, nif, nome);
+            }else if(tipo.equals("Administrador")){
+                return new Administrador(email, password, dataNascimento, nif, nome);
+            }else if(tipo.equals("Especialista")){
+                return new Especialista(email, password, dataNascimento, nif, nome);
+            }else throw new SQLException("Utilizador não existe");
 
         }
         throw new SQLException("Can't get user");
@@ -116,4 +120,24 @@ public class DBUtilizadores {
         else System.out.println("Logout efetuado");
         return null;
     }
+
+
+    public void addFavorito(String userId, Favorito favorito) throws SQLException{
+        String query = "INSERT INTO Favorito(favorito, Utilizador_email, Desporto_idDesporto)VALUES (?,?,?) ";
+        PreparedStatement pstmt = c.prepareStatement(query);
+        pstmt.setString(1, favorito.getNome());
+        pstmt.setString(2, userId);
+        pstmt.setInt(3, favorito.getDesporto().getIdDesporto());
+        pstmt.execute();
+    }
+
+    public void removeFavorito(String userId, Favorito favorito) throws SQLException{
+        String query = "DELETE FROM Favorito WHERE favorito = ? AND  Utilizador_emial=? AND Desporto_idDesporto = ?";
+        PreparedStatement pstmt = c.prepareStatement(query);
+        pstmt.setString(1, favorito.getNome());
+        pstmt.setString(2, userId);
+        pstmt.setInt(3, favorito.getDesporto().getIdDesporto());
+        pstmt.execute();
+    }
+
 }

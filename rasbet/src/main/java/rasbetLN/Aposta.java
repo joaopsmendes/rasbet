@@ -1,15 +1,13 @@
 package rasbetLN;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public abstract class Aposta {
     private static int idAposta=0;
     private float montante;
-    private LocalDateTime dataAposta;
+    private LocalDate dataAposta;
     boolean resultado;
 
-    private enum Estado{
-
-    }
 
     private static int GetId() {
         return idAposta++;
@@ -18,19 +16,20 @@ public abstract class Aposta {
     public Aposta(float montante) {
         this.idAposta = GetId();
         this.montante = montante;
-        this.dataAposta = LocalDateTime.now();
+        this.dataAposta = LocalDate.now();
         resultado = false;
     }
     public Aposta() {
         this.idAposta = 0;
         this.montante = 0;
-        this.dataAposta = LocalDateTime.now();
+        this.dataAposta = LocalDate.now();
     }
 
     public Aposta(Aposta aposta) {
         this.idAposta = aposta.getIdAposta();
         this.montante = aposta.getMontante();
         this.dataAposta = aposta.getDataAposta();
+        this.resultado = aposta.getResultado();
     }
 
     public int getIdAposta() {
@@ -41,8 +40,12 @@ public abstract class Aposta {
         return montante;
     }
 
-    public LocalDateTime getDataAposta() {
+    public LocalDate getDataAposta() {
         return dataAposta;
+    }
+
+    public boolean getResultado(){
+        return resultado;
     }
 
 

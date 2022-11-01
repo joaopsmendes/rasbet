@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,8 @@ public class Apostador extends Utilizador {
 
     private Map<Integer, Aposta> apostasAtivas;
 
-    public Apostador(String email, String password, String dataNascimento, String NIF, String nome) {
-        super(email, password, dataNascimento, NIF);
+    public Apostador(String email, String password, LocalDate dataNascimento, String NIF, String nome) {
+        super(email, password, dataNascimento, NIF,nome);
         this.carteira = new Carteira();
         this.listaFavoritos = new ArrayList<>();
         this.historicoApostas = new HashMap<>();
