@@ -100,29 +100,35 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Favorito`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Favorito` (
-  `idFavorito` INT NOT NULL,
-  `favorito` VARCHAR(45) NOT NULL,
-  `Utilizador_email` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idFavorito`, `Utilizador_email`),
-  INDEX `fk_Favorito_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
-  CONSTRAINT `fk_Favorito_Utilizador1`
-    FOREIGN KEY (`Utilizador_email`)
-    REFERENCES `mydb`.`Utilizador` (`email`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`Desporto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Desporto` (
   `idDesporto` INT NOT NULL,
   `tipoDesporto` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idDesporto`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Favorito`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`Favorito` (
+  `favorito` VARCHAR(45) NOT NULL,
+  `Utilizador_email` VARCHAR(45) NOT NULL,
+  `Desporto_idDesporto` INT NOT NULL,
+  PRIMARY KEY (`Utilizador_email`, `Desporto_idDesporto`, `favorito`),
+  INDEX `fk_Favorito_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
+  INDEX `fk_Favorito_Desporto1_idx` (`Desporto_idDesporto` ASC) VISIBLE,
+  CONSTRAINT `fk_Favorito_Utilizador1`
+    FOREIGN KEY (`Utilizador_email`)
+    REFERENCES `mydb`.`Utilizador` (`email`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Favorito_Desporto1`
+    FOREIGN KEY (`Desporto_idDesporto`)
+    REFERENCES `mydb`.`Desporto` (`idDesporto`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
