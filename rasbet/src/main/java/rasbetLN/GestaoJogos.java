@@ -21,4 +21,8 @@ public class GestaoJogos implements IGestaoJogos {
     public Map<Integer,Desporto> getDesportos () throws SQLException {
         return jogos.getDesportos();
     }
+
+    public void alteraEstado(String idJogo, int estado) throws SQLException{
+        jogos.alteraEstado(idJogo, estado);
+    }
 }

@@ -72,4 +72,8 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
 
+    public void replaceTelemovel(String email, String telemovel) throws SQLException {
+        utilizadores.replaceTelemovel(email, telemovel);
+    }
+
 }

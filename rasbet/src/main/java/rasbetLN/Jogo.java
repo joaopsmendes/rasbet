@@ -1,5 +1,7 @@
 package rasbetLN;
 
+import Exceptions.EstadoFechadoException;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +48,10 @@ public class Jogo {
         return mapOdds.get(oddValor);
     }
 
-    public void updateEstado(Estado estado) { //duvidas
-
+    public void updateEstado(Estado estado) throws EstadoFechadoException { //duvidas
+        if(this.estado.equals(Estado.FECHADO)) throw new EstadoFechadoException("Estado de jogo: FECHADO");
+        else if(this.estado.equals(Estado.SUSPENSO)) this.setEstado(Estado.ATIVO);
+        else this.setEstado(Estado.SUSPENSO);
     }
+
 }

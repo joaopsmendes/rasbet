@@ -17,4 +17,6 @@ public interface IGestaoUtilizadores {
     void deposito(String userId,Deposito deposito) throws SQLException;
 
     void levantamento(String userId,Levantamento levantamento) throws SQLException;
+
+    void replaceTelemovel(String email, String telemovel) throws SQLException;
 }

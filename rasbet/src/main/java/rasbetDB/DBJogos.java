@@ -40,4 +40,12 @@ public class DBJogos {
         }
         return mapDesportos;
     }
+
+    public void alteraEstado(String idJogo, int estado) throws SQLException {
+        String query = "UPDATE Jogo SET Estado_idEstado = ? WHERE idJogo = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, estado);
+        ps.setString(2, idJogo);
+        ps.execute();
+    }
 }

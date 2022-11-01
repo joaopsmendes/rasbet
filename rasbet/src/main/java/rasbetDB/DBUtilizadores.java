@@ -100,15 +100,21 @@ public class DBUtilizadores {
         ps.setString(2, nif);
         ps.execute();
     }
-/*
-    public void replaceTelemovel(String email, String nif) throws SQLException {
 
+
+    public void replaceTelemovel(String email, String telemovel) throws SQLException {
+        String query = "UPDATE utilizador SET telemovel = ? WHERE nif = ?";
+        PreparedStatement ps;
+        ps = c.prepareStatement(query);
+        ps.setString(1, email);
+        ps.setString(2, telemovel);
+        ps.execute();
     }
-
+    /*
     public void replaceMorada(String email, String nif) throws SQLException {
 
     }
- */
+    */
 
     public Utilizador logOut(String email) throws SQLException { //duvidas
         String query = "SELECT Utilizador.email FROM Utilizador WHERE email = ? ";
@@ -156,6 +162,14 @@ public class DBUtilizadores {
         String query = "UPDATE Carteira SET saldo = ? WHERE Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setFloat(1, saldo);
+        ps.setString(2, userId);
+        ps.execute();
+    }
+
+    public void updateFreebets(float freebets, String userId) throws SQLException {
+        String query = "UPDATE Carteira SET freebets = ? WHERE Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setFloat(1, freebets);
         ps.setString(2, userId);
         ps.execute();
     }
