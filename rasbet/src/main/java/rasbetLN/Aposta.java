@@ -1,6 +1,6 @@
 package rasbetLN;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public abstract class Aposta {
     private static int idAposta=0;

@@ -1,12 +1,11 @@
 package rasbetLN;
 
 import rasbetDB.DBAposta;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-public class GestaoApostas implements IGestaoApostas{
+public class GestaoApostas implements IGestaoApostas {
     private DBAposta apostas;
 
     public GestaoApostas(Connection connection){

@@ -1,13 +1,11 @@
 package rasbetLN;
 
 import rasbetDB.DBJogos;
-import rasbetDB.DBUtilizadores;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class GestaoJogos implements IGestaoJogos{
+public class GestaoJogos implements IGestaoJogos {
     private DBJogos jogos;
 
     public GestaoJogos(Connection connection){

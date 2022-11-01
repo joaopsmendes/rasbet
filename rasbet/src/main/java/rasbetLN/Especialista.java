@@ -1,9 +1,8 @@
 package rasbetLN;
 
-
 import java.time.LocalDate;
 
-public class Especialista extends Utilizador{
+public class Especialista extends Utilizador {
     public Especialista(){
         super();
     }

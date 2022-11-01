@@ -1,6 +1,5 @@
 package rasbetLN;
 
-
 import java.time.LocalDateTime;
 
 public class Levantamento extends Transacao {

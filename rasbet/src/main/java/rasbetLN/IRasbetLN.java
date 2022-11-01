@@ -3,8 +3,6 @@ package rasbetLN;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
 
-import java.time.LocalDate;
-
 public interface IRasbetLN {
     void addGame(Game game, String bookmaker, String desporto);
 
