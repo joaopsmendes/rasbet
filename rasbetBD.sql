@@ -31,6 +31,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`TipoAposta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`TipoAposta` (
+  `TipoAposta` VARCHAR(45) NULL,
+  `idTipoAposta` INT NOT NULL,
+  PRIMARY KEY (`idTipoAposta`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`Aposta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Aposta` (
@@ -39,26 +49,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Aposta` (
   `data` DATE NOT NULL,
   `Utilizador_email` VARCHAR(45) NOT NULL,
   `resultado` TINYINT NULL,
-  PRIMARY KEY (`idAposta`, `Utilizador_email`),
+  `TipoAposta_idTipoAposta` INT NOT NULL,
+  PRIMARY KEY (`idAposta`, `Utilizador_email`, `TipoAposta_idTipoAposta`),
   INDEX `fk_Aposta_Utilizador1_idx` (`Utilizador_email` ASC) VISIBLE,
+  INDEX `fk_Aposta_TipoAposta1_idx` (`TipoAposta_idTipoAposta` ASC) VISIBLE,
   CONSTRAINT `fk_Aposta_Utilizador1`
     FOREIGN KEY (`Utilizador_email`)
     REFERENCES `mydb`.`Utilizador` (`email`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`TipoAposta`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`TipoAposta` (
-  `Aposta` INT NOT NULL,
-  `TipoApostacol` VARCHAR(45) NULL,
-  PRIMARY KEY (`Aposta`),
-  CONSTRAINT `fk_TipoAposta_Aposta`
-    FOREIGN KEY (`Aposta`)
-    REFERENCES `mydb`.`Aposta` (`idAposta`)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Aposta_TipoAposta1`
+    FOREIGN KEY (`TipoAposta_idTipoAposta`)
+    REFERENCES `mydb`.`TipoAposta` (`idTipoAposta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -68,8 +70,8 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Carteira`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Carteira` (
-  `saldo` DOUBLE NOT NULL,
-  `freebets` DOUBLE NOT NULL,
+  `saldo` FLOAT NOT NULL,
+  `freebets` FLOAT NOT NULL,
   `Utilizador_email` VARCHAR(45) NOT NULL,
   `Utilizador_email1` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`Utilizador_email`, `Utilizador_email1`),
@@ -87,7 +89,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Transação` (
   `idTransação` INT NOT NULL,
-  `valor` DOUBLE NOT NULL,
+  `valor` FLOAT NOT NULL,
   `dataTransacao` DATE NOT NULL,
   `Carteira_Utilizador_email` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idTransação`, `Carteira_Utilizador_email`),
@@ -174,7 +176,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Odd` (
   `idOdd` INT NOT NULL,
   `Jogo_idJogo` INT NOT NULL,
-  `valor` DOUBLE NOT NULL,
+  `valor` FLOAT NOT NULL,
   `opcao` VARCHAR(45) NULL,
   `Aposta_idAposta` INT NOT NULL,
   `Aposta_Utilizador_email` VARCHAR(45) NOT NULL,
