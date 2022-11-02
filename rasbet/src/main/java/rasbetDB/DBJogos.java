@@ -1,9 +1,14 @@
 package rasbetDB;
 
 import rasbetLN.*;
+import rasbetUI.ApostaOpcao;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DBJogos {
@@ -15,15 +20,42 @@ public class DBJogos {
     }
 
 
-    public void adicionarJogo(Jogo jogo) {
-        String query1 = "INSERT INTO Jogo(idJogo,Desporto_idDesporto,resultado)VALUES(?,?,?)";
-        //PreparedStatement pstmt1 = c.prepareStatement(query1);
-        //pstmt1.setString(1, jogo.getIdJogo());
-        //pstmt1.setDate(2, Date.valueOf(dataNascimento));
-        //pstmt1.setString(3, nif);
-        //pstmt1.setString(4, password);
-        //pstmt1.setString(5, nome);
-        //pstmt1.execute();
+    public void adicionarJogo(Jogo jogo) throws SQLException {
+        String query = "INSERT INTO Jogo(idJogo,Desporto_idDesporto,Estado_idEstado,data)VALUES(?,?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,jogo.getIdJogo());
+        ps.setInt(2,jogo.getDesporto());
+        ps.setInt(3,jogo.getEstadoValue());
+        ps.setString(4,jogo.getData().toString());
+        ps.execute();
+
+        for (ApostaJogo apostaJogo : jogo.getApostas()){
+            adicionarApostaJogo(apostaJogo,jogo.getIdJogo(),jogo.getDesporto());
+        }
+    }
+
+    public void adicionarApostaJogo(ApostaJogo apostaJogo,String idJogo,int idDesporto) throws SQLException {
+        String query = "INSERT INTO ApostaJogo(tema,Jogo_idJogo,Jogo_Desporto_idDesporto)VALUES(?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,apostaJogo.getTema());
+        ps.setString(2,idJogo);
+        ps.setInt(3,idDesporto);
+        ps.execute();
+
+        for (Odd odd : apostaJogo.getMapOdd().values()){
+            adicionarOdd(odd, apostaJogo.getTema(),idJogo,idDesporto);
+        }
+    }
+
+    public void adicionarOdd(Odd odd,String tema,String idJogo, int idDesporto) throws SQLException {
+        String query = "INSERT INTO Odd(opcao,valor,ApostaJogo_tema,ApostaJogo_Jogo_idJogo,ApostaJogo_Jogo_Desporto_idDesporto)VALUES(?,?,?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,odd.getOpcao());
+        ps.setFloat(2,odd.getValor());
+        ps.setString(3,tema);
+        ps.setString(4,idJogo);
+        ps.setInt(5,idDesporto);
+        ps.execute();
     }
 
     public Map<Integer,Desporto> getDesportos() throws SQLException {
@@ -40,6 +72,68 @@ public class DBJogos {
         }
         return mapDesportos;
     }
+
+    public List<Jogo> getJogo(Desporto desporto) throws SQLException{
+        List<Jogo> jogos = new ArrayList<>();
+        String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, desporto.getIdDesporto());
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            String idJogo = rs.getString("idJogo");
+            LocalDateTime data = LocalDateTime.parse(rs.getString("data"));
+            Jogo jogo = new Jogo(idJogo, desporto, data, Jogo.Estado.ATIVO);
+
+            Map<String,ApostaJogo> map = apostasJogo(jogo);
+            jogo.setApostas(map);
+            jogos.add(jogo);
+
+        }
+        return jogos;
+    }
+    
+    
+    public Map<String,ApostaJogo> apostasJogo(Jogo jogo) throws SQLException{
+        Map<String,ApostaJogo> apostas = new HashMap<>();
+        String query = "SELECT * FROM ApostaJogo where Jogo_idJogo = ? AND Jogo_Desporto_idDesporto = ? AND resultado IS NULL";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, jogo.getIdJogo());
+        ps.setInt(2, jogo.getDesporto());
+
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            String tema = rs.getString("tema");
+
+            ApostaJogo apostaJogo = new ApostaJogo(tema);
+
+            Map<String,Odd> mapOdd = oddApostaJogo(tema,jogo);
+            apostaJogo.setMapOdd(mapOdd);
+
+            apostas.put(tema,apostaJogo);
+        }
+
+        return apostas;
+    }
+
+
+    public Map<String,Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
+        Map<String,Odd> map = new HashMap<>();
+        String query = "SELECT * FROM Odd Where ApostaJogo_tema = ? AND ApostaJogo_Jogo_idJogo = ? AND ApostaJogo_Jogo_Desporto_idDesporto = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, tema);
+        ps.setString(2, jogo.getIdJogo());
+        ps.setInt(3, jogo.getDesporto());
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+//            String idOdd = rs.getString("idOdd");
+            float valor = rs.getFloat("valor");
+            String opcao = rs.getString("opcao");
+            Odd odd = new Odd(valor, opcao, jogo);
+            map.put(odd.getOpcao(),odd);
+        }
+        return map;
+    }
+
 
     public void alteraEstado(String idJogo, int estado) throws SQLException {
         String query = "UPDATE Jogo SET Estado_idEstado = ? WHERE idJogo = ?";

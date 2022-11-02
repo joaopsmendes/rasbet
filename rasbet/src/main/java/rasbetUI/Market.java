@@ -24,6 +24,7 @@ public class Market {
         this.outcomes = outcomes;
     }
 
+
     public Object[] order(){
         return Arrays.stream(this.outcomes).sorted(Comparator.comparing(o -> o.price)).toArray();
     }

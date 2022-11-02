@@ -2,7 +2,7 @@ package rasbetUI;
 
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +17,6 @@ public class Game {
     String scores;
     Map<String,Bookmaker> mapBookmakers;
     //Bookmaker[] bookmakers;
-    private static final String market = "h2h";
 
     public String getId() {
         return id;
@@ -79,11 +78,9 @@ public class Game {
         }
     }
 
-    public Outcome[] getOutcomes (String bookmaker){
+    public Collection<Market> getMarkets(String bookmaker){
         Bookmaker b = mapBookmakers.get(bookmaker);
-        Market m = b.mapMarkets.get(market);
-        return m.outcomes;
-
+        return b.mapMarkets.values();
     }
     public String whoWon (){
         if (!completed || scores == null ) return "NOT PLAYED"; // EXCEPTION

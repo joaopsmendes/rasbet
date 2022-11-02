@@ -8,6 +8,8 @@ public abstract class Utilizador {
     private LocalDate dataNascimento;
     private String NIF;
     private String nome;
+    private String telemovel;
+    private String morada;
 
 
     public Utilizador() {
@@ -16,15 +18,19 @@ public abstract class Utilizador {
         this.dataNascimento = null;
         this.NIF = null;
         this.nome = null;
+        this.telemovel = null;
+        this.morada = null;
 
     }
 
-    public Utilizador(String email, String password, LocalDate dataNascimento, String nif, String nome) {
+    public Utilizador(String email, String password, LocalDate dataNascimento, String nif, String nome, String telemovel, String morada) {
         this.email = email;
         this.password = password;
         this.dataNascimento = dataNascimento;
         this.NIF = nif;
         this.nome = nome;
+        this.telemovel = telemovel;
+        this.morada = morada;
 
     }
 
@@ -34,6 +40,8 @@ public abstract class Utilizador {
         this.dataNascimento = u.getDataNascimento();
         this.NIF = u.getNIF();
         this.nome = u.getNome();
+        this.telemovel = u.getTelemovel();
+        this.morada = u.getMorada();
     }
 
 
@@ -78,5 +86,11 @@ public abstract class Utilizador {
         this.nome = nome;
     }
 
+    public String getTelemovel() {
+        return telemovel;
+    }
 
+    public  String getMorada(){
+        return morada;
+    }
 }

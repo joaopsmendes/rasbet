@@ -12,8 +12,8 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         this.utilizadores = new DBUtilizadores(connection);
     }
 
-    public void newApostador(String email, LocalDate dataNAscimento, String nif, String password, String tipo, String nome) throws SQLException {
-        utilizadores.createApostador(email,dataNAscimento,nif,password, tipo, nome );
+    public void newApostador(Apostador apostador) throws SQLException {
+        utilizadores.createApostador(apostador );
     }
 
     public void logIn(String email, String password) throws SQLException{
@@ -26,11 +26,13 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     public void replace(String email, Utilizador user) throws SQLException{
-        Utilizador  oldUser = utilizadores.getUtilizador(email);
-        utilizadores.replaceNome(email, selectString( oldUser.getNome(), user.getNome()));
-        utilizadores.replaceEmail(email, selectString( oldUser.getEmail(), user.getEmail()));
-        //replaceTelemovel
-        //replaceMorada
+//        Utilizador  oldUser = utilizadores.getUtilizador(email);
+        utilizadores.replaceUtilizador(user, email);
+//        utilizadores.replaceNome(email, selectString( oldUser.getNome(), user.getNome()));
+//        utilizadores.replaceEmail(email, selectString( oldUser.getEmail(), user.getEmail()));
+//        utilizadores.replaceTelemovel(email, selectString(oldUser.getTelemovel(), user.getTelemovel()));
+//        utilizadores.replaceMorada(email, selectString(oldUser.getMorada(), user.getMorada()));
+
     }
     private String selectString (String one,String two){
         if (two != null && !two.isEmpty()) return two;
@@ -71,9 +73,9 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         }
     }
 
-
-    public void replaceTelemovel(String email, String telemovel) throws SQLException {
-        utilizadores.replaceTelemovel(email, telemovel);
+    public void updateFreebets(float freebets, String userId) throws SQLException{
+        this.utilizadores.updateFreebets(freebets,userId);
     }
+
 
 }

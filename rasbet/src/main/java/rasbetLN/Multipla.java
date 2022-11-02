@@ -15,6 +15,14 @@ public class Multipla extends Aposta {
     public Multipla(int idAposta, float montante, LocalDate data, String idUtilizador, boolean resultado) {
         super();
     }
+
+    public float valorOdd(){
+        float res = 0;
+        for(Odd odd : oddList){
+            res *= odd.getValor();
+        }
+        return res;
+    }
 }
 
 

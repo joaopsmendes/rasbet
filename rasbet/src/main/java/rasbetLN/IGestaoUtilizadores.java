@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public interface IGestaoUtilizadores {
-    void newApostador(String email, LocalDate dataNAscimento, String nif, String password, String tipo, String nome) throws SQLException;
+    void newApostador(Apostador apostador) throws SQLException;
     void logIn(String email, String password) throws SQLException;
     void logOut(String email) throws SQLException;
     void replace(String email, Utilizador user) throws SQLException;
@@ -18,5 +18,9 @@ public interface IGestaoUtilizadores {
 
     void levantamento(String userId,Levantamento levantamento) throws SQLException;
 
-    void replaceTelemovel(String email, String telemovel) throws SQLException;
+    //void replaceTelemovel(String email, String telemovel) throws SQLException;
+
+    //void replaceMorada(String email, String morada) throws SQLException;
+
+    void updateFreebets(float freebets, String userId) throws SQLException;
 }

@@ -12,8 +12,8 @@ public class Apostador extends Utilizador {
     private Map<Integer, Aposta> historicoApostas;
     private Map<Integer, Aposta> apostasAtivas;
 
-    public Apostador(String email, String password, LocalDate dataNascimento, String NIF, String nome) {
-        super(email, password, dataNascimento, NIF,nome);
+    public Apostador(String email, String password, LocalDate dataNascimento, String NIF, String nome, String telemovel, String morada) {
+        super(email, password, dataNascimento, NIF,nome, telemovel, morada);
         this.carteira = new Carteira();
         this.listaFavoritos = new ArrayList<>();
         this.historicoApostas = new HashMap<>();

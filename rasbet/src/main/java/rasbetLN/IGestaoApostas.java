@@ -10,4 +10,6 @@ public interface IGestaoApostas {
     void createMultipla(Aposta aposta, String userId, List<String> listaOdd) throws SQLException;
     void insereOdd(String idOdd, int idAposta) throws SQLException;
     void createAposta(Aposta aposta, String idUtilizador, int tipo) throws SQLException;
+    List<Aposta> getHistoricoApostas(String idUser) throws SQLException;
+    List<Aposta> getApostasAtivas(String idUser) throws SQLException;
 }

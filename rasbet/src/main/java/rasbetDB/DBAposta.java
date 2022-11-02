@@ -5,6 +5,7 @@ import rasbetLN.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBAposta {
@@ -84,11 +85,34 @@ public class DBAposta {
         throw new SQLException("Can't get aposta");
     }
 
-    public List<Aposta> getHistoricoApostas(LocalDate date) throws SQLException{ //duvidas se é preciso ou nao
-        //orientar o historico pela data
-        return null;
+    public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{
+        List<Aposta> historicoApostas = new ArrayList<>();
+        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NULL";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, idUser);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int idAposta = rs.getInt("idAposta");
+             Aposta a = getAposta(idAposta, idUser);
+             historicoApostas.add(a);
+        }
+        return historicoApostas;
     }
 
-
+    public List<Aposta> getApostasAtivas(String idUser) throws SQLException{
+        List<Aposta> apostasAtivas = new ArrayList<>();
+        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NOT NULL";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, idUser);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int idAposta = rs.getInt("idAposta");
+            Aposta a = getAposta(idAposta, idUser);
+            apostasAtivas.add(a);
+        }
+        return apostasAtivas;
+    }
 
 }

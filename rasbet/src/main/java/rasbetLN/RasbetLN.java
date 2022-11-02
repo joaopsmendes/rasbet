@@ -2,10 +2,12 @@ package rasbetLN;
 
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
+import rasbetUI.Market;
 import rasbetUI.Outcome;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Map;
 
 public class RasbetLN implements IRasbetLN{
@@ -37,12 +39,14 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public void addGame(Game game, String bookmaker, String desporto) {
+    public void addGame(Game game, String bookmaker, String desporto) throws SQLException{
         Desporto d = mapDesportos.get(desporto);
         Jogo jogo = new Jogo(game.getId(),d,game.getCommenceTime());
-        for (Outcome outcome : game.getOutcomes(bookmaker)){
-            Odd odd = new Odd(outcome.getPrice(),outcome.getName(),jogo);
-            jogo.addOdd(odd);
+        for (Market market : game.getMarkets(bookmaker)){
+            for (Outcome outcome : market.getOutcomes()){
+                Odd odd = new Odd(outcome.getPrice(),outcome.getName(),jogo);
+                jogo.addOdd(market.getKey(),odd);
+            }
         }
 
         gestaoJogos.adicionarJogo(jogo);
@@ -103,6 +107,18 @@ public class RasbetLN implements IRasbetLN{
         Levantamento levantamento = new Levantamento(valor);
         gestaoUtilizadores.levantamento(userId, levantamento);
     }
+
+
+    public void validateLogin (String email, String password) throws SQLException {
+        gestaoUtilizadores.logIn(email,password);
+    }
+
+    public void registarApostador(String email, String password, String nome,String nif,LocalDate date, String morada, String telemovel) throws SQLException {
+        Apostador apostador = new Apostador(email,password,date,nif,nome,morada,telemovel);
+        gestaoUtilizadores.newApostador(apostador);
+    }
+
+
 
 
 }

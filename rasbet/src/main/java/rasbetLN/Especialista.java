@@ -8,7 +8,7 @@ public class Especialista extends Utilizador {
     }
 
 
-    public Especialista(String email, String password, LocalDate dataNascimento, String nif, String nome) {
-        super(email, password, dataNascimento, nif, nome);
+    public Especialista(String email, String password, LocalDate dataNascimento, String nif, String nome, String telemovel, String morada) {
+        super(email, password, dataNascimento, nif, nome, telemovel, morada);
     }
 }

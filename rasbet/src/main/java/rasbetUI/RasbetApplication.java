@@ -6,11 +6,15 @@ import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rasbetLN.Apostador;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +36,34 @@ public class RasbetApplication {
 
 	// Register
 	@PostMapping(path = "register")
-	public String register(@RequestBody UserRegister userRegister){
-		System.out.println(userRegister);
-		return userRegister.email;
+	public ResponseEntity<String> register(@RequestBody Map<String,String> myJsonRequest){
+		String email = myJsonRequest.get("email");
+		String password = myJsonRequest.get("password");
+		String nome = myJsonRequest.get("nome");
+		String nif = myJsonRequest.get("nif");
+		LocalDate date = LocalDate.parse(myJsonRequest.get("date"));
+		String morada = myJsonRequest.get("morada");
+		String telemovel = myJsonRequest.get("telemovel");
+		try {
+			rasbetLN.registarApostador(email,password,nome,nif,date,morada,telemovel);
+			return new ResponseEntity<>("Apostador registado", HttpStatus.OK);
+		} catch (SQLException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 
-	@PostMapping(path = "login")
-	public void login(@RequestBody Map<String, String> myJsonRequest) {
-		System.out.println(myJsonRequest.get("email"));
-		System.out.println(myJsonRequest.get("password"));
+	@RequestMapping(path = "login")
+	public boolean login(@RequestBody Map<String, String> myJsonRequest) {
+		String email = myJsonRequest.get("email");
+		String password = myJsonRequest.get("password");
+		try {
+			rasbetLN.validateLogin(email,password);
+			return true;
+		}
+		catch (SQLException e){
+			return false;
+		}
 	}
 
 	@PostMapping(path = "apostaSimples")
@@ -58,12 +80,12 @@ public class RasbetApplication {
 
 	}
 
-	@PostMapping(path = "showGames")
+	@RequestMapping(path = "showGames")
 	public void showGames(@RequestBody Map<String, String> myJsonRequest) {
 		System.out.println(myJsonRequest.get("desporto"));
 	}
 
-	@PostMapping(path = "showGamesToAdd")
+	@RequestMapping(path = "showGamesToAdd")
 	public List<Game> showGamesToAdd(@RequestBody Map<String, String> myJsonRequest) {
 		// Check if there's new games to add
 		RestService rest = new RestService(new RestTemplateBuilder());

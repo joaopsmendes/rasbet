@@ -31,6 +31,7 @@ public class Bookmaker {
         mapMarkets = new HashMap<>();
         for (Market market : markets){
             mapMarkets.put(market.key,market);
+            market.setTema();
         }
     }
 

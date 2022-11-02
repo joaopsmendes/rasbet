@@ -34,4 +34,12 @@ public class GestaoApostas implements IGestaoApostas {
     public void createAposta(Aposta aposta, String idUtilizador, int tipo) throws SQLException{
         this.apostas.createAposta(aposta, idUtilizador, tipo);
     }
+
+    public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{
+        return this.apostas.getHistoricoApostas(idUser);
+    }
+
+    public List<Aposta> getApostasAtivas (String idUser) throws SQLException{
+        return this.apostas.getHistoricoApostas(idUser);
+    }
 }

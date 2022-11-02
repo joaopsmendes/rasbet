@@ -2,12 +2,15 @@ package rasbetDB;
 
 import rasbetLN.*;
 
+import javax.swing.*;
 import java.sql.*;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBUtilizadores {
     private Connection c;
@@ -16,23 +19,24 @@ public class DBUtilizadores {
         this.c = connection;
     }
 
-    public Utilizador createApostador(String email, LocalDate dataNascimento, String nif, String password, String tipo, String nome) throws SQLException {
-        String query1 = "INSERT INTO Utilizador(email, dataNascimento, NIF, pass, nome)VALUES(?,?,?,?,?)";
+    public void createApostador(Apostador apostador) throws SQLException {
+        String query1 = "INSERT INTO Utilizador(email, dataNascimento, NIF, pass, nome, telemovel, morada)VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstmt1 = c.prepareStatement(query1);
-        pstmt1.setString(1, email);
-        pstmt1.setDate(2, Date.valueOf(dataNascimento));
-        pstmt1.setString(3, nif);
-        pstmt1.setString(4, password);
-        pstmt1.setString(5, nome);
+        pstmt1.setString(1, apostador.getEmail());
+        pstmt1.setDate(2, Date.valueOf(apostador.getDataNascimento()));
+        pstmt1.setString(3, apostador.getNIF());
+        pstmt1.setString(4, apostador.getPassword());
+        pstmt1.setString(5, apostador.getNome());
+        pstmt1.setString(6, apostador.getTelemovel());
+        pstmt1.setString(7, apostador.getMorada());
         pstmt1.execute();
 
         String query2 = "INSERT INTO TipoUtilizador(Tipo, Utilizador_NIF)VALUES(?,?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
-        pstmt2.setString(1, tipo);
-        pstmt2.setString(2, nif);
+        pstmt2.setString(1, "Apostador");
+        pstmt2.setString(2, apostador.getNIF());
         pstmt2.execute();
 
-        return new Apostador(email, password, dataNascimento, nif, nome);
     }
 
     public Utilizador logIn(String email, String password) throws SQLException {
@@ -61,13 +65,15 @@ public class DBUtilizadores {
             String password = rs.getString("pass");
             LocalDate dataNascimento = rs.getDate("dataNascimento").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             String nif = rs.getString("nif");
+            String telemovel = rs.getString("telemovel");
+            String morada = rs.getString("morada");
             String tipo = rs.getString("tipo");
             if (tipo.equals("Apostador")) {
-                return new Apostador(email, password, dataNascimento, nif, nome);
+                return new Apostador(email, password, dataNascimento, nif, nome, telemovel, morada);
             } else if (tipo.equals("Administrador")) {
-                return new Administrador(email, password, dataNascimento, nif, nome);
+                return new Administrador(email, password, dataNascimento, nif, nome, telemovel, morada);
             } else if (tipo.equals("Especialista")) {
-                return new Especialista(email, password, dataNascimento, nif, nome);
+                return new Especialista(email, password, dataNascimento, nif, nome, telemovel, morada);
             } else throw new SQLException("Utilizador não existe");
 
         }
@@ -83,38 +89,56 @@ public class DBUtilizadores {
 //        ps.execute();
 //    }
 
-    public void replaceNome(String email, String nome) throws SQLException {
-        String query = "UPDATE utilizador SET Nome = ? WHERE Email = ?";
-        PreparedStatement ps;
-        ps = c.prepareStatement(query);
-        ps.setString(1, nome);
-        ps.setString(2, email);
+//    public void replaceNome(String email, String nome) throws SQLException {
+//        String query = "UPDATE utilizador SET Nome = ?WHERE Email = ?";
+//        PreparedStatement ps;
+//        ps = c.prepareStatement(query);
+//        ps.setString(1, nome);
+//        ps.setString(2, email);
+//        ps.execute();
+//    }
+//
+//    public void replaceEmail(String email, String nif) throws SQLException {
+//        String query = "UPDATE utilizador SET Email = ? WHERE nif = ?";
+//        PreparedStatement ps;
+//        ps = c.prepareStatement(query);
+//        ps.setString(1, email);
+//        ps.setString(2, nif);
+//        ps.execute();
+//    }
+//
+//
+//    public void replaceTelemovel(String email, String telemovel) throws SQLException {
+//        String query = "UPDATE utilizador SET telemovel = ? WHERE email = ?";
+//        PreparedStatement ps;
+//        ps = c.prepareStatement(query);
+//        ps.setString(1, telemovel);
+//        ps.setString(2, email);
+//        ps.execute();
+//    }
+//
+//    public void replaceMorada(String email, String morada) throws SQLException {
+//        String query = "UPDATE utilizador SET morada = ? WHERE email = ?";
+//        PreparedStatement ps;
+//        ps = c.prepareStatement(query);
+//        ps.setString(1, morada);
+//        ps.setString(2, email);
+//        ps.execute();
+//    }
+
+    public void replaceUtilizador(Utilizador user, String oldEmail) throws SQLException{
+        String query = "UPDATE utilizador SET nome = ?, pass = ?, telemovel = ?, morada = ?, email = ? WHERE email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, user.getNome());
+        ps.setString(2, user.getPassword());
+        ps.setString(3, user.getTelemovel());
+        ps.setString(4, user.getMorada());
+        ps.setString(5, user.getEmail());
+        ps.setString(6, oldEmail);
         ps.execute();
-    }
-
-    public void replaceEmail(String email, String nif) throws SQLException {
-        String query = "UPDATE utilizador SET Email = ? WHERE nif = ?";
-        PreparedStatement ps;
-        ps = c.prepareStatement(query);
-        ps.setString(1, email);
-        ps.setString(2, nif);
-        ps.execute();
-    }
-
-
-    public void replaceTelemovel(String email, String telemovel) throws SQLException {
-        String query = "UPDATE utilizador SET telemovel = ? WHERE nif = ?";
-        PreparedStatement ps;
-        ps = c.prepareStatement(query);
-        ps.setString(1, email);
-        ps.setString(2, telemovel);
-        ps.execute();
-    }
-    /*
-    public void replaceMorada(String email, String nif) throws SQLException {
 
     }
-    */
+
 
     public Utilizador logOut(String email) throws SQLException { //duvidas
         String query = "SELECT Utilizador.email FROM Utilizador WHERE email = ? ";
@@ -194,6 +218,17 @@ public class DBUtilizadores {
         ps.execute();
     }
 
-
+    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
+        List<Transacao> transacoes = new ArrayList<>();
+        String query = "SELECT * FROM Transacao WHERE Carteira_Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            //
+        }
+        return transacoes;
+    }
 
 }

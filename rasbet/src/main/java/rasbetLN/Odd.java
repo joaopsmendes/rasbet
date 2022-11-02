@@ -27,11 +27,5 @@ public class Odd {
         this.opcao = opcao;
     }
 
-    public Jogo getJogo() {
-        return jogo;
-    }
 
-    public void setJogo(Jogo jogo) {
-        this.jogo = jogo;
-    }
 }
