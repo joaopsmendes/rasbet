@@ -1,4 +1,4 @@
-package rasbetLN;
+package rasbetLN.GestaoApostas;
 
 import java.time.LocalDate;
 

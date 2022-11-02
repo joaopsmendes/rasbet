@@ -1,4 +1,6 @@
-package rasbetLN;
+package rasbetLN.GestaoUtilizadores;
+
+import rasbetLN.GestaoUtilizadores.Utilizador;
 
 import java.time.LocalDate;
 

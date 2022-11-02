@@ -1,4 +1,6 @@
-package rasbetLN;
+package rasbetLN.GestaoUtilizadores;
+
+import rasbetLN.GestaoJogos.Desporto;
 
 public class Favorito {
     private String nome;

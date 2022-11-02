@@ -1,4 +1,4 @@
-package rasbetLN;
+package rasbetLN.GestaoJogos;
 
 public class Desporto {
     private String modalidade;

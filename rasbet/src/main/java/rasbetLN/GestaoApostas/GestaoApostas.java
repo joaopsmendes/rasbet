@@ -1,9 +1,9 @@
-package rasbetLN;
+package rasbetLN.GestaoApostas;
 
 import rasbetDB.DBAposta;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class GestaoApostas implements IGestaoApostas {
@@ -19,20 +19,12 @@ public class GestaoApostas implements IGestaoApostas {
         return this.apostas.getAposta(idAposta, email);
     }
 
-    public void createSimples(Aposta aposta, String userId, String idOdd) throws SQLException{
-        this.apostas.createSimples(aposta,userId, idOdd);
+    public void createSimples(String userId, float montante,int idOdd) throws SQLException{
+        this.apostas.createSimples(userId,montante ,idOdd);
     }
 
-    public void createMultipla(Aposta aposta, String userId, List<String> listaOdd) throws SQLException{
-        this.apostas.createMultipla(aposta,userId, listaOdd);
-    }
-
-    public void insereOdd(String idOdd, int idAposta) throws SQLException{
-        this.apostas.insereOdd(idOdd, idAposta);
-    }
-
-    public void createAposta(Aposta aposta, String idUtilizador, int tipo) throws SQLException{
-        this.apostas.createAposta(aposta, idUtilizador, tipo);
+    public void createMultipla(String userId,float montante,List<Integer> listaOdd) throws SQLException{
+        this.apostas.createMultipla(userId,montante,listaOdd);
     }
 
     public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{

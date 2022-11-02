@@ -1,11 +1,13 @@
 package rasbetDB;
 
-import rasbetLN.*;
-import rasbetUI.ApostaOpcao;
+import rasbetLN.GestaoApostas.Odd;
+import rasbetLN.GestaoJogos.ApostaJogo;
+import rasbetLN.GestaoJogos.Desporto;
+import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,30 +38,32 @@ public class DBJogos {
 
     public void adicionarApostaJogo(ApostaJogo apostaJogo,String idJogo,int idDesporto) throws SQLException {
         String query = "INSERT INTO ApostaJogo(tema,Jogo_idJogo,Jogo_Desporto_idDesporto)VALUES(?,?,?)";
-        PreparedStatement ps = c.prepareStatement(query);
+        PreparedStatement ps = c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1,apostaJogo.getTema());
         ps.setString(2,idJogo);
         ps.setInt(3,idDesporto);
         ps.execute();
 
+        ResultSet rs = ps.getGeneratedKeys();
+        int idApostaJogo =0;
+        if (rs.next()) idApostaJogo = rs.getInt(1);
+
         for (Odd odd : apostaJogo.getMapOdd().values()){
-            adicionarOdd(odd, apostaJogo.getTema(),idJogo,idDesporto);
+            adicionarOdd(odd, apostaJogo.getTema(),idApostaJogo);
         }
     }
 
-    public void adicionarOdd(Odd odd,String tema,String idJogo, int idDesporto) throws SQLException {
-        String query = "INSERT INTO Odd(opcao,valor,ApostaJogo_tema,ApostaJogo_Jogo_idJogo,ApostaJogo_Jogo_Desporto_idDesporto)VALUES(?,?,?,?,?)";
+    public void adicionarOdd(Odd odd,String tema,int idApostaJogo) throws SQLException {
+        String query = "INSERT INTO Odd(opcao,valor,ApostaJogo_idApostaJogo)VALUES(?,?,?)";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1,odd.getOpcao());
         ps.setFloat(2,odd.getValor());
-        ps.setString(3,tema);
-        ps.setString(4,idJogo);
-        ps.setInt(5,idDesporto);
+        ps.setInt(3,idApostaJogo);
         ps.execute();
     }
 
-    public Map<Integer,Desporto> getDesportos() throws SQLException {
-        Map<Integer,Desporto> mapDesportos = new HashMap<>();
+    public Map<String, Desporto> getDesportos() throws SQLException {
+        Map<String,Desporto> mapDesportos = new HashMap<>();
         String query = "SELECT * FROM Desporto";
         PreparedStatement ps = c.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
@@ -68,28 +72,42 @@ public class DBJogos {
             int idDesporto = rs.getInt("idDesporto");
             System.out.println(nomeDesporto);
             Desporto desporto = new Desporto(idDesporto,nomeDesporto);
-            mapDesportos.put(idDesporto,desporto);
+            mapDesportos.put(nomeDesporto,desporto);
         }
         return mapDesportos;
     }
 
-    public List<Jogo> getJogo(Desporto desporto) throws SQLException{
+    public Map<String,Jogo> getJogos(Desporto desporto) throws SQLException{
         List<Jogo> jogos = new ArrayList<>();
-        String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
-        PreparedStatement ps = c.prepareStatement(query);
+        Map<String,Jogo> map = new HashMap<>();
+        //String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
+        String query2 ="SELECT Jogo.idJogo, Jogo.Data,Odd.idOdd,ApostaJogo.tema,Odd.valor,Jogo.Desporto_idDesporto,Odd.opcao FROM ApostaJogo " +
+                "INNER JOIN Jogo ON Jogo.idJogo=ApostaJogo.Jogo_idJogo AND Jogo.Desporto_idDesporto=ApostaJogo.Jogo_Desporto_idDesporto " +
+                "INNER JOIN Odd ON Odd.ApostaJogo_idApostaJogo=ApostaJogo.idApostaJogo WHERE Jogo.Desporto_idDesporto = ? and Jogo.Estado_idEstado = ?";
+        PreparedStatement ps = c.prepareStatement(query2);
         ps.setInt(1, desporto.getIdDesporto());
+        ps.setInt(2,Jogo.Estado.ATIVO.value);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             String idJogo = rs.getString("idJogo");
-            LocalDateTime data = LocalDateTime.parse(rs.getString("data"));
-            Jogo jogo = new Jogo(idJogo, desporto, data, Jogo.Estado.ATIVO);
 
-            Map<String,ApostaJogo> map = apostasJogo(jogo);
-            jogo.setApostas(map);
-            jogos.add(jogo);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime data = LocalDateTime.parse(rs.getString("data"),formatter);
+            int idOdd = rs.getInt("idOdd");
+            float valorOdd = rs.getFloat("valor");
+            String tema = rs.getString("tema");
+            String opcao = rs.getString("opcao");
+
+            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data, Jogo.Estado.ATIVO));
+            System.out.println(tema+ " " + idOdd);
+            Jogo jogo = map.get(idJogo);
+
+            Odd odd = new Odd(idOdd,valorOdd, opcao, jogo.getIdJogo());
+            System.out.println(odd);
+            jogo.addOdd(tema,odd);
 
         }
-        return jogos;
+        return map;
     }
     
     
@@ -125,10 +143,10 @@ public class DBJogos {
         ps.setInt(3, jogo.getDesporto());
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-//            String idOdd = rs.getString("idOdd");
+            int idOdd = rs.getInt("idOdd");
             float valor = rs.getFloat("valor");
             String opcao = rs.getString("opcao");
-            Odd odd = new Odd(valor, opcao, jogo);
+            Odd odd = new Odd(idOdd,valor, opcao, jogo.getIdJogo());
             map.put(odd.getOpcao(),odd);
         }
         return map;
@@ -141,5 +159,14 @@ public class DBJogos {
         ps.setInt(1, estado);
         ps.setString(2, idJogo);
         ps.execute();
+    }
+
+    public boolean existeJogo(String gameId, Desporto desporto) throws SQLException {
+        String query = "SELECT * FROM Jogo WHERE idJogo = ? AND Desporto_idDesporto = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,gameId);
+        ps.setInt(2, desporto.getIdDesporto());
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
     }
 }

@@ -2,14 +2,13 @@ package rasbetUI;
 
 
 
-import com.google.gson.Gson;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rasbetLN.Apostador;
+import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
 
@@ -23,7 +22,16 @@ import java.util.Map;
 @RestController
 public class RasbetApplication {
 
-	IRasbetLN rasbetLN = new RasbetLN();
+	IRasbetLN rasbetLN;
+
+	{
+		try {
+			rasbetLN = new RasbetLN();
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(RasbetApplication.class, args);
 	}
@@ -62,39 +70,50 @@ public class RasbetApplication {
 			return true;
 		}
 		catch (SQLException e){
+			System.out.println(e.getMessage());
 			return false;
 		}
 	}
 
 	@PostMapping(path = "apostaSimples")
 	public void apostaSimples(@RequestBody ApostaRequest apostaRequest) {
-		//System.out.println(apostaRequest.gameId);
-		System.out.println(apostaRequest);
-
-
+		try {
+			rasbetLN.apostaSimples(apostaRequest);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@PostMapping(path = "apostaMultipla")
 	public void apostaMultipla(@RequestBody ApostaRequest apostaRequest){
-		System.out.println(apostaRequest);
-
+		try {
+			rasbetLN.apostaMultipla(apostaRequest);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@RequestMapping(path = "showGames")
-	public void showGames(@RequestBody Map<String, String> myJsonRequest) {
-		System.out.println(myJsonRequest.get("desporto"));
+	public Map<String, Jogo> showGames(@RequestBody Map<String, String> myJsonRequest) throws SQLException {
+		String desporto = myJsonRequest.get("desporto");
+		return rasbetLN.getJogos(desporto);
 	}
 
 	@RequestMapping(path = "showGamesToAdd")
-	public List<Game> showGamesToAdd(@RequestBody Map<String, String> myJsonRequest) {
-		// Check if there's new games to add
+	public List<GameFutebol> showGamesToAdd() {
 		RestService rest = new RestService(new RestTemplateBuilder());
-		Map<String,Game> games = rest.getPostsPlainJSON();
+		Map<String, GameFutebol> games = rest.getPostsPlainJSON();
+		List<GameFutebol> toAdd = new ArrayList<>();
+		for (GameFutebol g: games.values()){
+			if(!g.completed) {
+				try {
+					if (!rasbetLN.existsGame(g.getId(), "futebol")) {
+						toAdd.add(g);
+					}
+				} catch (SQLException ignored) {
 
-		List<Game> toAdd = new ArrayList<>();
-		for (Game g: games.values()){
-			//Check if game is at Database
-			//LN.exists - add to List if not
+				}
+			}
 		}
 		return toAdd;
 	}
@@ -104,8 +123,14 @@ public class RasbetApplication {
 		String id =  myJsonRequest.get("gameId");
 		String keyB = myJsonRequest.get("keyBookmaker");
 		RestService rest = new RestService(new RestTemplateBuilder());
-		Map<String,Game> mapGames  = rest.getPostsPlainJSON();
-		Game game = mapGames.get(id);
+		Map<String, GameFutebol> mapGames  = rest.getPostsPlainJSON();
+		GameFutebol gameFutebol = mapGames.get(id);
+
+		try {
+			rasbetLN.addGame(gameFutebol,keyB,"futebol");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 
@@ -117,26 +142,60 @@ public class RasbetApplication {
 
 
 	//pre-condition: deposit was valid
-	@PostMapping(path = "deposit")
+	@PostMapping(path = "deposito")
 	public void deposit(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
-		Float value = Float.parseFloat(myJsonRequest.get("value"));
-		//
+		float value = Float.parseFloat(myJsonRequest.get("value"));
+		try {
+			rasbetLN.deposito(id,value);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 		
-	@PostMapping(path = "withdraw")
+	@PostMapping(path = "levantamento")
 	public void withdraw(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
-		Float value = Float.parseFloat(myJsonRequest.get("value"));
-		//
+		float value = Float.parseFloat(myJsonRequest.get("value"));
+		try {
+			rasbetLN.levantamento(id,value);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@PostMapping(path = "addFavorito")
-	public void add(@RequestBody Map<String, String> myJsonRequest) {
+	public void addFavorito(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
 		String fav= myJsonRequest.get("value");
-		//
+		String desporto = myJsonRequest.get("desporto");
+		try {
+			rasbetLN.addFavorito(id,desporto,fav);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
+
+	@PostMapping(path = "removeFavorito")
+	public void removeFavorito(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+		String fav= myJsonRequest.get("value");
+		String desporto = myJsonRequest.get("desporto");
+		try {
+			rasbetLN.removeFavorito(id,desporto,fav);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@RequestMapping("notificacao")
+	public void addNotificacao(){
+		//Get List of favorites
+
+	}
+
+
 
 	@RequestMapping("favorites")
 	public void getFavorites(){

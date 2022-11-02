@@ -1,6 +1,8 @@
 package rasbetDB;
 
-import rasbetLN.*;
+import rasbetLN.GestaoApostas.Aposta;
+import rasbetLN.GestaoApostas.Multipla;
+import rasbetLN.GestaoApostas.Simples;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,55 +17,54 @@ public class DBAposta {
         this.c = connection;
     }
 
-    public Aposta createSimples(Aposta aposta, String idUtilizador, String idOdd) throws SQLException{
-        createAposta(aposta, idUtilizador,0);
+    public void createSimples(String idUtilizador, float montante,int idOdd) throws SQLException{
+        int idAposta = createAposta(idUtilizador,montante);
 
-        String query2 = "INSERT INTO TipoAposta(TipoAposta, idTipoAposta)VALUES(?,?)";
+        String query2 = "INSERT INTO Simples(Aposta_idAposta, Odd_idOdd)VALUES(?,?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
-        pstmt2.setString(1, "simples");
-        pstmt2.setInt(2, 0);
+        pstmt2.setInt(1, idAposta);
+        pstmt2.setInt(2, idOdd);
         pstmt2.execute();
-
-        insereOdd(idOdd, aposta.getIdAposta());
-
-        return new Simples(aposta.getIdAposta(),  aposta.getMontante(),  aposta.getDataAposta(),  idUtilizador, aposta.getResultado());
     }
 
-    public Aposta createMultipla(Aposta aposta, String idUtilizador, List<String> listaOdd) throws SQLException{
-        createAposta(aposta, idUtilizador, 1);
+    public void createMultipla(String idUtilizador,float montante,List<Integer> listaOdd) throws SQLException{
+        int idAposta = createAposta(idUtilizador,montante);
 
-        String query2 = "INSERT INTO TipoAposta(TipoAposta, idTipoAposta)VALUES(?,?)";
+        String query2 = "INSERT INTO Multipla(Aposta_idAposta)VALUES(?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
-        pstmt2.setString(1, "multipla");
-        pstmt2.setInt(2, 1);
+        pstmt2.setInt(1, idAposta);
         pstmt2.execute();
 
-        for (String st : listaOdd){
-            insereOdd(st, aposta.getIdAposta());
+        for (int idOdd : listaOdd){
+            insereOdd(idOdd,idAposta);
         }
 
-        return new Multipla(aposta.getIdAposta(),  aposta.getMontante(),  aposta.getDataAposta(),  idUtilizador, aposta.getResultado());
     }
 
-    public void insereOdd(String idOdd,int idAposta) throws SQLException{
-        String query = "INSERT INTO Aposta_tem_Odd(Aposta_idAposta, Odd_idOdd)VALUES(?,?)";
+    public int createAposta(String idUtilizador,float montante) throws SQLException {
+        String query1 = "INSERT INTO Aposta(Utilizador_email,montante,data)VALUES(?,?,?)";
+        PreparedStatement pstmt1 = c.prepareStatement(query1,Statement.RETURN_GENERATED_KEYS);
+        pstmt1.setString(1, idUtilizador);
+        pstmt1.setFloat(2, montante);
+        pstmt1.setString(3, LocalDateTime.now().toString());
+        pstmt1.execute();
+
+        ResultSet rs = pstmt1.getGeneratedKeys();
+        int idAposta =0;
+        if (rs.next()) idAposta= rs.getInt(1);
+        return idAposta;
+
+    }
+
+    public void insereOdd(int idOdd,int idAposta) throws SQLException{
+        String query = "INSERT INTO Aposta_tem_Odd(Multipla_Aposta_idAposta, Odd_idOdd)VALUES(?,?)";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setInt(1, idAposta);
-        pstmt.setString(2, idOdd);
+        pstmt.setInt(2, idOdd);
         pstmt.execute();
     }
 
-    public void createAposta(Aposta aposta, String idUtilizador, int tipo) throws SQLException {
-        String query1 = "INSERT INTO Aposta(idAposta, montante, date, Utilizador_email, resultado, TipoAposta_idTipoAposta)VALUES(?,?,?,?,?,?)";
-        PreparedStatement pstmt1 = c.prepareStatement(query1);
-        pstmt1.setInt(1, aposta.getIdAposta());
-        pstmt1.setFloat(2, aposta.getMontante());
-        pstmt1.setDate(3, Date.valueOf(aposta.getDataAposta()));
-        pstmt1.setString(4, idUtilizador);
-        pstmt1.setBoolean(5, aposta.getResultado());
-        pstmt1.setInt(6,tipo);
-        pstmt1.execute();
-    }
+
 
     public Aposta getAposta(int idAposta, String email) throws SQLException{
         String query ="SELECT * FROM Aposta WHERE idAposta = ? AND Utilizador_email = ?";
@@ -114,5 +115,4 @@ public class DBAposta {
         }
         return apostasAtivas;
     }
-
 }

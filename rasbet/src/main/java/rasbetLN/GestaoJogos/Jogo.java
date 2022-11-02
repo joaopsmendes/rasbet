@@ -1,26 +1,17 @@
-package rasbetLN;
+package rasbetLN.GestaoJogos;
 
 import Exceptions.EstadoFechadoException;
+import rasbetLN.GestaoApostas.Odd;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Jogo {
     private String idJogo;
     private Desporto desporto;
     private LocalDateTime data;
-    private Map<String,ApostaJogo> apostas;
+    private Map<String, ApostaJogo> apostas;
     private Estado estado;
-
-    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, Estado estado) {
-        this.idJogo = idJogo;
-        this.desporto = desporto;
-        this.data = data;
-        this.estado = estado;
-    }
-
 
     public enum Estado{
         ATIVO(0), //0
@@ -33,6 +24,17 @@ public class Jogo {
             this.value = i;
         }
     }
+
+    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, Estado estado) {
+        this.idJogo = idJogo;
+        this.desporto = desporto;
+        this.data = data;
+        this.estado = estado;
+        this.apostas = new HashMap<>();
+    }
+
+
+
 
 
     public Jogo(String idJogo, Desporto desporto, LocalDateTime data) {
@@ -86,6 +88,4 @@ public class Jogo {
         ApostaJogo apostaJogo = apostas.get(tema);
         apostaJogo.addOdd(odd);
     }
-
-
 }

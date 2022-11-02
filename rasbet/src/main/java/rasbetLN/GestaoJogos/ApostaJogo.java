@@ -1,13 +1,13 @@
-package rasbetLN;
+package rasbetLN.GestaoJogos;
 
-import java.util.ArrayList;
+import rasbetLN.GestaoApostas.Odd;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ApostaJogo {
     private String tema;
-    private Map<String,Odd> mapOdd;
+    private Map<String, Odd> mapOdd;
     private Odd resultado;
 
 

@@ -1,4 +1,6 @@
-package rasbetLN;
+package rasbetLN.GestaoUtilizadores;
+
+import rasbetLN.GestaoApostas.Aposta;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

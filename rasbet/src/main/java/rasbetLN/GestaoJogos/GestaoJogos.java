@@ -1,9 +1,10 @@
-package rasbetLN;
+package rasbetLN.GestaoJogos;
 
 import rasbetDB.DBJogos;
+import rasbetLN.GestaoApostas.Odd;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 public class GestaoJogos implements IGestaoJogos {
@@ -18,8 +19,7 @@ public class GestaoJogos implements IGestaoJogos {
         jogos.adicionarJogo(jogo);
     }
 
-
-    public Map<Integer,Desporto> getDesportos () throws SQLException {
+    public Map<String, Desporto> getDesportos () throws SQLException {
         return jogos.getDesportos();
     }
 
@@ -27,15 +27,20 @@ public class GestaoJogos implements IGestaoJogos {
         jogos.alteraEstado(idJogo, estado);
     }
 
-    public List<Jogo> getJogo(Desporto desporto) throws SQLException{
-        return this.jogos.getJogo(desporto);
+    public Map<String, Jogo> getJogos(Desporto desporto) throws SQLException{
+        return this.jogos.getJogos(desporto);
     }
 
     public Map<String, ApostaJogo> getApostasJogo(Jogo jogo) throws SQLException{
         return this.jogos.apostasJogo(jogo);
     }
 
-    public Map<String,Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
+    public Map<String, Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
         return this.jogos.oddApostaJogo(tema, jogo);
+    }
+
+    @Override
+    public boolean existeJogo(String gameId, Desporto desporto) throws SQLException {
+        return this.jogos.existeJogo(gameId,desporto);
     }
 }

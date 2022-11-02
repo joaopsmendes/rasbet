@@ -1,9 +1,10 @@
-package rasbetLN;
+package rasbetLN.GestaoUtilizadores;
 
 import rasbetDB.DBUtilizadores;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.util.List;
 
 public class GestaoUtilizadores implements IGestaoUtilizadores {
     private DBUtilizadores utilizadores;
@@ -54,7 +55,7 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     @Override
-    public void deposito(String userId,Deposito deposito) throws SQLException {
+    public void deposito(String userId, Deposito deposito) throws SQLException {
         float saldo = utilizadores.getSaldo(userId);
         saldo += deposito.getValor();
         utilizadores.updateSaldo(saldo, userId);
@@ -64,10 +65,10 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     public void levantamento(String userId, Levantamento levantamento) throws SQLException{
         float saldo = utilizadores.getSaldo(userId);
         if (levantamento.getValor() > saldo){
-            /*criar exceção*/
+            throw new SQLException("Saldo insuficiente");
         }
         else {
-            saldo = saldo - levantamento.getValor();
+            saldo -= levantamento.getValor();
             utilizadores.updateSaldo(saldo, userId);
             utilizadores.novoLevantamento(levantamento, userId);
         }
@@ -78,4 +79,14 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
 
+    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
+        return this.utilizadores.getHistTransacoes(userId);
+    }
+
+    @Override
+    public void fazerAposta(String userId, float montante) throws SQLException {
+        float saldo = utilizadores.getSaldo(userId);
+        saldo -= montante;
+        utilizadores.updateSaldo(saldo, userId);
+    }
 }

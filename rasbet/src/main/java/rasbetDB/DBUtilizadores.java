@@ -1,14 +1,11 @@
 package rasbetDB;
 
-import rasbetLN.*;
+import rasbetLN.GestaoUtilizadores.*;
 
-import javax.swing.*;
 import java.sql.*;
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,36 +17,52 @@ public class DBUtilizadores {
     }
 
     public void createApostador(Apostador apostador) throws SQLException {
+
+        createUtilizador(apostador);
+
+        String query2 = "INSERT INTO Apostador(Utilizador_email)VALUES(?)";
+        PreparedStatement pstmt2 = c.prepareStatement(query2);
+        pstmt2.setString(1, apostador.getEmail());
+        pstmt2.execute();
+
+        criarCarteira(apostador.getEmail());
+    }
+
+    public void createUtilizador(Utilizador utilizador) throws SQLException {
         String query1 = "INSERT INTO Utilizador(email, dataNascimento, NIF, pass, nome, telemovel, morada)VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstmt1 = c.prepareStatement(query1);
-        pstmt1.setString(1, apostador.getEmail());
-        pstmt1.setDate(2, Date.valueOf(apostador.getDataNascimento()));
-        pstmt1.setString(3, apostador.getNIF());
-        pstmt1.setString(4, apostador.getPassword());
-        pstmt1.setString(5, apostador.getNome());
-        pstmt1.setString(6, apostador.getTelemovel());
-        pstmt1.setString(7, apostador.getMorada());
+        pstmt1.setString(1, utilizador.getEmail());
+        pstmt1.setDate(2, Date.valueOf(utilizador.getDataNascimento()));
+        pstmt1.setString(3, utilizador.getNIF());
+        pstmt1.setString(4, utilizador.getPassword());
+        pstmt1.setString(5, utilizador.getNome());
+        pstmt1.setString(6, utilizador.getTelemovel());
+        pstmt1.setString(7, utilizador.getMorada());
         pstmt1.execute();
-
-        String query2 = "INSERT INTO TipoUtilizador(Tipo, Utilizador_NIF)VALUES(?,?)";
-        PreparedStatement pstmt2 = c.prepareStatement(query2);
-        pstmt2.setString(1, "Apostador");
-        pstmt2.setString(2, apostador.getNIF());
-        pstmt2.execute();
 
     }
 
-    public Utilizador logIn(String email, String password) throws SQLException {
-        String query = "SELECT Utilizador.email, Utilizador.pass FROM Utilizador WHERE email = ? AND password = ?";
+    public void criarCarteira(String userId) throws SQLException {
+        String query1 = "INSERT INTO Carteira(Utilizador_email,saldo,freebets)VALUES(?,?,?)";
+        PreparedStatement st = c.prepareStatement(query1);
+        st.setString(1, userId);
+        st.setFloat(2,0);
+        st.setFloat(3,5);
+        st.execute();
+
+    }
+
+
+    public void logIn(String email, String password) throws SQLException {
+        String query = "SELECT email, pass FROM Utilizador WHERE email = ? AND pass = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, email);
         ps.setString(2, password);
-        int i = ps.executeUpdate();
-        if (i == 0) {
+        ResultSet rs = ps.executeQuery();
+        if (!rs.next()) {
             throw new SQLException("Utilizador não existe");
         } else {
             System.out.println("Login feito com sucesso");
-            return getUtilizador(email);
         }
     }
 
@@ -63,7 +76,7 @@ public class DBUtilizadores {
         while (rs.next()) {
             String nome = rs.getString("nome");
             String password = rs.getString("pass");
-            LocalDate dataNascimento = rs.getDate("dataNascimento").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate dataNascimento = LocalDate.parse(rs.getString("dataNascimento"));
             String nif = rs.getString("nif");
             String telemovel = rs.getString("telemovel");
             String morada = rs.getString("morada");
@@ -139,7 +152,7 @@ public class DBUtilizadores {
 
     }
 
-
+// Não sei se é preciso
     public Utilizador logOut(String email) throws SQLException { //duvidas
         String query = "SELECT Utilizador.email FROM Utilizador WHERE email = ? ";
         PreparedStatement ps = c.prepareStatement(query);
@@ -162,7 +175,7 @@ public class DBUtilizadores {
     }
 
     public void removeFavorito(String userId, Favorito favorito) throws SQLException {
-        String query = "DELETE FROM Favorito WHERE favorito = ? AND  Utilizador_emial=? AND Desporto_idDesporto = ?";
+        String query = "DELETE FROM Favorito WHERE favorito = ? AND  Utilizador_email=? AND Desporto_idDesporto = ?";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setString(1, favorito.getNome());
         pstmt.setString(2, userId);
@@ -198,35 +211,75 @@ public class DBUtilizadores {
         ps.execute();
     }
 
-    public void novoDeposito(Deposito deposito, String userId) throws SQLException {
-        String query = "INSERT INTO Transação(valor, dataTransacao, Carteira_Utilizador_Email)VALUES (?,?,?)";
-        PreparedStatement ps = c.prepareStatement(query);
-        ps.setFloat(1, deposito.getValor());
-        ps.setString(2, deposito.getData().toString());
+    public int novaTransacao(Transacao transacao,String userId) throws SQLException {
+        String query = "INSERT INTO Transacao(valor, dataTransacao, Utilizador_Email)VALUES (?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+        ps.setFloat(1, transacao.getValor());
+        ps.setString(2, transacao.getData().toString());
         ps.setString(3, userId);
         ps.execute();
+
+        ResultSet rs = ps.getGeneratedKeys();
+        int value = 0;
+        if(rs.next()) value = rs.getInt(1);
+        return value;
+    }
+
+    public void novoDeposito(Deposito deposito, String userId) throws SQLException {
+        int idTransacao = novaTransacao(deposito,userId);
+        String query = "INSERT INTO Deposito(Transacao_idTransacao)VALUES (?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,idTransacao);
+        ps.execute();
+    }
+
+    public void novoLevantamento(Levantamento levantamento, String userId) throws SQLException {
+        int idTransacao = novaTransacao(levantamento,userId);
+        String query = "INSERT INTO Levantamento(Transacao_idTransacao)VALUES (?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,idTransacao);
         ps.execute();
 
     }
 
-    public void novoLevantamento(Levantamento levantamento, String userId) throws SQLException {
-        String query = "INSERT INTO Transação(valor, dataTransacao, Carteira_Utilizador_Email)VALUES (?,?,?)";
+    public Transacao getTransacao(int idT, String userId) throws SQLException{
+        String query ="SELECT * FROM Transacao WHERE idTransacao = ? AND Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setFloat(1, levantamento.getValor());
-        ps.setObject(2, levantamento.getData());
-        ps.setString(3, userId);
-        ps.execute();
+        ps.setInt(1, idT);
+        ps.setString(2, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            float valor = rs.getFloat("valor");
+            LocalDateTime dataTransacao = LocalDateTime.parse(rs.getString("dataTransacao"));
+            int tipo = rs.getInt("TipoTransicao_idTipoTransacao");
+            if(tipo == 0){
+                //seja 0 - Levantamento
+                return new Levantamento(valor, dataTransacao);
+            }
+            else new Deposito(valor, dataTransacao);
+        }
+        return null;
     }
 
     public List<Transacao> getHistTransacoes(String userId) throws SQLException{
         List<Transacao> transacoes = new ArrayList<>();
-        String query = "SELECT * FROM Transacao WHERE Carteira_Utilizador_email = ?";
+        String query = "SELECT * FROM Carteira WHERE Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ps.execute();
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            //
+            int idtransacao = rs.getInt("idTransacao");
+            //float valor = rs.getFloat("valor");
+            //LocalDateTime dataTransacao = rs.getTimestamp("dataTransacao").toLocalDateTime();
+            //int tipo = rs.getInt("TipoTransicao_idTipoTransacao");
+            //if(tipo == 0){
+                //seja 0 - Levantamento
+            //    transacoes.add(new Levantamento(valor, dataTransacao));
+            //}
+            //else transacoes.add(new Deposito(valor, dataTransacao));
+            Transacao a = getTransacao(idtransacao, userId);
+            transacoes.add(a);
         }
         return transacoes;
     }

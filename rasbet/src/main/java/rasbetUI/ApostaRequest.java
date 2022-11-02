@@ -7,7 +7,7 @@ public class ApostaRequest {
 
     String userId;
     float valor;
-    ApostaOpcao []opcoes;
+    Integer []odds;
 
     public String getUserId() {
         return userId;
@@ -25,12 +25,13 @@ public class ApostaRequest {
         this.valor = valor;
     }
 
-    public ApostaOpcao[] getOpcoes() {
-        return opcoes;
+
+    public Integer[] getOdds() {
+        return odds;
     }
 
-    public void setOpcoes(ApostaOpcao[] opcoes) {
-        this.opcoes = opcoes;
+    public void setOdds(Integer[] odds) {
+        this.odds = odds;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class ApostaRequest {
         return "ApostaRequest{" +
                 "userId='" + userId + '\'' +
                 ", valor=" + valor +
-                ", opcoes=" + Arrays.toString(opcoes) +
+                ", odds=" + Arrays.toString(odds) +
                 '}';
     }
 }
