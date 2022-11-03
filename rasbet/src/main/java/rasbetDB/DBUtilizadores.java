@@ -1,5 +1,6 @@
 package rasbetDB;
 
+import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoUtilizadores.*;
 
 import java.sql.*;
@@ -140,7 +141,7 @@ public class DBUtilizadores {
 //    }
 
     public void replaceUtilizador(Utilizador user, String oldEmail) throws SQLException{
-        String query = "UPDATE utilizador SET nome = ?, pass = ?, telemovel = ?, morada = ?, email = ? WHERE email = ?";
+        String query = "UPDATE Utilizador SET nome = ?, pass = ?, telemovel = ?, morada = ?, email = ? WHERE email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, user.getNome());
         ps.setString(2, user.getPassword());
@@ -282,6 +283,61 @@ public class DBUtilizadores {
             transacoes.add(a);
         }
         return transacoes;
+    }
+
+    public void addNotificacao(String userId, Notificacao notificacao) throws SQLException{
+        String query = "INSERT INTO Notificacao(idNotificacao, conteudo, vista, Utilizador_email)VALUES (?,?,?,?) ";
+        PreparedStatement pstmt = c.prepareStatement(query);
+        pstmt.setInt(1, notificacao.getIdNotificacao());
+        pstmt.setString(2, notificacao.getConteudo());
+        pstmt.setBoolean(3, false);
+        pstmt.setString(4, userId);
+        pstmt.execute();
+    }
+
+
+    public void removeNotificacao(String userId, Notificacao notificacao) throws SQLException{
+        String query = "DELETE FROM Notificacao WHERE idNotificacao = ? AND  conteudo = ? AND vista = ? AND Utilizador_email = ?";
+        PreparedStatement pstmt = c.prepareStatement(query);
+        pstmt.setInt(1, notificacao.getIdNotificacao());
+        pstmt.setString(2, notificacao.getConteudo());
+        pstmt.setBoolean(3, notificacao.isVista());
+        pstmt.setString(4, userId);
+        pstmt.execute();
+
+    }
+
+    public List<Notificacao> getListaNotificacao(String userId) throws SQLException{
+        List<Notificacao> lista = new ArrayList<>();
+        String query = "SELECT * FROM Notificacao Where Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int idNotificacao = rs.getInt("idNotificacao");
+            String conteudo = rs.getString("conteudo");
+            boolean vista = rs.getBoolean("vista");
+            //Notificacao noti = new Notificacao( idNotificacao,conteudo,  vista);
+            //lista.add(noti);
+        }
+        return lista;
+    }
+
+    public List<Favorito> getFavoritos(String userId) throws SQLException{
+        List<Favorito> lista = new ArrayList<>();
+        String query ="SELECT * FROM Favorito INNER JOIN Desporto ON Desporto_idDesporto=idDesporto Where Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            String favorito = rs.getString("favorito");
+            int idDesporto = rs.getInt("Desporto_idDesporto");
+            String modalidade = rs.getString("modalidade");
+            Desporto desp = new Desporto(idDesporto, modalidade);
+            Favorito fav = new Favorito(favorito, desp);
+            lista.add(fav);
+        }
+        return lista;
     }
 
 }

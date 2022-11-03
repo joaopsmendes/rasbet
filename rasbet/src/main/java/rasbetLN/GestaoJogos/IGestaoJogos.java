@@ -20,4 +20,6 @@ public interface IGestaoJogos {
     Map<String, Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException;
 
     boolean existeJogo(String gameId, Desporto desporto) throws SQLException;
+
+    void updateResultados(Map<String, String> map, Desporto desporto) throws SQLException;
 }

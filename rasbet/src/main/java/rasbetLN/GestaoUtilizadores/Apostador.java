@@ -13,6 +13,7 @@ public class Apostador extends Utilizador {
     private List<Favorito> listaFavoritos;
     private Map<Integer, Aposta> historicoApostas;
     private Map<Integer, Aposta> apostasAtivas;
+    private List<Notificacao> notificacoes;
 
     public Apostador(String email, String password, LocalDate dataNascimento, String NIF, String nome, String telemovel, String morada) {
         super(email, password, dataNascimento, NIF,nome, telemovel, morada);

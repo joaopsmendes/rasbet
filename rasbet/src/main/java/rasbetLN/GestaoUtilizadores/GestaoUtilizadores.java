@@ -19,7 +19,6 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
 
     public void logIn(String email, String password) throws SQLException{
         utilizadores.logIn(email, password);
-
     }
 
     public void logOut(String email) throws SQLException{
@@ -88,5 +87,12 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         float saldo = utilizadores.getSaldo(userId);
         saldo -= montante;
         utilizadores.updateSaldo(saldo, userId);
+    }
+    public void addNotificacao(String idUser, Notificacao notificacao) throws SQLException{
+        utilizadores.addNotificacao(idUser, notificacao);
+    }
+
+    public List<Favorito> getFavoritos(String idUser) throws SQLException{
+        return utilizadores.getFavoritos(idUser);
     }
 }

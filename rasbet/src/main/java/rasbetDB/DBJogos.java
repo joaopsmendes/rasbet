@@ -31,7 +31,7 @@ public class DBJogos {
         ps.setString(4,jogo.getData().toString());
         ps.execute();
 
-        for (ApostaJogo apostaJogo : jogo.getApostas()){
+        for (ApostaJogo apostaJogo : jogo.getApostas().values()){
             adicionarApostaJogo(apostaJogo,jogo.getIdJogo(),jogo.getDesporto());
         }
     }
@@ -168,5 +168,45 @@ public class DBJogos {
         ps.setInt(2, desporto.getIdDesporto());
         ResultSet rs = ps.executeQuery();
         return rs.next();
+    }
+
+    public void updateVencedor(String idJogo, String vencedor) throws SQLException {
+        String query ="SELECT idOdd FROM Jogo " +
+                "INNER JOIN ApostaJogo ON idJogo=Jogo_idJogo " +
+                "INNER JOIN Odd ON idApostaJogo=ApostaJogo_idApostaJogo " +
+                "WHERE idJogo = ? AND Resultado is NULL AND opcao=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,idJogo);
+        ps.setString(2,vencedor);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            int idOdd = rs.getInt("idOdd");
+            query="UPDATE Odd SET Resultado=1 WHERE idOdd =?";
+            ps = c.prepareStatement(query);
+            ps.setInt(1,idOdd);
+            ps.execute();
+        }
+    }
+    public void updatePerdedores(String idJogo, String vencedor) throws SQLException {
+        String query ="SELECT idOdd FROM Jogo " +
+                "INNER JOIN ApostaJogo ON idJogo=Jogo_idJogo " +
+                "INNER JOIN Odd ON idApostaJogo=ApostaJogo_idApostaJogo " +
+                "WHERE idJogo = ? AND Resultado is NULL AND opcao!=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,idJogo);
+        ps.setString(2,vencedor);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int idOdd = rs.getInt("idOdd");
+            query="UPDATE Odd SET Resultado=0 WHERE idOdd =?";
+            ps = c.prepareStatement(query);
+            ps.setInt(1,idOdd);
+            ps.execute();
+        }
+    }
+
+    public void updateResultado(String idJogo, String vencedor) throws SQLException {
+        updateVencedor(idJogo,vencedor);
+        updatePerdedores(idJogo, vencedor);
     }
 }

@@ -17,6 +17,12 @@ public class ApostaJogo {
         resultado = null;
     }
 
+    public ApostaJogo(ApostaJogo apostaJogo) {
+        this.tema = apostaJogo.getTema();
+        this.mapOdd = apostaJogo.getMapOdd();
+        this.resultado = apostaJogo.getResultado();
+    }
+
     public void addOdd(Odd odd){
         mapOdd.put(odd.getOpcao(),odd);
     }
@@ -30,11 +36,19 @@ public class ApostaJogo {
     }
 
     public Map<String, Odd> getMapOdd() {
-        return mapOdd;
+        Map<String, Odd> map = new HashMap<>();
+        for(Map.Entry<String, Odd> entry : mapOdd.entrySet()){
+            this.mapOdd.put(entry.getKey(), entry.getValue().clone());
+        }
+        return map;
     }
 
     public void setMapOdd(Map<String, Odd> mapOdd) {
-        this.mapOdd = mapOdd;
+        Map<String, Odd> map = new HashMap<>();
+        for(Map.Entry<String, Odd> entry : mapOdd.entrySet()){
+            this.mapOdd.put(entry.getKey(), entry.getValue().clone());
+        }
+        this.mapOdd = map;
     }
 
     public Odd getResultado() {
@@ -45,8 +59,11 @@ public class ApostaJogo {
         this.resultado = resultado;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public ApostaJogo clone(){
+        return new ApostaJogo(this);
     }
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
 }

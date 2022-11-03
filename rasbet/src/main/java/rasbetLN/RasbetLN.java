@@ -89,8 +89,6 @@ public class RasbetLN implements IRasbetLN{
 
         gestaoApostas.createMultipla(userId,montante,listOdds);
         gestaoUtilizadores.fazerAposta(userId,montante);
-
-        //ADD TO DATABASE
     }
 
     public void deposito(String userId, float valor) throws SQLException {
@@ -124,6 +122,20 @@ public class RasbetLN implements IRasbetLN{
         return gestaoJogos.getJogos(d);
     }
 
+    @Override
+    public void updateResultados(Map<String, String> map,String desporto) throws SQLException {
+        Desporto d = mapDesportos.get(desporto);
+        gestaoJogos.updateResultados(map,d);
+    }
 
+    public void addNotificacao(String userId, String conteudo) throws SQLException {
+        Notificacao notificacao = new Notificacao(conteudo,false);
+        gestaoUtilizadores.addNotificacao(userId,notificacao);
+    }
+
+
+    public List<Favorito> getFavorites(String userId) throws SQLException{
+        return gestaoUtilizadores.getFavoritos(userId);
+    }
 
 }

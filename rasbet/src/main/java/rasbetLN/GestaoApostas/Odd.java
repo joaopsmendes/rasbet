@@ -20,20 +20,27 @@ public class Odd {
         this.opcao = opcao;
         this.idJogo = jogo;
     }
-    public float getValor() {
-        return valor;
+
+    public Odd(Odd odd) {
+        this.valor = odd.getValor();
+        this.opcao = odd.getOpcao();
+        this.idJogo = odd.getIdJogo();
     }
 
-    public void setValor(float valor) {
-        this.valor = valor;
+    public float getValor() {
+        return valor;
     }
 
     public String getOpcao() {
         return opcao;
     }
 
-    public void setOpcao(String opcao) {
-        this.opcao = opcao;
+    public String getIdJogo() {
+        return idJogo;
+    }
+
+    public Odd clone(){
+        return new Odd(this);
     }
 
 

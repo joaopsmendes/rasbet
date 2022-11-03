@@ -34,9 +34,6 @@ public class Jogo {
     }
 
 
-
-
-
     public Jogo(String idJogo, Desporto desporto, LocalDateTime data) {
         this.idJogo = idJogo;
         this.desporto = desporto;
@@ -69,12 +66,20 @@ public class Jogo {
         return data;
     }
 
-    public Collection<ApostaJogo> getApostas() {
-        return apostas.values();
+    public Map<String, ApostaJogo> getApostas() {
+        Map<String, ApostaJogo> map = new HashMap<>();
+        for(Map.Entry<String, ApostaJogo> entry : apostas.entrySet()){
+            this.apostas.put(entry.getKey(), entry.getValue().clone());
+        }
+        return map;
     }
 
     public void setApostas(Map<String, ApostaJogo> apostas) {//refazer
-        this.apostas = apostas;
+        Map<String, ApostaJogo> map = new HashMap<>();
+        for(Map.Entry<String, ApostaJogo> entry : apostas.entrySet()){
+            this.apostas.put(entry.getKey(), entry.getValue().clone());
+        }
+        this.apostas = map;
     }
 
     public void updateEstado(Estado estado) throws EstadoFechadoException { //duvidas

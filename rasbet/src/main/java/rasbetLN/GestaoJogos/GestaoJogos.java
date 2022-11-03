@@ -43,4 +43,14 @@ public class GestaoJogos implements IGestaoJogos {
     public boolean existeJogo(String gameId, Desporto desporto) throws SQLException {
         return this.jogos.existeJogo(gameId,desporto);
     }
+
+    @Override
+    public void updateResultados(Map<String, String> map, Desporto desporto) throws SQLException {
+        for (Map.Entry<String, String> entry : map.entrySet()){
+            if(jogos.existeJogo(entry.getKey(),desporto)) {
+                System.out.println(entry.getValue());
+                jogos.updateResultado(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 }

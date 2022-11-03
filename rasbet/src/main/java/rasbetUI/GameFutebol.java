@@ -87,7 +87,6 @@ public class GameFutebol implements Game{
         return b.mapMarkets.values();
     }
     public String whoWon (){
-        if (!completed || scores == null ) return "NOT PLAYED"; // EXCEPTION
         String[] goals = scores.split("x");
         int homeGoals = Integer.parseInt(goals[0]);
         int awayGoals = Integer.parseInt(goals[1]);

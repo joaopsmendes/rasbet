@@ -9,19 +9,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rasbetLN.GestaoJogos.Jogo;
+import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
 @RestController
 public class RasbetApplication {
-
 	IRasbetLN rasbetLN;
 
 	{
@@ -36,11 +37,6 @@ public class RasbetApplication {
 		SpringApplication.run(RasbetApplication.class, args);
 	}
 
-	// Get Games from Database
-	@RequestMapping("games")
-	public void getGames(){
-
-	}
 
 	// Register
 	@PostMapping(path = "register")
@@ -134,10 +130,12 @@ public class RasbetApplication {
 
 	}
 
-
-	@PostMapping(path = "changeProfile")
+	//TODO
+	@PostMapping(path ="changeProfile")
 	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
+
+
 	}
 
 
@@ -188,19 +186,47 @@ public class RasbetApplication {
 			System.out.println(e.getMessage());
 		}
 	}
-
 	@RequestMapping("notificacao")
-	public void addNotificacao(){
+	public void addNotificacao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
+		String id = myJsonRequest.get("userId");
+		String notificacao = myJsonRequest.get("conteudo");
+		try {
+			rasbetLN.addNotificacao(id, notificacao);
+		}catch (SQLException e){
+			System.out.println(e.getMessage());
+		}
 
 	}
 
-
-
 	@RequestMapping("favorites")
-	public void getFavorites(){
+	public List<Favorito> getFavorites(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
+		String id = myJsonRequest.get("userId");
+		try {
+			return rasbetLN.getFavorites(id);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
+
+	@RequestMapping("updateResultados")
+	public void updateResultados(){
+		RestService rest = new RestService(new RestTemplateBuilder());
+		Map<String, GameFutebol> games = rest.getPostsPlainJSON();
+		Map<String,String> map = new HashMap<>();
+		for (GameFutebol g: games.values()){
+			if (g.completed) {
+				String vencedor = g.whoWon();
+				map.put(g.id,vencedor);
+			}
+		}
+		try {
+			rasbetLN.updateResultados(map,"futebol");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }

@@ -27,4 +27,8 @@ public interface IGestaoUtilizadores {
     List<Transacao> getHistTransacoes(String userId) throws SQLException;
 
     void fazerAposta(String userId, float montante) throws SQLException;
+
+    public void addNotificacao(String idUser, Notificacao notificacao) throws SQLException;
+
+    public List<Favorito> getFavoritos(String idUser) throws SQLException;
 }

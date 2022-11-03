@@ -1,11 +1,13 @@
 package rasbetLN;
 
 import rasbetLN.GestaoJogos.Jogo;
+import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetUI.ApostaRequest;
 import rasbetUI.GameFutebol;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface IRasbetLN {
@@ -31,4 +33,11 @@ public interface IRasbetLN {
 
 
     Map<String, Jogo> getJogos(String desporto) throws SQLException;
+
+    void updateResultados(Map<String, String> map,String desporto) throws SQLException;
+
+    void addNotificacao(String userId, String conteudo) throws SQLException;
+
+    List<Favorito> getFavorites(String userId) throws SQLException;
+
 }
