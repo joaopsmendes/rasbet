@@ -4,7 +4,6 @@ package rasbetUI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,6 @@ import java.util.Map;
 @RestController
 public class RasbetApplication {
 	IRasbetLN rasbetLN;
-
 	{
 		try {
 			rasbetLN = new RasbetLN();
@@ -32,11 +30,17 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 	}
+	Map<String,Fornecedor> fornecedorMap = setuFornecedores();
 
 	public static void main(String[] args) {
 		SpringApplication.run(RasbetApplication.class, args);
 	}
 
+	public Map<String,Fornecedor> setuFornecedores(){
+		Map<String,Fornecedor> map = new HashMap<>();
+		map.put("futebol",new FornecedorUcras());
+		return map;
+	}
 
 	// Register
 	@PostMapping(path = "register")
@@ -71,23 +75,16 @@ public class RasbetApplication {
 		}
 	}
 
-	@PostMapping(path = "apostaSimples")
-	public void apostaSimples(@RequestBody ApostaRequest apostaRequest) {
+	@PostMapping(path = "aposta")
+	public void aposta(@RequestBody ApostaRequest apostaRequest) {
 		try {
-			rasbetLN.apostaSimples(apostaRequest);
+			rasbetLN.aposta(apostaRequest);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	@PostMapping(path = "apostaMultipla")
-	public void apostaMultipla(@RequestBody ApostaRequest apostaRequest){
-		try {
-			rasbetLN.apostaMultipla(apostaRequest);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+
 
 	@RequestMapping(path = "showGames")
 	public Map<String, Jogo> showGames(@RequestBody Map<String, String> myJsonRequest) throws SQLException {
@@ -96,34 +93,38 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path = "showGamesToAdd")
-	public List<GameFutebol> showGamesToAdd() {
-		RestService rest = new RestService(new RestTemplateBuilder());
-		Map<String, GameFutebol> games = rest.getPostsPlainJSON();
-		List<GameFutebol> toAdd = new ArrayList<>();
-		for (GameFutebol g: games.values()){
-			if(!g.completed) {
-				try {
-					if (!rasbetLN.existsGame(g.getId(), "futebol")) {
-						toAdd.add(g);
-					}
-				} catch (SQLException ignored) {
+	public Map<String,List<Game>> showGamesToAdd() {
+		Map<String,List<Game>> map = new HashMap<>();
+		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
+			Map<String,Game> games = entry.getValue().getGames();
+			List<Game> toAdd = new ArrayList<>();
+			for (Game g: games.values()){
+				if(!g.concluido()) {
+					try {
+						if (!rasbetLN.existsGame(g.getId(),entry.getKey())) {
+							toAdd.add(g);
+						}
+					} catch (SQLException ignored) {
 
+					}
 				}
 			}
+			map.putIfAbsent(entry.getKey(), toAdd);
 		}
-		return toAdd;
+
+		return map;
 	}
 
 	@PostMapping(path = "addGame")
 	public void addGame(@RequestBody Map<String, String> myJsonRequest) {
 		String id =  myJsonRequest.get("gameId");
 		String keyB = myJsonRequest.get("keyBookmaker");
-		RestService rest = new RestService(new RestTemplateBuilder());
-		Map<String, GameFutebol> mapGames  = rest.getPostsPlainJSON();
-		GameFutebol gameFutebol = mapGames.get(id);
+		String forn = myJsonRequest.get("desporto");
+		Map<String, Game> mapGames  = fornecedorMap.get(forn).getGames();
+		Game game = mapGames.get(id);
 
 		try {
-			rasbetLN.addGame(gameFutebol,keyB,"futebol");
+			rasbetLN.addGame(game,keyB,forn);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -210,23 +211,31 @@ public class RasbetApplication {
 		}
 	}
 
+	@PostMapping("fecharAposta")
+	public void fecharAposta(@RequestBody Map<String, String> myJsonRequest){
+		//Get List of favorites
+		String idUser = myJsonRequest.get("userId");
+		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
+		boolean resultado = Boolean.parseBoolean(myJsonRequest.get("resultado"));
+		try {
+			rasbetLN.fecharAposta(idUser,idAposta,resultado);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 	@RequestMapping("updateResultados")
 	public void updateResultados(){
-		RestService rest = new RestService(new RestTemplateBuilder());
-		Map<String, GameFutebol> games = rest.getPostsPlainJSON();
-		Map<String,String> map = new HashMap<>();
-		for (GameFutebol g: games.values()){
-			if (g.completed) {
-				String vencedor = g.whoWon();
-				map.put(g.id,vencedor);
+		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
+			Map<String,String> map = entry.getValue().updateResultados();
+			try {
+				rasbetLN.updateResultados(map,entry.getKey());
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
 			}
 		}
-		try {
-			rasbetLN.updateResultados(map,"futebol");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
 	}
+
 
 }

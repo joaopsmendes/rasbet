@@ -34,13 +34,14 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public void addGame(GameFutebol gameFutebol, String bookmaker, String desporto) throws SQLException{
+    public void addGame(Game game, String bookmaker, String desporto) throws SQLException{
         Desporto d = mapDesportos.get(desporto);
-        Jogo jogo = new Jogo(gameFutebol.getId(),d, gameFutebol.getHoraComeco());
-        for (Market market : gameFutebol.getMarkets(bookmaker)){
-            for (Outcome outcome : market.getOutcomes()){
+        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco());
+        Map<String,List<Outcome>> mapOdds = game.getOdds(bookmaker);
+        for (Map.Entry<String, List<Outcome>> entry :mapOdds.entrySet()){
+            for (Outcome outcome : entry.getValue()){
                 Odd odd = new Odd(outcome.getPrice(),outcome.getName(),jogo.getIdJogo());
-                jogo.addOdd(market.getKey(),odd);
+                jogo.addOdd(entry.getKey(),odd);
             }
         }
 
@@ -64,31 +65,14 @@ public class RasbetLN implements IRasbetLN{
 
 
 
-    @Override
-    public void apostaSimples(ApostaRequest apostaRequest) throws SQLException {
-        //Apostador apostador = (Apostador) gestaoUtilizadores.getByEmail(apostaRequest.getUserId());
-       // ApostaOpcao apostaOpcao = apostaRequest.getOpcoes()[0];
-
-        String userId = apostaRequest.getUserId();
-        float montante = apostaRequest.getValor();
-        int idOdd = apostaRequest.getOdds()[0];
-
-        gestaoApostas.createSimples(userId,montante,idOdd);
-        gestaoUtilizadores.fazerAposta(userId,montante);
-        //apostador.addAposta(simples);
-
-        //Add to DATABASE
-
-    }
-
-    public void apostaMultipla(ApostaRequest apostaRequest) throws SQLException {
+    public void aposta(ApostaRequest apostaRequest) throws SQLException {
 
         String userId = apostaRequest.getUserId();
         float montante = apostaRequest.getValor();
         List<Integer> listOdds = List.of(apostaRequest.getOdds());
 
-        gestaoApostas.createMultipla(userId,montante,listOdds);
-        gestaoUtilizadores.fazerAposta(userId,montante);
+        gestaoUtilizadores.updateSaldo(userId,montante*-1);
+        gestaoApostas.createAposta(userId,montante,listOdds);
     }
 
     public void deposito(String userId, float valor) throws SQLException {
@@ -136,6 +120,14 @@ public class RasbetLN implements IRasbetLN{
 
     public List<Favorito> getFavorites(String userId) throws SQLException{
         return gestaoUtilizadores.getFavoritos(userId);
+    }
+
+    @Override
+    public void fecharAposta(String userId,int idAposta, boolean resultado) throws SQLException {
+        float value = gestaoApostas.fecharAposta(idAposta,resultado);
+        if(resultado){
+            gestaoUtilizadores.updateSaldo(userId,value);
+        }
     }
 
 }

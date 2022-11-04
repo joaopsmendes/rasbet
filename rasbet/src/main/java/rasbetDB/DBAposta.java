@@ -115,4 +115,59 @@ public class DBAposta {
         }
         return apostasAtivas;
     }
+
+    public void fecharAposta(int idAposta, boolean resultado) throws SQLException {
+        String query = "UPDATE Aposta SET resultado = ? WHERE idAposta = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setBoolean(1,resultado);
+        ps.setInt(2, idAposta);
+        ps.execute();
+    }
+
+    public float getValorAposta(int id) throws SQLException {
+        String query = "SELECT * FROM Simples WHERE Aposta_idAposta=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, id);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            return getValorApostaSimples(id);
+        }
+        else {
+            return getValorApostaMultipla(id);
+        }
+    }
+
+    public float getValorApostaMultipla(int id) throws SQLException {
+        String query = "SELECT valor,montante FROM Aposta INNER JOIN Aposta_tem_Odd ON idAposta=Multipla_Aposta_idAposta " +
+                "INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idAposta = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        System.out.println(id);
+        ps.setInt(1, id);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        float valor = 1, montante = 0;
+        while (rs.next()){
+            if (montante==0) montante=rs.getFloat("montante");
+            System.out.println(valor);
+            float num = rs.getFloat("valor");
+            System.out.println(num);
+            valor*=num;
+        }
+        return valor*montante;
+    }
+    public float getValorApostaSimples(int id) throws SQLException {
+        String query = "SELECT valor,montante FROM Aposta INNER JOIN Simples ON idAposta=Aposta_idAposta " +
+                "INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idAposta = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, id);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        float valor = 0;
+        if (rs.next()){
+            valor = rs.getFloat("valor");
+        }
+        float montante=rs.getFloat("montante");
+        return valor*montante;
+    }
 }

@@ -23,7 +23,7 @@ public class GestaoJogos implements IGestaoJogos {
         return jogos.getDesportos();
     }
 
-    public void alteraEstado(String idJogo, int estado) throws SQLException{
+    public void alteraEstado(String idJogo, Jogo.Estado estado) throws SQLException{
         jogos.alteraEstado(idJogo, estado);
     }
 

@@ -3,7 +3,8 @@ package rasbetLN;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetUI.ApostaRequest;
-import rasbetUI.GameFutebol;
+import rasbetUI.Game;
+import rasbetUI.GameUcras;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -13,13 +14,11 @@ import java.util.Map;
 public interface IRasbetLN {
 
     void validateLogin (String email, String password) throws SQLException;
-    void addGame(GameFutebol gameFutebol, String bookmaker, String desporto) throws SQLException;
+    void addGame(Game game, String bookmaker, String desporto) throws SQLException;
 
     // Class Apostador
     void addFavorito(String id,String desporto,String f) throws SQLException;
 
-    void apostaSimples(ApostaRequest apostaRequest) throws SQLException;
-    void apostaMultipla(ApostaRequest apostaRequest) throws SQLException;
 
     void deposito(String userId, float valor) throws SQLException;
 
@@ -40,4 +39,7 @@ public interface IRasbetLN {
 
     List<Favorito> getFavorites(String userId) throws SQLException;
 
+    public void fecharAposta(String userId,int idAposta, boolean resultado) throws SQLException;
+
+    void aposta(ApostaRequest apostaRequest) throws SQLException;
 }

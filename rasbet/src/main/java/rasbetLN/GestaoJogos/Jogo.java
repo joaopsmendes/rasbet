@@ -67,11 +67,7 @@ public class Jogo {
     }
 
     public Map<String, ApostaJogo> getApostas() {
-        Map<String, ApostaJogo> map = new HashMap<>();
-        for(Map.Entry<String, ApostaJogo> entry : apostas.entrySet()){
-            this.apostas.put(entry.getKey(), entry.getValue().clone());
-        }
-        return map;
+        return apostas;
     }
 
     public void setApostas(Map<String, ApostaJogo> apostas) {//refazer

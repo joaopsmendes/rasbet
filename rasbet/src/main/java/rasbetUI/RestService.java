@@ -17,11 +17,11 @@ public class RestService {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public Map<String, GameFutebol> getPostsPlainJSON() {
+    public Map<String, Game> getGamesUcras() {
         String url = "http://ucras.di.uminho.pt/v1/games/";
-        GameFutebol[] gameFutebols = this.restTemplate.getForObject(url, GameFutebol[].class);
-        Map<String, GameFutebol> mapGame = new HashMap<>();
-        for (GameFutebol g : gameFutebols){
+        GameUcras[] gameUcras = this.restTemplate.getForObject(url, GameUcras[].class);
+        Map<String, Game> mapGame = new HashMap<>();
+        for (GameUcras g : gameUcras){
             System.out.println(g.id);
             mapGame.put(g.id,g);
         }

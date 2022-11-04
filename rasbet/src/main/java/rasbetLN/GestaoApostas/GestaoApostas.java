@@ -19,12 +19,21 @@ public class GestaoApostas implements IGestaoApostas {
         return this.apostas.getAposta(idAposta, email);
     }
 
-    public void createSimples(String userId, float montante,int idOdd) throws SQLException{
-        this.apostas.createSimples(userId,montante ,idOdd);
+
+
+    public void createAposta(String userId,float montante,List<Integer> listaOdd) throws SQLException{
+        if (listaOdd.size() == 1) this.apostas.createSimples(userId,montante,listaOdd.get(0));
+        else this.apostas.createMultipla(userId,montante,listaOdd);
     }
 
-    public void createMultipla(String userId,float montante,List<Integer> listaOdd) throws SQLException{
-        this.apostas.createMultipla(userId,montante,listaOdd);
+    @Override
+    public float fecharAposta(int id, boolean resultado) throws SQLException {
+        apostas.fecharAposta(id,resultado);
+        if (resultado){
+            return apostas.getValorAposta(id);
+        }
+
+        return 0;
     }
 
     public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{

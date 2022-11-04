@@ -36,11 +36,7 @@ public class ApostaJogo {
     }
 
     public Map<String, Odd> getMapOdd() {
-        Map<String, Odd> map = new HashMap<>();
-        for(Map.Entry<String, Odd> entry : mapOdd.entrySet()){
-            this.mapOdd.put(entry.getKey(), entry.getValue().clone());
-        }
-        return map;
+        return mapOdd;
     }
 
     public void setMapOdd(Map<String, Odd> mapOdd) {

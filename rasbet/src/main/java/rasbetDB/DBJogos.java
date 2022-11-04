@@ -153,10 +153,10 @@ public class DBJogos {
     }
 
 
-    public void alteraEstado(String idJogo, int estado) throws SQLException {
+    public void alteraEstado(String idJogo, Jogo.Estado estado) throws SQLException {
         String query = "UPDATE Jogo SET Estado_idEstado = ? WHERE idJogo = ?";
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1, estado);
+        ps.setInt(1, estado.value);
         ps.setString(2, idJogo);
         ps.execute();
     }
@@ -209,4 +209,13 @@ public class DBJogos {
         updateVencedor(idJogo,vencedor);
         updatePerdedores(idJogo, vencedor);
     }
+
+    public void updateOdd(int idOdd, float valor) throws SQLException{
+        String query = "UPDATE Odd SET valor=? WHERE idOdd =?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setFloat(1, valor);
+        ps.setInt(2, idOdd);
+        ps.execute();
+        }
+
 }

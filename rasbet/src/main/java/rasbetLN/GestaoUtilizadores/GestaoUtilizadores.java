@@ -55,22 +55,14 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
 
     @Override
     public void deposito(String userId, Deposito deposito) throws SQLException {
-        float saldo = utilizadores.getSaldo(userId);
-        saldo += deposito.getValor();
-        utilizadores.updateSaldo(saldo, userId);
+        updateSaldo(userId,deposito.getValor());
         utilizadores.novoDeposito(deposito, userId);
     }
 
     public void levantamento(String userId, Levantamento levantamento) throws SQLException{
+        updateSaldo(userId, levantamento.getValor()*-1);
         float saldo = utilizadores.getSaldo(userId);
-        if (levantamento.getValor() > saldo){
-            throw new SQLException("Saldo insuficiente");
-        }
-        else {
-            saldo -= levantamento.getValor();
-            utilizadores.updateSaldo(saldo, userId);
-            utilizadores.novoLevantamento(levantamento, userId);
-        }
+        utilizadores.novoLevantamento(levantamento, userId);
     }
 
     public void updateFreebets(float freebets, String userId) throws SQLException{
@@ -82,12 +74,6 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return this.utilizadores.getHistTransacoes(userId);
     }
 
-    @Override
-    public void fazerAposta(String userId, float montante) throws SQLException {
-        float saldo = utilizadores.getSaldo(userId);
-        saldo -= montante;
-        utilizadores.updateSaldo(saldo, userId);
-    }
     public void addNotificacao(String idUser, Notificacao notificacao) throws SQLException{
         utilizadores.addNotificacao(idUser, notificacao);
     }
@@ -95,4 +81,14 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     public List<Favorito> getFavoritos(String idUser) throws SQLException{
         return utilizadores.getFavoritos(idUser);
     }
+
+    public void updateSaldo(String userId, float value) throws SQLException {
+        float saldo = utilizadores.getSaldo(userId);
+        saldo += value;
+        if (saldo < 0){
+            throw new SQLException("Saldo insuficiente");
+        }
+        utilizadores.updateSaldo(saldo, userId);
+    }
+
 }

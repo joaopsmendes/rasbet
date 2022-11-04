@@ -7,8 +7,8 @@ public interface IGestaoApostas {
     Aposta getAposta(int idAposta, String email) throws SQLException;
     List<Aposta> getHistoricoApostas(String idUser) throws SQLException;
     List<Aposta> getApostasAtivas(String idUser) throws SQLException;
-    void createSimples(String userId, float montante,int idOdd) throws SQLException;
 
-    void createMultipla(String userId,float montante,List<Integer> listaOdd) throws SQLException;
+    float fecharAposta(int id, boolean resultado) throws SQLException;
 
+    void createAposta(String userId, float montante, List<Integer> listOdds) throws SQLException;
 }

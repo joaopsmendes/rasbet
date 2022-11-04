@@ -30,7 +30,8 @@ public class Bookmaker {
     public void setMarkets(Market[] markets) {
         mapMarkets = new HashMap<>();
         for (Market market : markets){
-            mapMarkets.put(market.key,market);
+            if (market.key.equals("h2h"))
+                mapMarkets.put(market.key,market);
         }
     }
 
