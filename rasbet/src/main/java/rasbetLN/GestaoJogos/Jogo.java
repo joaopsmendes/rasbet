@@ -1,6 +1,5 @@
 package rasbetLN.GestaoJogos;
 
-import Exceptions.EstadoFechadoException;
 import rasbetLN.GestaoApostas.Odd;
 
 import java.time.LocalDateTime;
@@ -70,19 +69,7 @@ public class Jogo {
         return apostas;
     }
 
-    public void setApostas(Map<String, ApostaJogo> apostas) {//refazer
-        Map<String, ApostaJogo> map = new HashMap<>();
-        for(Map.Entry<String, ApostaJogo> entry : apostas.entrySet()){
-            this.apostas.put(entry.getKey(), entry.getValue().clone());
-        }
-        this.apostas = map;
-    }
 
-    public void updateEstado(Estado estado) throws EstadoFechadoException { //duvidas
-        if(this.estado.equals(Estado.FECHADO)) throw new EstadoFechadoException("Estado de jogo: FECHADO");
-        else if(this.estado.equals(Estado.SUSPENSO)) this.setEstado(Estado.ATIVO);
-        else this.setEstado(Estado.SUSPENSO);
-    }
 
     public void addOdd(String tema, Odd odd) {
         apostas.putIfAbsent(tema,new ApostaJogo(tema));

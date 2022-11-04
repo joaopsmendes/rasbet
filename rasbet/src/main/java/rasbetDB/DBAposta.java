@@ -77,33 +77,27 @@ public class DBAposta {
             LocalDate dataAposta = rs.getDate("data").toLocalDate();
             boolean resultado = rs.getBoolean("resultado");
             int tipo = rs.getInt("TipoAposta_idTipoAposta");
-            if(tipo == 0){
+            query ="SELECT * FROM Simples WHERE Aposta_idAposta = ?";
+            ps = c.prepareStatement(query);
+            ps.setInt(1, idAposta);
+            rs = ps.executeQuery();
+            if(rs.next()){
                 return new Simples(idAposta, montante, dataAposta, email, resultado);
-            }else if(tipo == 1){
+            }
+            else{
                 return new Multipla(idAposta, montante, dataAposta, email, resultado);
-            }else throw new SQLException("Aposta não existe");
+            }
         }
         throw new SQLException("Can't get aposta");
     }
 
     public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{
-        List<Aposta> historicoApostas = new ArrayList<>();
         String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NULL";
-        PreparedStatement ps = c.prepareStatement(query);
-        ps.setString(1, idUser);
-        ps.execute();
-        ResultSet rs = ps.executeQuery();
-        while(rs.next()){
-            int idAposta = rs.getInt("idAposta");
-             Aposta a = getAposta(idAposta, idUser);
-             historicoApostas.add(a);
-        }
-        return historicoApostas;
+        return getApostas(idUser,query);
     }
 
-    public List<Aposta> getApostasAtivas(String idUser) throws SQLException{
-        List<Aposta> apostasAtivas = new ArrayList<>();
-        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NOT NULL";
+    public List<Aposta> getApostas(String idUser,String query) throws SQLException {
+        List<Aposta> listApostas = new ArrayList<>();
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, idUser);
         ps.execute();
@@ -111,9 +105,14 @@ public class DBAposta {
         while(rs.next()){
             int idAposta = rs.getInt("idAposta");
             Aposta a = getAposta(idAposta, idUser);
-            apostasAtivas.add(a);
+            listApostas.add(a);
         }
-        return apostasAtivas;
+        return listApostas;
+    }
+    public List<Aposta> getApostasAtivas(String idUser) throws SQLException{
+        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NOT NULL";
+        return getApostas(idUser,query);
+
     }
 
     public void fecharAposta(int idAposta, boolean resultado) throws SQLException {
