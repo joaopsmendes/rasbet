@@ -27,6 +27,12 @@ public class GestaoApostas implements IGestaoApostas {
     }
 
     @Override
+    public float cashout(int idAposta) throws SQLException {
+        apostas.cashout(idAposta);
+        return (float) (0.5 * apostas.getMontante(idAposta));
+    }
+
+    @Override
     public float fecharAposta(int id, boolean resultado) throws SQLException {
         apostas.fecharAposta(id,resultado);
         if (resultado){

@@ -90,7 +90,15 @@ public abstract class Utilizador {
         return telemovel;
     }
 
+    public void setTelemovel(String telemovel) {
+        this.telemovel = telemovel;
+    }
+
     public  String getMorada(){
         return morada;
+    }
+
+    public void setMorada(String morada) {
+        this.morada = morada;
     }
 }

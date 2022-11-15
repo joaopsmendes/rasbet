@@ -76,7 +76,6 @@ public class DBAposta {
             float montante = rs.getFloat("montante");
             LocalDate dataAposta = rs.getDate("data").toLocalDate();
             boolean resultado = rs.getBoolean("resultado");
-            int tipo = rs.getInt("TipoAposta_idTipoAposta");
             query ="SELECT * FROM Simples WHERE Aposta_idAposta = ?";
             ps = c.prepareStatement(query);
             ps.setInt(1, idAposta);
@@ -168,5 +167,23 @@ public class DBAposta {
         }
         float montante=rs.getFloat("montante");
         return valor*montante;
+    }
+
+    public void cashout(int idAposta) {
+        //TODO Think about this
+        
+    }
+    
+    public float getMontante(int idAposta) throws SQLException {
+        String query = "SELECT montante FROM Aposta WHERE idAposta= ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, idAposta);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        float montante = 0;
+        if (rs.next()){
+            montante = rs.getFloat("montante");
+        }
+        return montante;
     }
 }

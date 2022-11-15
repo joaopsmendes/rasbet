@@ -11,4 +11,6 @@ public interface IGestaoApostas {
     float fecharAposta(int id, boolean resultado) throws SQLException;
 
     void createAposta(String userId, float montante, List<Integer> listOdds) throws SQLException;
+
+    float cashout(int idAposta) throws SQLException;
 }

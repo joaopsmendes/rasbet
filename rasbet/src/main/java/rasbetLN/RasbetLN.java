@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoApostas.GestaoApostas;
 import rasbetLN.GestaoApostas.IGestaoApostas;
 import rasbetLN.GestaoApostas.Odd;
@@ -75,6 +76,16 @@ public class RasbetLN implements IRasbetLN{
         gestaoApostas.createAposta(userId,montante,listOdds);
     }
 
+    @Override
+    public void historicoApostas(String userId) throws SQLException {
+        List<Aposta> historicoApostas = gestaoApostas.getHistoricoApostas(userId);
+    }
+
+    @Override
+    public void alterarOdd(int idOdd, float valor) throws SQLException {
+        gestaoJogos.alterarOdd(idOdd,valor);
+    }
+
     public void deposito(String userId, float valor) throws SQLException {
         Deposito deposito = new Deposito(valor);
         gestaoUtilizadores.deposito(userId,deposito);
@@ -128,6 +139,36 @@ public class RasbetLN implements IRasbetLN{
         if(resultado){
             gestaoUtilizadores.updateSaldo(userId,value);
         }
+    }
+
+    public void alterarPerfil(String userID, Map<String, String> dados) throws SQLException{
+        Utilizador user = gestaoUtilizadores.getByEmail(userID);
+        if (dados.containsKey("nome")){
+            String name = dados.get("nome");
+            user.setNome(name);
+        }
+
+        if (dados.containsKey("email")){
+            String email = dados.get("email");
+            user.setEmail(email);
+        }
+
+        if (dados.containsKey("telemovel")){
+            String tele = dados.get("telemovel");
+            user.setTelemovel(tele);
+        }
+
+        if (dados.containsKey("morada")){
+            String mrd = dados.get("morada");
+            user.setMorada(mrd);
+        }
+        gestaoUtilizadores.replace(userID, user);
+    }
+
+    public void cashout(int idAposta,String userId) throws SQLException {
+        float montante = gestaoApostas.cashout(idAposta);
+        gestaoUtilizadores.updateSaldo(userId,montante);
+
     }
 
 }

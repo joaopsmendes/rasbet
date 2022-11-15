@@ -53,4 +53,9 @@ public class GestaoJogos implements IGestaoJogos {
             }
         }
     }
+
+    @Override
+    public void alterarOdd(int idOdd, float valor) throws SQLException {
+        this.jogos.updateOdd(idOdd,valor);
+    }
 }

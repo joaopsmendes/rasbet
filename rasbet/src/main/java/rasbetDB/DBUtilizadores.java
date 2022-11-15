@@ -154,7 +154,7 @@ public class DBUtilizadores {
     }
 
 // Não sei se é preciso
-    public Utilizador logOut(String email) throws SQLException { //duvidas
+    public Utilizador logOut(String email) throws SQLException {
         String query = "SELECT Utilizador.email FROM Utilizador WHERE email = ? ";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, email);

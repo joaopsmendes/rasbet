@@ -134,11 +134,15 @@ public class RasbetApplication {
 	//TODO
 	@PostMapping(path ="changeProfile")
 	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("userId");
+		try{
+			rasbetLN.alterarPerfil(id,myJsonRequest);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 
 	}
-
 
 	//pre-condition: deposit was valid
 	@PostMapping(path = "deposito")
@@ -187,7 +191,7 @@ public class RasbetApplication {
 			System.out.println(e.getMessage());
 		}
 	}
-	@RequestMapping("notificacao")
+	@PostMapping("notificacao")
 	public void addNotificacao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		String id = myJsonRequest.get("userId");
@@ -197,7 +201,6 @@ public class RasbetApplication {
 		}catch (SQLException e){
 			System.out.println(e.getMessage());
 		}
-
 	}
 
 	@RequestMapping("favorites")
@@ -236,6 +239,47 @@ public class RasbetApplication {
 			}
 		}
 	}
+
+	// TODO
+	@RequestMapping("historicoAposta")
+	public void hisotoricoAposta(@RequestBody Map<String, String> myJsonRequest){
+		String userId = myJsonRequest.get("userId");
+		try {
+			rasbetLN.historicoApostas(userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	//TODO
+	@PostMapping("alterarOdd")
+	public void alterarOdd(@RequestBody Map<String, String> myJsonRequest){
+		//Get List of favorites
+		int idOdd = Integer.parseInt(myJsonRequest.get("idOdd"));
+		float valor = Float.parseFloat(myJsonRequest.get("valor"));
+		try {
+			rasbetLN.alterarOdd(idOdd,valor);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
+	//TODO
+	@PostMapping("Cashout")
+	public void cashout(@RequestBody Map<String, String> myJsonRequest){
+		//Get List of favorites
+		//String idUser = myJsonRequest.get("idUser");
+		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
+		String userId = myJsonRequest.get("userId");
+
+		try {
+			rasbetLN.cashout(idAposta,userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 
 
 }

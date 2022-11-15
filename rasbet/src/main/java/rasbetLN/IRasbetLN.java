@@ -42,4 +42,12 @@ public interface IRasbetLN {
     public void fecharAposta(String userId,int idAposta, boolean resultado) throws SQLException;
 
     void aposta(ApostaRequest apostaRequest) throws SQLException;
+
+    void historicoApostas(String userId) throws SQLException;
+
+    void alterarOdd(int idOdd, float valor) throws SQLException;
+
+    void cashout(int idAposta,String userId) throws SQLException;
+
+    public void alterarPerfil(String userID, Map<String, String> dados) throws SQLException;
 }
