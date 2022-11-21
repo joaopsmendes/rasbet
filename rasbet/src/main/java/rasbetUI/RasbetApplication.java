@@ -4,7 +4,9 @@ package rasbetUI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rasbetLN.GestaoJogos.Jogo;
@@ -19,7 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootApplication
+@CrossOrigin(origins = "*")
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @RestController
 public class RasbetApplication {
 	IRasbetLN rasbetLN;
@@ -60,18 +63,21 @@ public class RasbetApplication {
 		}
 	}
 
-
-	@RequestMapping(path = "login")
-	public boolean login(@RequestBody Map<String, String> myJsonRequest) {
+	@PostMapping(path = "login")
+	public ResponseEntity<String> login(@RequestBody Map<String, String> myJsonRequest) {
 		String email = myJsonRequest.get("email");
 		String password = myJsonRequest.get("password");
+		System.out.println(email);
+		System.out.println(password);
+
 		try {
 			rasbetLN.validateLogin(email,password);
-			return true;
+			return new ResponseEntity<>("Sucesso", HttpStatus.OK);
 		}
 		catch (SQLException e){
 			System.out.println(e.getMessage());
-			return false;
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
 		}
 	}
 
@@ -156,7 +162,7 @@ public class RasbetApplication {
 		}
 
 	}
-		
+
 	@PostMapping(path = "levantamento")
 	public void withdraw(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("id");
@@ -265,7 +271,7 @@ public class RasbetApplication {
 
 
 	//TODO
-	@PostMapping("Cashout")
+	@PostMapping("cashout")
 	public void cashout(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		//String idUser = myJsonRequest.get("idUser");
