@@ -92,9 +92,8 @@ public class RasbetApplication {
 
 
 
-	@RequestMapping(path = "showGames")
-	public Map<String, Jogo> showGames(@RequestBody Map<String, String> myJsonRequest) throws SQLException {
-		String desporto = myJsonRequest.get("desporto");
+	@RequestMapping(path = "jogos")
+	public Map<String, Jogo> getJogos(@RequestParam(name = "desporto") String desporto) throws SQLException {
 		return rasbetLN.getJogos(desporto);
 	}
 
