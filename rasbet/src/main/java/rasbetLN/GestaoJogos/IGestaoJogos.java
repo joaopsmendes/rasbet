@@ -24,4 +24,6 @@ public interface IGestaoJogos {
     void updateResultados(Map<String, String> map, Desporto desporto) throws SQLException;
 
     void alterarOdd(int idOdd, float valor) throws SQLException;
+
+    Desporto getDesporto(String idJogo) throws SQLException;
 }

@@ -58,4 +58,9 @@ public class GestaoJogos implements IGestaoJogos {
     public void alterarOdd(int idOdd, float valor) throws SQLException {
         this.jogos.updateOdd(idOdd,valor);
     }
+
+    @Override
+    public Desporto getDesporto(String idJogo) throws SQLException {
+        return this.jogos.getDesporto(idJogo);
+    }
 }
