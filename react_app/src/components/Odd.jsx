@@ -15,9 +15,7 @@ function Odd(props) {
     },[])
 
     return (
-        <div className="Odd">
             <button className="OddButton">{nome}<br/>{valor}</button>
-        </div>
     );
   }
 

@@ -14,14 +14,11 @@ function Aposta(props) {
         setNome(props.aposta[0])
     },[]);
 
-    return (
-        <div className="Aposta">
-            <div className="Container">
-                {
-                    odds.length> 0 && odds.map((odd)=>(<Odd odd={odd}/>))
-                }
-            </div>
-        </div>
+    return (<li>
+                    {
+                    odds.length> 0 && odds.map((odd)=>(<Odd key={odd.idOdd} odd={odd}/>))
+                    }
+            </li>   
     );
   }
 

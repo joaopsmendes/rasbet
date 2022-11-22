@@ -12,18 +12,16 @@ function Jogos(props) {
 
 
     const getJogos=async()=>{
-        const response = fetch('http://localhost:8080/jogos?' + new URLSearchParams({
+        const response = await fetch('http://localhost:8080/jogos?' + new URLSearchParams({
                 desporto: "futebol"})
             , {
             method: 'GET',
         });
-        const data = await(await response).json();
-        console.log(data);
+        const data = await response.json();
+        //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
-        console.log(result.length);
+        console.log("RESULT");
         console.log(result);
-
-
         setJogos(result);
 
     }
@@ -52,7 +50,7 @@ function Jogos(props) {
             */}
             {}
                 <div className="Jogos">
-                        {jogos.length > 0 && jogos.map((jogo)=>(<Jogo jogo={jogo}/>))}
+                        {jogos.length > 0 && jogos.map((jogo)=>(<Jogo key={jogo.idJogo} jogo={jogo}/>))}
                 </div>
         
         </div>
