@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import Aposta from "./Aposta";
+import ApostaJogo from "./ApostaJogo";
 
 function Jogo(props) {
 
@@ -12,8 +12,6 @@ function Jogo(props) {
         const date = new Date(props.jogo.data);
         setTime(date.toLocaleString());
         let apostasArray = Object.keys(props.jogo.apostas).map((key) => [key,props.jogo.apostas[key]]); 
-        console.log("APOSTAS ARRAY");
-        console.log(apostasArray);
         setApostas(apostasArray);
     },[])
 
@@ -23,7 +21,7 @@ function Jogo(props) {
             <div className="Container">
                 <ul>
                     {
-                        apostas.length > 0 && apostas.map((aposta)=>(<Aposta key={aposta.tema} aposta={aposta}/>))
+                        apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo key={aposta.tema} aposta={aposta}/>))
                     }
                 </ul>
             </div>

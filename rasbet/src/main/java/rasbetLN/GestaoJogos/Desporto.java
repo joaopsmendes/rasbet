@@ -9,6 +9,18 @@ public class Desporto {
         this.idDesporto = idDesporto;
     }
 
+    public String getModalidade() {
+        return modalidade;
+    }
+
+    public void setModalidade(String modalidade) {
+        this.modalidade = modalidade;
+    }
+
+    public void setIdDesporto(int idDesporto) {
+        this.idDesporto = idDesporto;
+    }
+
     public int getIdDesporto() {
         return idDesporto;
     }

@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetUI.ApostaRequest;
@@ -50,4 +51,6 @@ public interface IRasbetLN {
     void cashout(int idAposta,String userId) throws SQLException;
 
     public void alterarPerfil(String userID, Map<String, String> dados) throws SQLException;
+
+    public List<Desporto> getDesporto();
 }

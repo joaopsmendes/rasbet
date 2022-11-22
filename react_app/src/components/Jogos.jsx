@@ -48,7 +48,6 @@ function Jogos(props) {
                     {props.desportos.map((desporto)=>(<p>{desporto}</p>))}
             </div>}}
             */}
-            {}
                 <div className="Jogos">
                         {jogos.length > 0 && jogos.map((jogo)=>(<Jogo key={jogo.idJogo} jogo={jogo}/>))}
                 </div>

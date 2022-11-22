@@ -5,14 +5,20 @@ import HistoricoApostas from './components/HistoricoApostas';
 import Jogos from './components/Jogos';
 import { useEffect,useState} from 'react';
 import Registo from './components/Registo';
+import Button from '@mui/material/Button';
+import Desportos from './components/Desportos';
+
 function App() {
 
   const [login,setLogin] = useState(false);
   const [showLogin,setShowLogin] = useState(false);
   const [user,setUser] = useState();
 
+  const[desportos,setDesportos] = useState([]);
+
 
   useEffect(()=>{
+    getDesportos();
   },[]);
 
 
@@ -27,15 +33,41 @@ function App() {
   }
   
 
+  const getDesportos=async()=>{
+    const response = await fetch('http://localhost:8080/desportos',{
+        method: 'GET',
+    });
+    
+    const data = await response.json();
+    setDesportos(data);
+
+}
+
+
+  const loginButton = () => {
+    return(
+        <Button
+        onClick={handleShowLogin}
+        variant="contained"
+        color={"primary"}
+        >
+         Loggin
+       </Button>
+       );
+  }
+
+
 
   return (
     <div className="App">
-      {login ? <p>Bem vindo, {user}</p>: <button onClick={handleShowLogin}>Login</button>}
+      <Desportos/>
+      <Registo/>
       {
       showLogin ? 
       <Login changeState={handleLogin} /> 
       :  
       <div>
+        {login ? <p>Bem vindo, {user}</p>: loginButton()}
         <Jogos/>
         <HistoricoApostas nome={user}/>
       </div>

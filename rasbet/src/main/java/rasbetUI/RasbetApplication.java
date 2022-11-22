@@ -6,9 +6,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetLN.IRasbetLN;
@@ -90,6 +90,10 @@ public class RasbetApplication {
 		}
 	}
 
+	@RequestMapping(path = "desportos")
+	public List<Desporto> getJogos(){
+		return rasbetLN.getDesporto();
+	}
 
 
 	@RequestMapping(path = "jogos")

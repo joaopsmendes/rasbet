@@ -172,7 +172,7 @@ public class RasbetLN implements IRasbetLN{
 
     }
 
-    public List<Desporto> getDesporto() throws SQLException {
+    public List<Desporto> getDesporto(){
         ArrayList<Desporto> desportos = new ArrayList<>();
         for (Map.Entry<String,Desporto> entry : mapDesportos.entrySet()){
             desportos.add(entry.getValue());

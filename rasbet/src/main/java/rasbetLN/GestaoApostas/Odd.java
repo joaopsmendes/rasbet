@@ -27,6 +27,10 @@ public class Odd {
         this.idJogo = odd.getIdJogo();
     }
 
+    public int getIdOdd() {
+        return idOdd;
+    }
+
     public float getValor() {
         return valor;
     }
