@@ -218,17 +218,17 @@ public class DBJogos {
         ps.execute();
         }
 
-    public Desporto getDesporto(String idJogo) throws SQLException {
-        String query = "SELECT * FROM Jogo INNER JOIN Desporto ON idDesporto = Desporto_idDesporto WHERE idJogo = ?";
-        PreparedStatement ps = c.prepareStatement(query);
-        ps.setString(1,idJogo);
-        ResultSet rs = ps.executeQuery();
-        if(rs.next()){
-            int idDesporto = rs.getInt("idDesporto");
-            String modalidade = rs.getString("modalidade");
-            Desporto desporto = new Desporto(idDesporto,modalidade);
-            return desporto;
-        }
-        return null;
-    }
+//    public Desporto getDesporto(String idJogo) throws SQLException {
+//        String query = "SELECT * FROM Jogo INNER JOIN Desporto ON idDesporto = Desporto_idDesporto WHERE idJogo = ?";
+//        PreparedStatement ps = c.prepareStatement(query);
+//        ps.setString(1,idJogo);
+//        ResultSet rs = ps.executeQuery();
+//        if(rs.next()){
+//            int idDesporto = rs.getInt("idDesporto");
+//            String modalidade = rs.getString("modalidade");
+//            Desporto desporto = new Desporto(idDesporto,modalidade);
+//            return desporto;
+//        }
+//        return null;
+//    }
 }

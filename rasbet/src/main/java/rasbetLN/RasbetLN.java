@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -169,6 +170,14 @@ public class RasbetLN implements IRasbetLN{
         float montante = gestaoApostas.cashout(idAposta);
         gestaoUtilizadores.updateSaldo(userId,montante);
 
+    }
+
+    public List<Desporto> getDesporto() throws SQLException {
+        ArrayList<Desporto> desportos = new ArrayList<>();
+        for (Map.Entry<String,Desporto> entry : mapDesportos.entrySet()){
+            desportos.add(entry.getValue());
+        }
+        return desportos;
     }
 
 }
