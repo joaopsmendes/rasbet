@@ -7,14 +7,20 @@ import { useEffect,useState} from 'react';
 import Registo from './components/Registo';
 import Button from '@mui/material/Button';
 import Desportos from './components/Desportos';
+import Dialogo from './components/Dialogo';
+
+import { createTheme } from '@mui/material/styles';
+
+
+
 
 function App() {
+  
 
   const [login,setLogin] = useState(false);
-  const [showLogin,setShowLogin] = useState(false);
+  const [signUp,setSignUp] = useState(false);
   const [user,setUser] = useState();
-
-  const[desportos,setDesportos] = useState([]);
+  const [desportos,setDesportos] = useState([]);
 
 
   useEffect(()=>{
@@ -22,14 +28,15 @@ function App() {
   },[]);
 
 
-  const handleShowLogin = () => {
-    setShowLogin(true);
+
+  const handleSignUp = () => {
+    setSignUp(true);
   }
 
   const handleLogin = (user) => {
     setLogin(true);
+    //localStorage.setItem("user",user);
     setUser(user);
-    setShowLogin(false);
   }
   
 
@@ -39,39 +46,22 @@ function App() {
     });
     
     const data = await response.json();
-    setDesportos(data);
-
+    //array to map
+    var result = Object.keys(data).map((key) => data[key].modalidade);
+    console.log("DATA");
+    console.log(result);
+    setDesportos(result);
 }
-
-
-  const loginButton = () => {
-    return(
-        <Button
-        onClick={handleShowLogin}
-        variant="contained"
-        color={"primary"}
-        >
-         Loggin
-       </Button>
-       );
-  }
-
-
-
   return (
     <div className="App">
-      <Desportos/>
-      <Registo/>
-      {
-      showLogin ? 
-      <Login changeState={handleLogin} /> 
-      :  
-      <div>
-        {login ? <p>Bem vindo, {user}</p>: loginButton()}
+      <ResponsiveAppBar pages={desportos} login={login} changeState={handleLogin}/>
+      <div> 
+        {login ? <p>Bem vindo, {user}</p> : <Dialogo  form={<Login changeState={handleLogin}/>} title="Login"/>}
+        {signUp && <Dialogo form={<Registo/>} title="Registo"/>}
         <Jogos/>
+        
         <HistoricoApostas nome={user}/>
       </div>
-    }
     </div>
   );
 }

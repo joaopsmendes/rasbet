@@ -13,18 +13,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright :copyright: '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const theme = createTheme();
 
@@ -54,6 +42,8 @@ const theme = createTheme();
   };
 
   return (
+    <div>
+    {/*}
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -71,7 +61,9 @@ const theme = createTheme();
           <Typography component="h1" variant="h5">
             Registo
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          */
+        }
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>        
             <TextField
               margin="normal"
               required
@@ -93,7 +85,7 @@ const theme = createTheme();
               autoComplete="current-password"
             />
 
-<TextField
+            <TextField
               margin="normal"
               required
               fullWidth
@@ -104,7 +96,7 @@ const theme = createTheme();
               autoComplete="current-password"
             />
 
-<TextField
+              <TextField
               margin="normal"
               required
               fullWidth
@@ -124,11 +116,9 @@ const theme = createTheme();
             >
               Registar
             </Button>
+          </Box> 
+      </div>
             
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
   );
 }
 
