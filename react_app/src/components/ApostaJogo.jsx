@@ -16,6 +16,8 @@ function ApostaJogo(props) {
 
 
     useEffect(()=>{
+        console.log("ApostaJogo");
+        console.log(props.aposta);
         let arrayOdds = Object.keys(props.aposta[1].mapOdd).map((key) => [key,props.aposta[1].mapOdd[key]]);
         setOdds(arrayOdds)
         setNome(props.aposta[0])
@@ -28,7 +30,11 @@ function ApostaJogo(props) {
     const handleChange = (event, newAlignment) => {
       setAlignment(newAlignment);
     };
-  
+
+    
+    const handleClick = (event) => {
+      console.log(event.target.value);
+    }
 
     return (        
             <ToggleButtonGroup
@@ -39,7 +45,7 @@ function ApostaJogo(props) {
               onChange={handleChange}
                     >
                     {
-                    odds.length> 0 && odds.map((odd)=>(<ToggleButton  value={odd[0]}><Odd key={odd[0]} odd={odd}/></ToggleButton>))
+                    odds.length> 0 && odds.map((odd)=>(<ToggleButton onClick={handleClick} value={odd[1].idOdd}><Odd key={odd[0]} odd={odd}/></ToggleButton>))
                     }
             </ToggleButtonGroup>
    

@@ -17,17 +17,11 @@ function Odd(props) {
         setIdOdd(props.odd[1].valor)
     },[])
 
-    const [flag, setFlag] = React.useState(true)
     
-    const handleClick = () => {
-      setFlag(!flag);
-    };
-  
-
     return (
         <p>
             {nome}<br/>{valor}
-          </p>
+        </p>
     );
   }
 

@@ -26,8 +26,9 @@ function HistoricoApostas(props){
     setFlag1(!flag1);
   };
 
-  const paperStyle={padding:'80px 50px', width:600,bmargin:"20px auto"}
-  const paperStyle2={padding:'40px 40px', width:600,bmargin:"20px auto"}
+  //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
+  const paperStyle={height: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}
+  const paperStyle2={padding:'10% 10%', width:"80%", bmargin:"20px auto",flexDirection: "column", alignItems: "center",  justifyContent: "center"}
   
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -49,6 +50,16 @@ function HistoricoApostas(props){
               onChange={handleChange}
                     >
                     <ToggleButton size="string" value="Simples">Simples</ToggleButton>
+                    
+
+            </ToggleButtonGroup>
+            <ToggleButtonGroup
+              fullWidth={true}
+              color="warning"
+              value={alignment}
+              exclusive
+              onChange={handleChange}
+                    >
                     <ToggleButton size="string" value="Multipla">Múltipla</ToggleButton>
 
             </ToggleButtonGroup>
@@ -56,13 +67,14 @@ function HistoricoApostas(props){
             >
           </Fab>
           
-          <Paper elevation={2} style={paperStyle2}>
-            {
-            //<Apostas/>
-            }
-          </Paper>
+
           
         </Stack>
+        <Paper elevation={3} style={paperStyle2} >
+            {
+            //<verApostas/>
+            }
+          </Paper>
         </Paper>
         </Container>
       </div>

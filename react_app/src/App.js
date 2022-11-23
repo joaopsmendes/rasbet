@@ -10,7 +10,7 @@ import Desportos from './components/Desportos';
 import Dialogo from './components/Dialogo';
 
 import { createTheme } from '@mui/material/styles';
-
+import Pagamento from './components/Pagamento';
 
 
 
@@ -61,6 +61,7 @@ function App() {
         <Jogos/>
         
         <HistoricoApostas nome={user}/>
+        <Pagamento/>
       </div>
     </div>
   );

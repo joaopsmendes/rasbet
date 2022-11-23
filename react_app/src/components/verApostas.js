@@ -12,13 +12,9 @@ import { ToggleButton } from "@mui/material";
 import Jogos from './components/Jogos';
 
 function Apostas(){
-    const[apostas, setApostas]=useState({})
-    const getApostas=async()=>{
-        const response = await fetch('http://localhost:8080/historicoAposta' + )
-    }
     return(
         <div className = "Apostas">
-            
+
          </div>   
     )
 }

@@ -1,5 +1,7 @@
 import React,{useState,useEffect} from "react";
 import ApostaJogo from "./ApostaJogo";
+import Container from '@mui/material/Container';
+
 
 function Jogo(props) {
 
@@ -17,14 +19,14 @@ function Jogo(props) {
 
     return (
         <div className="Jogo">
-            <h3>{time}</h3>
-            <div className="Container">
-                <ul>
-                    {
-                        apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo key={aposta.tema} aposta={aposta}/>))
-                    }
-                </ul>
-            </div>
+            <Container maxwidth="md">
+                <h3>{time}</h3>
+                <div className="Container">
+                        {
+                            apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo key={aposta.tema} aposta={aposta}/>))
+                        }
+                </div>
+            </Container>
         </div>
     );
   }
