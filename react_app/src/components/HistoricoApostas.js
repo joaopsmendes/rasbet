@@ -8,8 +8,7 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ToggleButton } from "@mui/material";
-//import Apostas from "./Apostas";
-
+import VerApostas from "./VerApostas";
 
 function HistoricoApostas(props){
   const button = document.getElementById('button');
@@ -72,7 +71,7 @@ function HistoricoApostas(props){
         </Stack>
         <Paper elevation={3} style={paperStyle2} >
             {
-            //<verApostas/>
+            <VerApostas/>
             }
           </Paper>
         </Paper>

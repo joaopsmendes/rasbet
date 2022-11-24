@@ -8,6 +8,7 @@ function Jogos(props) {
     //passar desporto ativo no props
     
     const[jogos,setJogos]=useState({})
+    const[aposta,setAposta]=useState([])
 
 
 
@@ -28,17 +29,21 @@ function Jogos(props) {
 
     useEffect(()=>{    
         
-        getJogos();
-
-
-
-        
+        getJogos(); 
         //fetch('http://localhost:8080/api/jogos')
         //.then(response=>response.json())
         //.then(data=>setJogos(data))
 
-
     },[])
+
+
+    const addAposta = (newAposta) => {
+        console.log("addAposta");
+        console.log(newAposta);
+        var newApostaArray = aposta.slice();
+        newApostaArray.filter((aposta)=>aposta.idOdd==newAposta.idOdd).length==0 && newApostaArray.push(newAposta);
+        setAposta([...aposta, newAposta]);
+    }
 
 
     return (
@@ -49,9 +54,11 @@ function Jogos(props) {
             </div>}}
             */}
                 <div className="Jogos">
-                        {jogos.length > 0 && jogos.map((jogo)=>(<Jogo key={jogo.idJogo} jogo={jogo}/>))}
+                        {jogos.length > 0 && jogos.map((jogo)=>(<Jogo addAposta={addAposta} key={jogo.idJogo} jogo={jogo}/>))}
                 </div>
-        
+                <ul>
+                    {aposta.length > 0 && aposta.map((aposta)=>(<p>{aposta.opcao}</p>))}
+                </ul>
         </div>
     );
   }

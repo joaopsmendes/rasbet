@@ -17,13 +17,17 @@ function Jogo(props) {
         setApostas(apostasArray);
     },[])
 
+
+
+
+
     return (
         <div className="Jogo">
             <Container maxwidth="md">
                 <h3>{time}</h3>
                 <div className="Container">
                         {
-                            apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo key={aposta.tema} aposta={aposta}/>))
+                            apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo addAposta={props.addAposta} key={aposta.tema} aposta={aposta}/>))
                         }
                 </div>
             </Container>

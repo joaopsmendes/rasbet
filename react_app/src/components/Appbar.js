@@ -50,6 +50,7 @@ function ResponsiveAppBar(props) {
     <AppBar position="static">
       <Container maxWidth="false">
         <Toolbar disableGutters>
+
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
@@ -108,8 +109,8 @@ function ResponsiveAppBar(props) {
           
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton onClick={handleOpenUserMenu} size="large"  color="inherit" aria-label="menu" sx={{ p: 0}}>
+                <MenuIcon />
               </IconButton>
             </Tooltip>
             <Menu

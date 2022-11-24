@@ -34,7 +34,7 @@ function VerApostas(props){
 
     return(
         <div className = "verApostas">
-            {//apostas.length > 0 && apostas.map((aposta)=>(<Apostas key={aposta.idAposta} aposta={aposta}/>))
+            {//apostas.length > 0 && apostas.map((aposta)=>(<verApostas key={aposta.idAposta} aposta={aposta}/>))
             }
          </div>   
     );

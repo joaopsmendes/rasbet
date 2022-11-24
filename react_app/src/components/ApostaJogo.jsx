@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import Odd from "./Odd";
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ToggleButton } from "@mui/material";
+import { getAccordionDetailsUtilityClass, ToggleButton } from "@mui/material";
 
 
 
@@ -31,9 +31,16 @@ function ApostaJogo(props) {
       setAlignment(newAlignment);
     };
 
+
+    const addAposta = (newAposta) => {
+      console.log(typeof newAposta);
+      newAposta["nome"] = nome;
+      props.addAposta(newAposta);
+    }
+
     
     const handleClick = (event) => {
-      console.log(event.target.value);
+      odds.map((odd)=>{if(odd[1].idOdd==event.target.value){addAposta(odd[1])}})
     }
 
     return (        
