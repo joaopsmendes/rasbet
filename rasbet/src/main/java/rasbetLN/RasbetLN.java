@@ -78,8 +78,8 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public void historicoApostas(String userId) throws SQLException {
-        List<Aposta> historicoApostas = gestaoApostas.getHistoricoApostas(userId);
+    public List<Aposta> historicoApostas(String userId) throws SQLException {
+        return gestaoApostas.getHistoricoApostas(userId);
     }
 
     @Override

@@ -3,22 +3,20 @@ package rasbetLN.GestaoApostas;
 import java.time.LocalDate;
 
 public abstract class Aposta {
-    private static int idAposta=0;
+
+    private int idAposta;
     private float montante;
     private LocalDate dataAposta;
     boolean resultado;
 
 
-    private static int GetId() {
-        return idAposta++;
+    public Aposta(int idAposta, float montante, LocalDate dataAposta, boolean resultado) {
+        this.idAposta = idAposta;
+        this.montante = montante;
+        this.dataAposta = dataAposta;
+        this.resultado = resultado;
     }
 
-    public Aposta(float montante) {
-        this.idAposta = GetId();
-        this.montante = montante;
-        this.dataAposta = LocalDate.now();
-        resultado = false;
-    }
     public Aposta() {
         this.idAposta = 0;
         this.montante = 0;

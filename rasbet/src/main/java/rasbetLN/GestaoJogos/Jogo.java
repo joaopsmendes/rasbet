@@ -12,6 +12,7 @@ public class Jogo {
     private Map<String, ApostaJogo> apostas;
     private Estado estado;
 
+
     public enum Estado{
         ATIVO(0), //0
         SUSPENSO(1) , //1
@@ -76,4 +77,11 @@ public class Jogo {
         ApostaJogo apostaJogo = apostas.get(tema);
         apostaJogo.addOdd(odd);
     }
+
+
+    public void setIdApostaJogo(String tema, int idApostaJogo) {
+        ApostaJogo apostaJogo = apostas.get(tema);
+        apostaJogo.setIdApostaJogo(idApostaJogo);
+    }
+
 }

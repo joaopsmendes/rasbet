@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ApostaJogo {
+
+    private int idApostaJogo;
     private String tema;
     private Map<String, Odd> mapOdd;
     private Odd resultado;
@@ -39,12 +41,20 @@ public class ApostaJogo {
         return mapOdd;
     }
 
+    public void setIdApostaJogo(int idApostaJogo) {
+        this.idApostaJogo = idApostaJogo;
+    }
+
     public void setMapOdd(Map<String, Odd> mapOdd) {
         Map<String, Odd> map = new HashMap<>();
         for(Map.Entry<String, Odd> entry : mapOdd.entrySet()){
             this.mapOdd.put(entry.getKey(), entry.getValue().clone());
         }
         this.mapOdd = map;
+    }
+
+    public int getIdApostaJogo() {
+        return idApostaJogo;
     }
 
     public Odd getResultado() {

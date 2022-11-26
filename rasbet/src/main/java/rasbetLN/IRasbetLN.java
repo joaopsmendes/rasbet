@@ -1,11 +1,11 @@
 package rasbetLN;
 
+import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
-import rasbetUI.GameUcras;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -44,7 +44,7 @@ public interface IRasbetLN {
 
     void aposta(ApostaRequest apostaRequest) throws SQLException;
 
-    void historicoApostas(String userId) throws SQLException;
+    List<Aposta> historicoApostas(String userId) throws SQLException;
 
     void alterarOdd(int idOdd, float valor) throws SQLException;
 

@@ -10,13 +10,8 @@ public class Multipla extends Aposta {
 
     private List<Odd> oddList;
 
-    public Multipla(float montante, List<Odd> oddList) {
-        super(montante);
-        this.oddList = oddList;
-    }
-
-    public Multipla(int idAposta, float montante, LocalDate data, String idUtilizador, boolean resultado) {
-        super();
+    public Multipla(int idAposta, float montante, LocalDate data, boolean resultado){
+        super(idAposta,montante,data,resultado);
     }
 
     public float valorOdd(){

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
@@ -200,7 +201,7 @@ public class RasbetApplication {
 			System.out.println(e.getMessage());
 		}
 	}
-	@PostMapping("notificacao")
+	@PostMapping(path="notificacao")
 	public void addNotificacao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		String id = myJsonRequest.get("userId");
@@ -212,7 +213,7 @@ public class RasbetApplication {
 		}
 	}
 
-	@RequestMapping("favorites")
+	@RequestMapping(path="favorites")
 	public List<Favorito> getFavorites(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		String id = myJsonRequest.get("userId");
@@ -223,7 +224,7 @@ public class RasbetApplication {
 		}
 	}
 
-	@PostMapping("fecharAposta")
+	@PostMapping(path="fecharAposta")
 	public void fecharAposta(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		String idUser = myJsonRequest.get("userId");
@@ -237,7 +238,7 @@ public class RasbetApplication {
 	}
 
 
-	@RequestMapping("updateResultados")
+	@RequestMapping(path="updateResultados")
 	public void updateResultados(){
 		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
 			Map<String,String> map = entry.getValue().updateResultados();
@@ -250,17 +251,16 @@ public class RasbetApplication {
 	}
 
 	// TODO
-	@RequestMapping("historicoAposta")
-	public void hisotoricoAposta(@RequestBody Map<String, String> myJsonRequest){
-		String userId = myJsonRequest.get("userId");
+	@RequestMapping(path= "historicoAposta")
+	public List<Aposta> historicoAposta(@RequestParam(name = "userId") String userId){
 		try {
-			rasbetLN.historicoApostas(userId);
+			return rasbetLN.historicoApostas(userId);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	//TODO
-	@PostMapping("alterarOdd")
+	@PostMapping(path="alterarOdd")
 	public void alterarOdd(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		int idOdd = Integer.parseInt(myJsonRequest.get("idOdd"));
@@ -274,7 +274,7 @@ public class RasbetApplication {
 
 
 	//TODO
-	@PostMapping("cashout")
+	@PostMapping(path="cashout")
 	public void cashout(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		//String idUser = myJsonRequest.get("idUser");

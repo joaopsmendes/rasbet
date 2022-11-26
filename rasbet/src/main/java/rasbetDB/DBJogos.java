@@ -49,11 +49,11 @@ public class DBJogos {
         if (rs.next()) idApostaJogo = rs.getInt(1);
 
         for (Odd odd : apostaJogo.getMapOdd().values()){
-            adicionarOdd(odd, apostaJogo.getTema(),idApostaJogo);
+            adicionarOdd(odd,idApostaJogo);
         }
     }
 
-    public void adicionarOdd(Odd odd,String tema,int idApostaJogo) throws SQLException {
+    public void adicionarOdd(Odd odd,int idApostaJogo) throws SQLException {
         String query = "INSERT INTO Odd(opcao,valor,ApostaJogo_idApostaJogo)VALUES(?,?,?)";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1,odd.getOpcao());
@@ -78,10 +78,9 @@ public class DBJogos {
     }
 
     public Map<String,Jogo> getJogos(Desporto desporto) throws SQLException{
-        List<Jogo> jogos = new ArrayList<>();
         Map<String,Jogo> map = new HashMap<>();
         //String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
-        String query2 ="SELECT Jogo.idJogo, Jogo.Data,Odd.idOdd,ApostaJogo.tema,Odd.valor,Jogo.Desporto_idDesporto,Odd.opcao FROM ApostaJogo " +
+        String query2 ="SELECT Jogo.idJogo, Jogo.Data,Odd.idOdd,ApostaJogo.idApostaJogo,ApostaJogo.tema,Odd.valor,Jogo.Desporto_idDesporto,Odd.opcao FROM ApostaJogo " +
                 "INNER JOIN Jogo ON Jogo.idJogo=ApostaJogo.Jogo_idJogo AND Jogo.Desporto_idDesporto=ApostaJogo.Jogo_Desporto_idDesporto " +
                 "INNER JOIN Odd ON Odd.ApostaJogo_idApostaJogo=ApostaJogo.idApostaJogo WHERE Jogo.Desporto_idDesporto = ? and Jogo.Estado_idEstado = ?";
         PreparedStatement ps = c.prepareStatement(query2);
@@ -98,12 +97,11 @@ public class DBJogos {
             String tema = rs.getString("tema");
             String opcao = rs.getString("opcao");
 
+
             map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data, Jogo.Estado.ATIVO));
-            System.out.println(tema+ " " + idOdd);
             Jogo jogo = map.get(idJogo);
 
             Odd odd = new Odd(idOdd,valorOdd, opcao, jogo.getIdJogo());
-            System.out.println(odd);
             jogo.addOdd(tema,odd);
 
         }
@@ -121,6 +119,11 @@ public class DBJogos {
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             String tema = rs.getString("tema");
+            int idApostaJogo = rs.getInt("idApostaJogo");
+
+
+            System.out.println("Aposta Jogo " + idApostaJogo);
+
 
             ApostaJogo apostaJogo = new ApostaJogo(tema);
 

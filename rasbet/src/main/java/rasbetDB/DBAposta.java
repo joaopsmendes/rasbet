@@ -81,10 +81,10 @@ public class DBAposta {
             ps.setInt(1, idAposta);
             rs = ps.executeQuery();
             if(rs.next()){
-                return new Simples(idAposta, montante, dataAposta, email, resultado);
+                return new Simples(idAposta, montante, dataAposta, resultado);
             }
             else{
-                return new Multipla(idAposta, montante, dataAposta, email, resultado);
+                return new Multipla(idAposta, montante, dataAposta, resultado);
             }
         }
         throw new SQLException("Can't get aposta");
