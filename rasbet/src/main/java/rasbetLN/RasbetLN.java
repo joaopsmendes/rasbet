@@ -180,4 +180,9 @@ public class RasbetLN implements IRasbetLN{
         return desportos;
     }
 
+    @Override
+    public double getSaldo(String userId) throws SQLException {
+        return gestaoUtilizadores.getSaldo(userId);
+    }
+
 }

@@ -50,7 +50,9 @@ public interface IRasbetLN {
 
     void cashout(int idAposta,String userId) throws SQLException;
 
-    public void alterarPerfil(String userID, Map<String, String> dados) throws SQLException;
+    void alterarPerfil(String userID, Map<String, String> dados) throws SQLException;
 
-    public List<Desporto> getDesporto();
+    List<Desporto> getDesporto();
+
+    double getSaldo(String userId) throws SQLException;
 }

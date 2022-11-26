@@ -31,4 +31,6 @@ public interface IGestaoUtilizadores {
     public List<Favorito> getFavoritos(String idUser) throws SQLException;
 
     void updateSaldo(String userId, float value) throws SQLException;
+
+    double getSaldo(String userId) throws SQLException;
 }

@@ -288,6 +288,16 @@ public class RasbetApplication {
 		}
 	}
 
+	@PostMapping(path="getSaldo")
+	public double getSaldo(@RequestBody Map<String, String> myJsonRequest) {
+		String id = myJsonRequest.get("id");
+		try {
+			return rasbetLN.getSaldo(id);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 
 
