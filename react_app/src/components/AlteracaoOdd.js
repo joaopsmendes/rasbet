@@ -93,7 +93,7 @@ function AlteracaoOdd() {
               <h1> Odd alterada com sucesso.</h1>
               <h1> Pretende REATIVAR o jogo? </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
               <Button variant="Contained" onClick={closeAll}>SIM</Button>
-              <Button variant="Contained" onClick={handleClickOpen1}>NÂO</Button>
+              <Button variant="Contained" onClick={handleClose2}>NÂO</Button>
             </DialogContent>
           </Dialog>
     </div>

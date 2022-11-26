@@ -56,6 +56,14 @@ useEffect(()=>{
   const user = JSON.parse(sessionStorage.getItem('user'));
   getSaldo(user);
 },[])
+
+
+const changeProfile = async(email) =>{
+  const response = await fetch('http://localhost:8080/changeProfile?' + new URLSearchParams({
+    userId: email})
+    ,{
+      method: 'GET',
+  });
   
     return(
        
