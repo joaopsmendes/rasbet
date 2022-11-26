@@ -35,7 +35,11 @@ function HistoricoApostas(props){
 
   return(
     
-      <div className = "Historico"> 
+      <div className = "Historico">
+      <Button variant="text" //onClick={handleClickOpen}
+      >
+        Historico de Apostas
+      </Button>
       <Container>
       <Paper elevation={3} style={paperStyle}>
         <h1> {props.nome} </h1>

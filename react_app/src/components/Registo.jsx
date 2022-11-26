@@ -19,6 +19,8 @@ const theme = createTheme();
  function Registo(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    /*
     const data = new FormData(event.currentTarget);
     const email = data.get('E-mail');
     const password = data.get('Palavra-Pass');
@@ -26,18 +28,23 @@ const theme = createTheme();
     const nif = data.get('NIF');
 
 
-    const response = await fetch('http://localhost:8080/registo', {
+    const response = await fetch('http://localhost:8080/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
           },
         body: JSON.stringify({
-            "E-mail": email, 
-            "Palavra-Passe": password,
-            "Data de Nascimento": datanascimento,
-            "NIF": nif,
+            "email": email, 
+            "password": password,
+            "date": datanascimento,
+            "nif": nif,
+            "nome":nome,
+            "morada":morada,
+            "telemovel":telemovel
         }),
     });
+    */
+    
 
   };
 
@@ -71,7 +78,7 @@ const theme = createTheme();
               id="email"
               label="E-mail"
               name="email"
-              autoComplete="email"
+              type="email"
               autoFocus
             />
             <TextField
@@ -82,18 +89,37 @@ const theme = createTheme();
               label="Palavra-Passe"
               type="password"
               id="password"
-              autoComplete="current-password"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="username"
+              label="Username"
+              id="username"
+            />
+
+          <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="date"
+              id="date"
+              label="Data de Nascimento"
+              type="date"
+              defaultValue={new Date().toLocaleDateString()}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
 
             <TextField
               margin="normal"
               required
               fullWidth
-              name="datanascimento"
-              label="Data de Nascimento"
-              type="datanascimento"
-              id="datanascimento"
-              autoComplete="current-password"
+              name="morada"
+              label="Morada"
+              id="morada"
             />
 
               <TextField
@@ -102,10 +128,20 @@ const theme = createTheme();
               fullWidth
               name="nif"
               label="NIF"
-              type="nif"
               id="nif"
-              autoComplete="current-password"
             />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="telemovel"
+              label="Telemóvel"
+              id="telemovel"
+              type="tel"
+            />
+
+            
 
             
             <Button

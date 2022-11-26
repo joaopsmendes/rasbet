@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState}  from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -35,6 +35,8 @@ const theme = createTheme();
 
  function Login(props) {
 
+  const [error,setError]=useState(false);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,18 +56,16 @@ const theme = createTheme();
     });
     if(response.status === 200){
         console.log("Login Success")
-
         props.changeState(email);
     }
     else{
-        console.log("Login Failed")
+        setError(true);
     }
   };
 
 
-  const handleSignUp = () => {
-    props.changeState();
-  }
+
+
 
   return (<div>
          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -77,6 +77,7 @@ const theme = createTheme();
               label="Email Address"
               name="email"
               autoComplete="email"
+              error={error}
               autoFocus
             />
             <TextField
@@ -87,30 +88,27 @@ const theme = createTheme();
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              error={error}
+              helperText={error ? "Email ou password inválidos" : " "}
             />
+            {/*
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Iniciar Sessão
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link component="button" variant="body2"
-                  onClick={handleSignUp}>
-                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>

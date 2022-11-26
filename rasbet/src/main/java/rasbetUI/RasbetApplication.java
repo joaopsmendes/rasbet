@@ -288,7 +288,7 @@ public class RasbetApplication {
 		}
 	}
 
-	@PostMapping(path="getSaldo")
+	@RequestMapping(path="getSaldo")
 	public double getSaldo(@RequestParam(name = "userId") String userId) {
 		try {
 			return rasbetLN.getSaldo(userId);

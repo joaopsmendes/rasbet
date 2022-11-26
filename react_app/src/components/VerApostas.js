@@ -15,26 +15,28 @@ function VerApostas(props){
     const[apostas, setApostas]=useState({})
 
     const getApostas=async(email)=>{
-        const response = await fetch('http://localhost:8080/historicoAposta', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-          },
-        body: JSON.stringify({
-            "email": email, 
-        }),
-     });
+        console.log(email)
+        const response = await fetch('http://localhost:8080/historicoAposta?' + new URLSearchParams({
+                userId: email})
+            , {
+            method: 'GET',
+        });
+
 
         const data = await response.json();
+        setApostas(data);
+        console.log(data);
     }
 
     useEffect(()=>{
-        //getApostas(props.email);
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        getApostas(user);
     },[])
 
     return(
         <div className = "verApostas">
-            {//apostas.length > 0 && apostas.map((aposta)=>(<verApostas key={aposta.idAposta} aposta={aposta}/>))
+            {
+            apostas.length > 0 && apostas.map((aposta)=>(<p>{aposta.idAposta}</p>))
             }
          </div>   
     );

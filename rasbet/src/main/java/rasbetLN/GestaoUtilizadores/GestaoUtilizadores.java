@@ -91,4 +91,9 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.updateSaldo(saldo, userId);
     }
 
+    @Override
+    public double getSaldo(String userId) throws SQLException {
+        return utilizadores.getSaldo(userId);
+    }
+
 }

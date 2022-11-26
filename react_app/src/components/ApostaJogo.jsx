@@ -28,20 +28,27 @@ function ApostaJogo(props) {
 
 
     const handleChange = (event, newAlignment) => {
+      if (newAlignment != null) {
+        odds.map((odd)=>{if(odd[1].idOdd==newAlignment){addOdd(odd[1])}})
+      }
+      else{
+        odds.map((odd)=>{if(odd[1].idOdd==alignment){removeOdd(odd[1].idOdd)}})
+      }
       setAlignment(newAlignment);
+      console.log(alignment);
     };
 
 
-    const addAposta = (newAposta) => {
-      console.log(typeof newAposta);
+    const addOdd = (newAposta) => {
       newAposta["nome"] = nome;
-      props.addAposta(newAposta);
+      props.addOdd(newAposta);
     }
 
-    
-    const handleClick = (event) => {
-      odds.map((odd)=>{if(odd[1].idOdd==event.target.value){addAposta(odd[1])}})
+    const removeOdd = (newAposta) => {
+      props.removeOdd(newAposta);
     }
+
+  
 
     return (        
             <ToggleButtonGroup
@@ -52,7 +59,7 @@ function ApostaJogo(props) {
               onChange={handleChange}
                     >
                     {
-                    odds.length> 0 && odds.map((odd)=>(<ToggleButton onClick={handleClick} value={odd[1].idOdd}><Odd key={odd[0]} odd={odd}/></ToggleButton>))
+                    odds.length> 0 && odds.map((odd)=>(<ToggleButton value={odd[1].idOdd}><Odd key={odd[0]} odd={odd}/></ToggleButton>))
                     }
             </ToggleButtonGroup>
    

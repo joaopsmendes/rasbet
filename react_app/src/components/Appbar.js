@@ -19,7 +19,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ToggleButton } from "@mui/material";
 
 //const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Perfil', 'Histórico',  'Terminar Sessão'];
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,6 +44,15 @@ function ResponsiveAppBar(props) {
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
+
+  const handleSettings = (event) => {
+    if(event.target.innerText === 'Histórico'){
+      props.historico();
+    }
+    if(event.target.innerText === 'Perfil'){
+      props.perfil();
+    }
+  }
 
   
   return (
@@ -130,14 +139,14 @@ function ResponsiveAppBar(props) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleSettings}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           :<div>
-            <Dialogo  form={<Login changeState={props.changeState}/>} title="Login"/>
+            <Dialogo form={<Login changeState={props.changeState}/>} title="Login"/>
             <Dialogo form={<Registo/>} title="Registo"/>
            </div>
            }

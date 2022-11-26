@@ -8,9 +8,11 @@ import Registo from './components/Registo';
 import Button from '@mui/material/Button';
 import Desportos from './components/Desportos';
 import Dialogo from './components/Dialogo';
+import AlteracaoOdd from './components/AlteracaoOdd'
 
 import { createTheme } from '@mui/material/styles';
 import Pagamento from './components/Pagamento';
+import AlterarInformacaoUser from './components/AlterarInformacaoUser';
 
 
 
@@ -21,10 +23,18 @@ function App() {
   const [signUp,setSignUp] = useState(false);
   const [user,setUser] = useState();
   const [desportos,setDesportos] = useState([]);
+  const [showJogos,setShowJogos] = useState(true);
+  const [showHistorico,setShowHistorico] = useState(false);
+  const [showPerfil,setShowPerfil] = useState(false);
+
 
 
   useEffect(()=>{
     getDesportos();
+    if (sessionStorage.getItem('user')){
+      setLogin(true);
+      setUser(JSON.parse(sessionStorage.getItem('user')));
+    }
   },[]);
 
 
@@ -35,10 +45,22 @@ function App() {
 
   const handleLogin = (user) => {
     setLogin(true);
-    //localStorage.setItem("user",user);
+    sessionStorage.setItem('user',JSON.stringify(user));
     setUser(user);
   }
   
+   const handleHistorico = () => {
+    setShowJogos(false);
+    setShowPerfil(false);
+    setShowHistorico(true);
+  }
+
+  const handlePerfil = () => {
+    setShowJogos(false);
+    setShowPerfil(true);
+    setShowHistorico(false);
+  }
+
 
   const getDesportos=async()=>{
     const response = await fetch('http://localhost:8080/desportos',{
@@ -54,14 +76,15 @@ function App() {
 }
   return (
     <div className="App">
-      <ResponsiveAppBar pages={desportos} login={login} changeState={handleLogin}/>
+      <ResponsiveAppBar pages={desportos} login={login} changeState={handleLogin} historico={handleHistorico} perfil={handlePerfil}/>
       <div> 
+        {showPerfil && <AlterarInformacaoUser/>}
         {login ? <p>Bem vindo, {user}</p> : <Dialogo  form={<Login changeState={handleLogin}/>} title="Login"/>}
         {signUp && <Dialogo form={<Registo/>} title="Registo"/>}
-        <Jogos/>
-        
-        <HistoricoApostas nome={user}/>
+        {showJogos && <Jogos userId={user}/>}
+        {showHistorico && <HistoricoApostas nome={user}/>}
         <Pagamento/>
+        <AlteracaoOdd/>
       </div>
     </div>
   );

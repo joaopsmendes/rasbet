@@ -23,11 +23,11 @@ function Jogo(props) {
 
     return (
         <div className="Jogo">
-            <Container maxwidth="md">
+            <Container sx={{ maxWidth:'70%'  }}maxWidth="false">
                 <h3>{time}</h3>
                 <div className="Container">
                         {
-                            apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo addAposta={props.addAposta} key={aposta.tema} aposta={aposta}/>))
+                            apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo removeOdd={props.removeOdd} addOdd={props.addOdd} key={aposta.tema} aposta={aposta}/>))
                         }
                 </div>
             </Container>
