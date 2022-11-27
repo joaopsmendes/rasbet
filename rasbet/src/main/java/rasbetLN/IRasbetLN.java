@@ -47,7 +47,7 @@ public interface IRasbetLN {
 
     List<Aposta> historicoApostas(String userId) throws SQLException;
 
-    List<Transacao> historicoTransacoes(String userId) throws SQLException;
+    Map<String, List<Transacao>> historicoTransacoes(String userId) throws SQLException;
 
     void alterarOdd(int idOdd, float valor) throws SQLException;
 
@@ -57,5 +57,7 @@ public interface IRasbetLN {
 
     List<Desporto> getDesporto();
 
-    Map<String, Double> getSaldo(String userId) throws SQLException;
+    Map<String, Float>  getSaldo(String userId) throws SQLException;
+
+    Map<String, String> infoUser(String userId)throws SQLException;
 }

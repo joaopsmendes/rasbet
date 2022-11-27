@@ -262,7 +262,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path= "historicoTransacoes")
-	public List<Transacao> historicoTransacoes(@RequestParam(name = "userId") String userId){
+	public Map<String, List<Transacao>> historicoTransacoes(@RequestParam(name = "userId") String userId){
 		try {
 			return rasbetLN.historicoTransacoes(userId);
 		} catch (SQLException e) {
@@ -299,14 +299,25 @@ public class RasbetApplication {
 		}
 	}
 
-	@RequestMapping(path="getSaldo")
-	public Map<String, Double > getSaldo(@RequestParam(name = "userId") String userId) {
+	@RequestMapping(path="saldo")
+	public Map<String, Float > getSaldo(@RequestParam(name = "userId") String userId) {
 		try {
 			return rasbetLN.getSaldo(userId);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@RequestMapping(path="info")
+	public Map<String, String> info(@RequestParam(name = "userId") String userId) {
+		try {
+			return rasbetLN.infoUser(userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 
 
 

@@ -10,7 +10,12 @@ public class Simples extends Aposta {
     private Odd odd;
 
 
-    public Simples(int idAposta, float montante, LocalDate data, boolean resultado, List<Odd> oddList) {
-        super(idAposta,montante,data,resultado,oddList);
+    public Simples(int idAposta, float montante, LocalDate data, boolean resultado,Odd odd) {
+        super(idAposta,montante,data,resultado);
+        this.odd = odd;
+    }
+
+    public Odd getOdd() {
+        return odd;
     }
 }

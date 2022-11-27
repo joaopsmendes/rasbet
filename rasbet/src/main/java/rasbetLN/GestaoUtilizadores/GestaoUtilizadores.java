@@ -71,7 +71,7 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
 
-    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
+    public Map<String, List<Transacao>> getHistTransacoes(String userId) throws SQLException{
         return this.utilizadores.getHistTransacoes(userId);
     }
 
@@ -92,10 +92,18 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.updateSaldo(saldo, userId);
     }
 
+    public float getSaldo(String userId) throws SQLException {
+        return utilizadores.getSaldo(userId);
+    }
+
     @Override
-    public Map<String, Double> getSaldo(String userId) throws SQLException {
-//        return utilizadores.getSaldo(userId);
-        return null;
+    public Map<String, Float> getSaldoFreeBets(String userId) throws SQLException {
+        return utilizadores.getSaldoFreeBets(userId);
+    }
+
+    @Override
+    public Map<String, String> info(String userId) throws SQLException{
+        return utilizadores.info(userId);
     }
 
 

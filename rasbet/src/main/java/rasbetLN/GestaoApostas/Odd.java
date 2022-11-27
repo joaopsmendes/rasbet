@@ -1,30 +1,28 @@
 package rasbetLN.GestaoApostas;
 
-import rasbetLN.GestaoJogos.Jogo;
-
 public class Odd {
     private int idOdd;
     private float valor;
     private String opcao;
-    private String idJogo;
+    private String desJogo;
 
-    public Odd(int idOdd,float valor, String opcao, String jogo) {
+    public Odd(int idOdd,float valor, String opcao, String desJogo) {
         this.idOdd = idOdd;
         this.valor = valor;
         this.opcao = opcao;
-        this.idJogo = jogo;
+        this.desJogo = desJogo;
     }
 
     public Odd(float valor, String opcao, String jogo) {
         this.valor = valor;
         this.opcao = opcao;
-        this.idJogo = jogo;
+        this.desJogo = jogo;
     }
 
     public Odd(Odd odd) {
         this.valor = odd.getValor();
         this.opcao = odd.getOpcao();
-        this.idJogo = odd.getIdJogo();
+        this.desJogo = odd.getDesJogo();
     }
 
     public int getIdOdd() {
@@ -39,8 +37,8 @@ public class Odd {
         return opcao;
     }
 
-    public String getIdJogo() {
-        return idJogo;
+    public String getDesJogo() {
+        return desJogo;
     }
 
     public Odd clone(){

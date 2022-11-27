@@ -16,7 +16,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +83,7 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public List<Transacao> historicoTransacoes(String userId) throws SQLException {
+    public Map<String, List<Transacao>> historicoTransacoes(String userId) throws SQLException {
         return gestaoUtilizadores.getHistTransacoes(userId);
     }
 
@@ -188,12 +187,13 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public Map<String, Double> getSaldo(String userId) throws SQLException {
-        Map<String, Double> map = new HashMap<>();
-        for (Map.Entry<String,Desporto> entry : mapDesportos.entrySet()){
+    public Map<String, Float> getSaldo(String userId) throws SQLException {
+        return gestaoUtilizadores.getSaldoFreeBets(userId);
+    }
 
-        }
-        return map;
+    @Override
+    public Map<String, String> infoUser(String userId) throws SQLException{
+        return gestaoUtilizadores.info(userId);
     }
 
 }

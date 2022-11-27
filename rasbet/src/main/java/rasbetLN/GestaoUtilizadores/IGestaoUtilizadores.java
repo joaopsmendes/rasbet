@@ -25,7 +25,7 @@ public interface IGestaoUtilizadores {
 
     void updateFreebets(float freebets, String userId) throws SQLException;
 
-    List<Transacao> getHistTransacoes(String userId) throws SQLException;
+    Map<String, List<Transacao>> getHistTransacoes(String userId) throws SQLException;
 
     void addNotificacao(String idUser, Notificacao notificacao) throws SQLException;
 
@@ -33,5 +33,9 @@ public interface IGestaoUtilizadores {
 
     void updateSaldo(String userId, float value) throws SQLException;
 
-    Map<String,Double> getSaldo(String userId) throws SQLException;
+    float getSaldo(String userId) throws SQLException;
+
+    Map<String, Float> getSaldoFreeBets(String userId) throws SQLException;
+
+    Map<String, String> info(String userId)throws SQLException;
 }

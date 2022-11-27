@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DBAposta {
     private Connection c;
@@ -77,15 +78,26 @@ public class DBAposta {
             float montante = rs.getFloat("montante");
             LocalDate dataAposta = rs.getDate("data").toLocalDate();
             boolean resultado = rs.getBoolean("resultado");
-            List<Odd> listaOdd = getListaOdd(idAposta);
             query ="SELECT * FROM Simples WHERE Aposta_idAposta = ?";
             ps = c.prepareStatement(query);
             ps.setInt(1, idAposta);
             rs = ps.executeQuery();
             if(rs.next()){
-                return new Simples(idAposta, montante, dataAposta, resultado,listaOdd);
+                int idOdd = rs.getInt("Odd_idOdd");
+                query ="SELECT opcao,valor,tema,titulo FROM Odd INNER JOIN ApostaJogo ON ApostaJogo_idApostaJogo=idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idOdd = ?";
+                ps = c.prepareStatement(query);
+                ps.setInt(1, idOdd);
+                rs = ps.executeQuery();
+                rs.next();
+                String opcao = rs.getString("opcao");
+                float valor = rs.getFloat("valor");
+                String tema = rs.getString("tema");
+                String titulo = rs.getString("titulo");
+                String s = titulo + " - " + tema;
+                return new Simples(idAposta, montante, dataAposta, resultado,new Odd(idOdd, valor, opcao, s));
             }
             else{
+                List<Odd> listaOdd = getListaOdd(idAposta);
                 return new Multipla(idAposta, montante, dataAposta, resultado,listaOdd);
             }
         }
@@ -93,28 +105,27 @@ public class DBAposta {
     }
     public List<Odd> getListaOdd(int idAposta) throws SQLException{
         List<Odd> listaOdd = new ArrayList<>();
-        String query ="SELECT idAposta,idOdd, opcao, valor, tema,titulo, idJogo FROM Aposta_tem_Odd INNER JOIN Apost\n" +
-                "a ON idAposta=Multipla_Aposta_idAposta INNER JOIN Odd ON Odd_idOdd=idOdd INNER JOIN ApostaJogo ON Apost\n" +
-                "aJogo_idApostaJogo=idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idAposta = ?";
+        String query ="SELECT idAposta,idOdd, opcao, valor, tema,titulo, idJogo FROM Aposta_tem_Odd INNER JOIN Aposta\n" +
+                " ON idAposta=Multipla_Aposta_idAposta INNER JOIN Odd ON Odd_idOdd=idOdd INNER JOIN ApostaJogo ON \n" +
+                "ApostaJogo_idApostaJogo=idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idAposta = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1, idAposta);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            int idOdd = rs.getInt("Odd_idOdd");
+            int idOdd = rs.getInt("idOdd");
             String opcao = rs.getString("opcao");
             float valor = rs.getFloat("valor");
             String tema = rs.getString("tema");
             String titulo = rs.getString("titulo");
-            String idJogo = rs.getString("idJogo");
-
-            listaOdd.add(new Odd(idOdd, valor, opcao, idJogo));
+            String s = titulo + " - " + tema;
+            listaOdd.add(new Odd(idOdd, valor, opcao, s));
         }
         return listaOdd;
     }
 
 
     public List<Aposta> getHistoricoApostas(String idUser) throws SQLException{
-        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ? AND resultado is NULL";
+        String query = "SELECT * FROM Aposta WHERE Utilizador_email = ?";
         return getApostas(idUser,query);
     }
 

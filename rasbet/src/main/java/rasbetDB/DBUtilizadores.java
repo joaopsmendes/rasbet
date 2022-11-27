@@ -7,8 +7,11 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DBUtilizadores {
     private Connection c;
@@ -196,6 +199,23 @@ public class DBUtilizadores {
         throw new SQLException("Saldo não encontrado.");
     }
 
+    public Map<String,Float> getSaldoFreeBets(String userId) throws SQLException {
+        String query = "SELECT saldo,freebets FROM Carteira WHERE Utilizador_email = ? ";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        Map<String,Float> map = new HashMap<>();
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            float saldo = rs.getFloat("saldo");
+            float freebets = rs.getFloat("freebets");
+            map.put("saldo",saldo);
+            map.put("freebets",freebets);
+            return map;
+        }
+        throw new SQLException("Saldo não encontrado.");
+    }
+
+
     public void updateSaldo(float saldo, String userId) throws SQLException {
         String query = "UPDATE Carteira SET saldo = ? WHERE Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
@@ -243,46 +263,36 @@ public class DBUtilizadores {
 
     }
 
-    public Transacao getTransacao(int idT, String userId) throws SQLException{
-        String query ="SELECT * FROM Transacao WHERE idTransacao = ? AND Utilizador_email = ?";
+    public void getTransacao(int idT, LocalDateTime dataTransacao, float valor,Map<String,List<Transacao>> map) throws SQLException{
+        String query ="SELECT * FROM Deposito WHERE Transacao_idTransacao = ? ";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1, idT);
-        ps.setString(2, userId);
         ResultSet rs = ps.executeQuery();
-        while (rs.next()){
-            float valor = rs.getFloat("valor");
-            LocalDateTime dataTransacao = LocalDateTime.parse(rs.getString("dataTransacao"));
-            int tipo = rs.getInt("TipoTransicao_idTipoTransacao");
-            if(tipo == 0){
-                //seja 0 - Levantamento
-                return new Levantamento(valor, dataTransacao);
-            }
-            else new Deposito(valor, dataTransacao);
+        if (rs.next()){
+            map.get("deposito").add(new Deposito(valor, dataTransacao));
         }
-        return null;
+        else{
+             map.get("levantamento").add(new Levantamento(valor, dataTransacao));
+        }
     }
 
-    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
-        List<Transacao> transacoes = new ArrayList<>();
-        String query = "SELECT * FROM Carteira WHERE Utilizador_email = ?";
+    public Map<String,List<Transacao>> getHistTransacoes(String userId) throws SQLException{
+        Map<String,List<Transacao>> map = new HashMap<>();
+        map.put("deposito",new ArrayList<>());
+        map.put("levantamento",new ArrayList<>());
+        String query = "SELECT * FROM Transacao WHERE Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ps.execute();
         ResultSet rs = ps.executeQuery();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         while(rs.next()){
             int idtransacao = rs.getInt("idTransacao");
-            //float valor = rs.getFloat("valor");
-            //LocalDateTime dataTransacao = rs.getTimestamp("dataTransacao").toLocalDateTime();
-            //int tipo = rs.getInt("TipoTransicao_idTipoTransacao");
-            //if(tipo == 0){
-                //seja 0 - Levantamento
-            //    transacoes.add(new Levantamento(valor, dataTransacao));
-            //}
-            //else transacoes.add(new Deposito(valor, dataTransacao));
-            Transacao a = getTransacao(idtransacao, userId);
-            transacoes.add(a);
+            LocalDateTime dataTransacao = LocalDateTime.parse(rs.getString("dataTransacao"),formatter);
+            float valor = rs.getFloat("valor");
+            getTransacao(idtransacao,dataTransacao,valor,map);
         }
-        return transacoes;
+        return map;
     }
 
     public void addNotificacao(String userId, Notificacao notificacao) throws SQLException{
@@ -339,5 +349,29 @@ public class DBUtilizadores {
         }
         return lista;
     }
+    /*
+    | email
+            | dataNascimento
+            | NIF
+            | pass
+            | nome
+            | Telemovel
+            | Morada
 
+*/
+    public Map<String, String> info(String userId) throws SQLException{
+        Map<String,String> map = new HashMap<>();
+        String query ="SELECT * FROM Utilizador Where Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            map.put("date",rs.getString("dataNascimento"));
+            map.put("nif",rs.getString("NIF"));
+            map.put("username",rs.getString("nome"));
+            map.put("telemovel",rs.getString("Telemovel"));
+            map.put("morada",rs.getString("Morada"));
+        }
+        return map;
+    }
 }
