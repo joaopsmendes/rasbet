@@ -12,6 +12,7 @@ import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
+import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
 
@@ -259,6 +260,16 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@RequestMapping(path= "historicoTransacoes")
+	public List<Transacao> historicoTransacoes(@RequestParam(name = "userId") String userId){
+		try {
+			return rasbetLN.historicoTransacoes(userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	//TODO
 	@PostMapping(path="alterarOdd")
 	public void alterarOdd(@RequestBody Map<String, String> myJsonRequest){
@@ -289,7 +300,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="getSaldo")
-	public double getSaldo(@RequestParam(name = "userId") String userId) {
+	public Map<String, Double > getSaldo(@RequestParam(name = "userId") String userId) {
 		try {
 			return rasbetLN.getSaldo(userId);
 		} catch (SQLException e) {

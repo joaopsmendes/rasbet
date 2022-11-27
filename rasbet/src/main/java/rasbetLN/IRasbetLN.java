@@ -4,6 +4,7 @@ import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
+import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
 
@@ -46,6 +47,8 @@ public interface IRasbetLN {
 
     List<Aposta> historicoApostas(String userId) throws SQLException;
 
+    List<Transacao> historicoTransacoes(String userId) throws SQLException;
+
     void alterarOdd(int idOdd, float valor) throws SQLException;
 
     void cashout(int idAposta,String userId) throws SQLException;
@@ -54,5 +57,5 @@ public interface IRasbetLN {
 
     List<Desporto> getDesporto();
 
-    double getSaldo(String userId) throws SQLException;
+    Map<String, Double> getSaldo(String userId) throws SQLException;
 }

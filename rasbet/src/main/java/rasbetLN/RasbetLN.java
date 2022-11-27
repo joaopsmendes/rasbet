@@ -16,6 +16,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +82,12 @@ public class RasbetLN implements IRasbetLN{
     public List<Aposta> historicoApostas(String userId) throws SQLException {
         return gestaoApostas.getHistoricoApostas(userId);
     }
+
+    @Override
+    public List<Transacao> historicoTransacoes(String userId) throws SQLException {
+        return gestaoUtilizadores.getHistTransacoes(userId);
+    }
+
 
     @Override
     public void alterarOdd(int idOdd, float valor) throws SQLException {
@@ -181,8 +188,12 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public double getSaldo(String userId) throws SQLException {
-        return gestaoUtilizadores.getSaldo(userId);
+    public Map<String, Double> getSaldo(String userId) throws SQLException {
+        Map<String, Double> map = new HashMap<>();
+        for (Map.Entry<String,Desporto> entry : mapDesportos.entrySet()){
+
+        }
+        return map;
     }
 
 }

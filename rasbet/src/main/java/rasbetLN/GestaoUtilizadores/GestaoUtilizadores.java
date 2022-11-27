@@ -5,6 +5,7 @@ import rasbetDB.DBUtilizadores;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class GestaoUtilizadores implements IGestaoUtilizadores {
     private DBUtilizadores utilizadores;
@@ -92,8 +93,10 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     @Override
-    public double getSaldo(String userId) throws SQLException {
-        return utilizadores.getSaldo(userId);
+    public Map<String, Double> getSaldo(String userId) throws SQLException {
+//        return utilizadores.getSaldo(userId);
+        return null;
     }
+
 
 }

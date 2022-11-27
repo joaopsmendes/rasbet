@@ -2,6 +2,7 @@ package rasbetLN.GestaoUtilizadores;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface IGestaoUtilizadores {
     void newApostador(Apostador apostador) throws SQLException;
@@ -26,11 +27,11 @@ public interface IGestaoUtilizadores {
 
     List<Transacao> getHistTransacoes(String userId) throws SQLException;
 
-    public void addNotificacao(String idUser, Notificacao notificacao) throws SQLException;
+    void addNotificacao(String idUser, Notificacao notificacao) throws SQLException;
 
-    public List<Favorito> getFavoritos(String idUser) throws SQLException;
+    List<Favorito> getFavoritos(String idUser) throws SQLException;
 
     void updateSaldo(String userId, float value) throws SQLException;
 
-    double getSaldo(String userId) throws SQLException;
+    Map<String,Double> getSaldo(String userId) throws SQLException;
 }
