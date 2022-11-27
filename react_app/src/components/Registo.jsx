@@ -139,11 +139,7 @@ const theme = createTheme();
               label="Telemóvel"
               id="telemovel"
               type="tel"
-            />
-
-            
-
-            
+            />            
             <Button
               type="submit"
               fullWidth

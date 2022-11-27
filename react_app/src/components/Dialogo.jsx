@@ -14,7 +14,6 @@ const theme = createTheme({
       dark: '#ef6c00',
       contrastText: 'rgba(0, 0, 0, 0.87)'
     }
-
 }});
 
 
@@ -35,7 +34,6 @@ function Dialogo(props) {
       <Button variant="text" color="custom" onClick={handleClickOpen}>
         {props.title}
       </Button>
-
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>

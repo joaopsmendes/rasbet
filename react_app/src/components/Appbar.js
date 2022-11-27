@@ -22,8 +22,8 @@ import { ToggleButton } from "@mui/material";
 const settings = ['Perfil', 'Histórico',  'Terminar Sessão'];
 
 function ResponsiveAppBar(props) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] =useState(null);
   const [alignment, setAlignment] = useState();
 
 
@@ -52,7 +52,12 @@ function ResponsiveAppBar(props) {
     if(event.target.innerText === 'Perfil'){
       props.perfil();
     }
+    if(event.target.innerText === 'Terminar Sessão'){
+      props.logout();
+    }
+    handleCloseUserMenu();
   }
+
 
   
   return (
@@ -80,16 +85,7 @@ function ResponsiveAppBar(props) {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
+
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -114,7 +110,7 @@ function ResponsiveAppBar(props) {
             </ToggleButtonGroup>
           </Box>
           {
-            props.login ?
+            props.isLogin ?
           
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -146,7 +142,7 @@ function ResponsiveAppBar(props) {
             </Menu>
           </Box>
           :<div>
-            <Dialogo form={<Login changeState={props.changeState}/>} title="Login"/>
+            <Dialogo form={<Login login={props.login}/>} title="Login"/>
             <Dialogo form={<Registo/>} title="Registo"/>
            </div>
            }

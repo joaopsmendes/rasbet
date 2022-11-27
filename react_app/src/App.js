@@ -12,7 +12,7 @@ import AlteracaoOdd from './components/AlteracaoOdd'
 
 import { createTheme } from '@mui/material/styles';
 import Pagamento from './components/Pagamento';
-import AlterarInformacaoUser from './components/AlterarInformacaoUser';
+import AlterarInformacaoUser from './components/AlterarInformacaoUser2';
 
 
 
@@ -48,6 +48,12 @@ function App() {
     sessionStorage.setItem('user',JSON.stringify(user));
     setUser(user);
   }
+
+  const handleLogout = () => {
+    setLogin(false);
+    sessionStorage.removeItem('user');
+    setUser(null);
+  }
   
    const handleHistorico = () => {
     setShowJogos(false);
@@ -76,7 +82,7 @@ function App() {
 }
   return (
     <div className="App">
-      <ResponsiveAppBar pages={desportos} login={login} changeState={handleLogin} historico={handleHistorico} perfil={handlePerfil}/>
+      <ResponsiveAppBar pages={desportos} isLogin={login} login={handleLogin} historico={handleHistorico} perfil={handlePerfil} logout={handleLogout}/>
       <div> 
         {showPerfil && <AlterarInformacaoUser/>}
         {login ? <p>Bem vindo, {user}</p> : <Dialogo  form={<Login changeState={handleLogin}/>} title="Login"/>}

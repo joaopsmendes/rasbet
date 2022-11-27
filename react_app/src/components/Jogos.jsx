@@ -95,7 +95,7 @@ function Jogos(props) {
         <TextField margin="normal" required fullWidth name="Montante" label="Montante" id="Montante" 
             type="number"
             defaultValue={1}
-            error={montante <= 0}
+            error={montante <= 0 }
             helperText={montante <= 0 ? 'Valor inválido' : ' '}
             onChange={(e)=>setMontante(e.target.value)}
             InputProps={{ inputProps: { min: 0.01 } }} />
@@ -120,15 +120,6 @@ function Jogos(props) {
             headers: {
                 'Content-Type': 'application/json',
             },
-
-
-            /*
-            String userId;
-            float valor;
-            Integer []odds;
-            
-
-            */
             body: JSON.stringify({
                 userId: user,
                 valor: montante,
@@ -167,7 +158,7 @@ function Jogos(props) {
                                         {montanteField()}
                                     </Grid>
                                 </Grid>
-                                <Button onClick={doAposta} variant="contained">
+                                <Button disabled={montante <= 0} onClick={doAposta} variant="contained">
                                     Apostar
                                 </Button>
                             </Grid>
