@@ -111,7 +111,7 @@ function Transacoes(props) {
         <div className="transacoes">
             <Grid container spacing={2}>
                 <Grid item xs={6} >
-                    <Button color={deposito ? "primary" : "inherit"} onClick={handleClickDeposito} variant="contained" size="" value="Deposito">Depósito</Button>
+                    <Button color={deposito ? "primary" : "inherit"} onClick={handleClickDeposito} variant="contained" size="md" value="Deposito">Depósito</Button>
                 </Grid>
                 <Grid item xs={6} >
                     <Button color={levantamento ? "primary" : "inherit"} onClick={handleClickLevantamento} variant="contained" size="md" value="Levantamento">Levantamento</Button>

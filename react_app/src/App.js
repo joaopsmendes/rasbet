@@ -12,7 +12,7 @@ import AlteracaoOdd from './components/AlteracaoOdd'
 
 import { createTheme } from '@mui/material/styles';
 import Pagamento from './components/Pagamento';
-import AlterarInformacaoUser from './components/AlterarInformacaoUser2';
+import AlterarInformacaoUser from './components/AlterarInformacaoUser';
 
 
 
