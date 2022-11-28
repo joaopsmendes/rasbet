@@ -11,7 +11,7 @@ public interface IGestaoJogos {
 
     public Map<String, Desporto> getDesportos () throws SQLException;
 
-    void alteraEstado(String idJogo, Jogo.Estado estado) throws SQLException;
+    void alteraEstado(String idJogo, int estado) throws SQLException;
 
     Map<String, Jogo> getJogos(Desporto desporto) throws SQLException;
 

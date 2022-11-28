@@ -60,4 +60,6 @@ public interface IRasbetLN {
     Map<String, Float>  getSaldo(String userId) throws SQLException;
 
     Map<String, String> infoUser(String userId)throws SQLException;
+
+    void alterarEstado(String idJogo, int estado) throws SQLException;
 }

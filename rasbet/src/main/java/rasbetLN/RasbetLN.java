@@ -196,4 +196,11 @@ public class RasbetLN implements IRasbetLN{
         return gestaoUtilizadores.info(userId);
     }
 
+    @Override
+    public void alterarEstado(String idJogo, int estado) throws SQLException {
+        gestaoJogos.alteraEstado(idJogo,estado);
+    }
+
+
+
 }

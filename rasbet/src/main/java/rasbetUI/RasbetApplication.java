@@ -283,6 +283,16 @@ public class RasbetApplication {
 		}
 	}
 
+	@PostMapping(path="alterarEstado")
+	public void alterarEstado(@RequestParam(name = "idJogo") String idJogo, @RequestParam(name = "estado") int estado){
+		try {
+			rasbetLN.alterarEstado(idJogo, estado);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 
 	//TODO
 	@PostMapping(path="cashout")
@@ -316,7 +326,6 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 
 
