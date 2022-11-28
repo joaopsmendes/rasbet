@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import Pagamento from "./Pagamento";
 
 
 
@@ -18,6 +19,7 @@ function Jogos(props) {
     const[aposta,setAposta]=useState([])
     const[montante,setMontante]=useState(1)
     const[isSimples,setIsSimples]=useState(true)
+    const[pagamento,setPagamento]=useState(false)
 
 
 
@@ -90,14 +92,18 @@ function Jogos(props) {
         return (getCotaTotal() * montante).toFixed(2);
     }
 
+    const handlePagamento = () => {
+        setPagamento(true);
+    }
+
     const montanteField = () => {
         return(
         <TextField margin="normal" required fullWidth name="Montante" label="Montante" id="Montante" 
             type="number"
             defaultValue={1}
+            onChange={(e)=>setMontante(e.target.value)}
             error={montante <= 0 }
             helperText={montante <= 0 ? 'Valor inválido' : ' '}
-            onChange={(e)=>setMontante(e.target.value)}
             InputProps={{ inputProps: { min: 0.01 } }} />
         );
     }
@@ -134,6 +140,8 @@ function Jogos(props) {
         console.log(response);
     }
 
+
+
     return (
         <div>
             {/*
@@ -141,6 +149,7 @@ function Jogos(props) {
                     {props.desportos.map((desporto)=>(<p>{desporto}</p>))}
             </div>}}
             */}
+            {pagamento && <Pagamento valor={montante} setPagamento={setPagamento} pagamento={pagamento} submit={doAposta}/>}
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={2}>
                         <Grid item xs>
@@ -158,7 +167,7 @@ function Jogos(props) {
                                         {montanteField()}
                                     </Grid>
                                 </Grid>
-                                <Button disabled={montante <= 0} onClick={doAposta} variant="contained">
+                                <Button disabled={montante <= 0} onClick={handlePagamento} variant="contained">
                                     Apostar
                                 </Button>
                             </Grid>

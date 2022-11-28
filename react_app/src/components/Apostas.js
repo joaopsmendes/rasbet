@@ -1,29 +1,100 @@
 
-import React,{useState,useEffect} from "react";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import React, { useState, useEffect } from "react";
+import Aposta from "./Aposta";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ToggleButton } from "@mui/material";
-import Jogos from './components/Jogos';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import { Container } from "@mui/material";
 
-function Apostas(){
-    const[apostas, setApostas]=useState({})
-    
 
-    const getApostas=async()=>{
-        
+function Apostas(props) {
+    const [apostas, setApostas] = useState({})
+    const [index, setIndex] = useState(0)
 
-    return(
-        <div className = "Apostas">
-            
-         </div>   
+
+    const getApostas = async (email) => {
+        console.log(email)
+        const response = await fetch('http://localhost:8080/historicoAposta?' + new URLSearchParams({
+            userId: email
+        })
+            , {
+                method: 'GET',
+            });
+        const data = await response.json();
+        setApostas(data);
+        console.log(data);
+    }
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        getApostas(user);
+    }, [])
+
+    const hasnext = () => {
+        if (index + 1 < apostas.length)
+            return true;
+        else return false;
+    }
+
+    const hasprev = () => {
+        if (index - 1 >= 0)
+            return true;
+        else return false;
+    }
+
+    const increment = () => {
+        setIndex(index + 1);
+    }
+
+    const decrement = () => {
+        setIndex(index - 1);
+    }
+
+    const setButton = (value) => {
+        if (value.odd !== undefined){
+            props.simples(true);
+            props.multipla(false);
+        }
+        else{
+            props.multipla(true);
+            props.simples(false);
+        }
+    }
+
+
+    return (
+        <div className="Apostas">
+            <Container>
+                <Grid container spacing={2}>
+                    <Grid item xs={1}>
+                        {hasprev() &&
+                            <Button variant="standard" onClick={decrement}>
+                                <ArrowBackIosIcon />
+                            </Button>
+                        }
+                    </Grid>
+
+                    {
+                        apostas.length > 0 &&
+                        <Grid item xs={10}>
+                            {setButton(apostas[index])}
+                            <Aposta index={index} aposta={apostas[index]} />
+                        </Grid>
+                    }
+                    <Grid item xs={1}>
+
+                        {hasnext() &&
+                            <Button variant="standard" onClick={increment}>
+                                <ArrowForwardIosIcon />
+                            </Button>
+                        }
+                    </Grid>
+                </Grid>
+            </Container>
+        </div>
     );
-}
 }
 
 export default Apostas;

@@ -10,10 +10,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ToggleButton } from "@mui/material";
 import HistoricoApostas from "./HistoricoApostas";
 import Grid from '@mui/material/Grid';
-import Deposito from "./Deposito";
 import Dialogo from "./Dialogo";
 import Registo from "./Registo";
-import Levantamento from "./Levantamento";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
@@ -111,10 +109,10 @@ function Transacoes(props) {
         <div className="transacoes">
             <Grid container spacing={2}>
                 <Grid item xs={6} >
-                    <Button color={deposito ? "primary" : "inherit"} onClick={handleClickDeposito} variant="contained" size="md" value="Deposito">Depósito</Button>
+                    <Button sx={{ m: 3}} color={deposito ? "primary" : "inherit"} onClick={handleClickDeposito} variant="contained" size="md" value="Deposito">Depósito</Button>
                 </Grid>
                 <Grid item xs={6} >
-                    <Button color={levantamento ? "primary" : "inherit"} onClick={handleClickLevantamento} variant="contained" size="md" value="Levantamento">Levantamento</Button>
+                    <Button sx={{ m: 3}} color={levantamento ? "primary" : "inherit"} onClick={handleClickLevantamento} variant="contained" size="md" value="Levantamento">Levantamento</Button>
                 </Grid>
             </Grid>
 

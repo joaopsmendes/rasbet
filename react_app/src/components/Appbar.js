@@ -143,7 +143,7 @@ function ResponsiveAppBar(props) {
           </Box>
           :<div>
             <Dialogo form={<Login login={props.login}/>} title="Login"/>
-            <Dialogo form={<Registo/>} title="Registo"/>
+            <Dialogo form={<Registo login={props.login} />} title="Registo"/>
            </div>
            }
         </Toolbar>

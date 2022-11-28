@@ -1,90 +1,108 @@
-import React,{useState,useEffect} from "react";
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
+import React, { useState, useEffect } from "react";
 import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ToggleButton } from "@mui/material";
-import HistoricoApostas from "./HistoricoApostas";
-import Grid from '@mui/material/Grid';
-import Deposito from "./Deposito";
-import Dialogo from "./Dialogo";
-import Registo from "./Registo";
-import Levantamento from "./Levantamento";
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import Transacoes from "./Transacoes";
+import validator from 'validator'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 
-function AlterarInformacaoUser(props){
+function AlterarInformacaoUser(props) {
+
+
+  const [email, setEmail] = useState("")
+  const [nome, setNome] = useState("")
+  const [morada, setMorada] = useState("")
+  const [password, setPassword] = useState("")
+  const [telemovel, setTelemovel] = useState("")
+
+  //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
+  const paperStyle = { height: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }
+
+
+
+  const handleSubmit = async (email) => {
+
     
-    const [alignment, setAlignment] = useState();
-    const[saldo, setSaldo]=useState(0)
-    const [deposito,setDeposito]=useState(false)
-    const [levantamento,setLevantamento]=useState(false)
-    const [montante,setMontante]=useState(1)
-    
+    const body = { email: email }
 
-    //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
-    const paperStyle={height: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}
-    
-
-
-
-
-
-
-
-
-    const changeProfile = async(email) =>{
-      const response = await fetch('http://localhost:8080/changeProfile?' + new URLSearchParams({
-        userId: email})
-        ,{
-          method: 'GET',
-      });
+    if (nome !== '') {
+      body['nome'] = nome;
     }
+    if (morada !== '') {
+      body['morada'] = morada
+    }
+    if (telemovel !== '') {
+      body['telemovel'] = telemovel
+    }
+    if (email !== '') {
+      body['email'] = email
+    }
+    if (password !== '') {
+      body['password'] = password
+    }
+    
 
-
-    const getSaldo = async(email)=>{
-        console.log(email)
-        const response = await fetch('http://localhost:8080/getSaldo?' + new URLSearchParams({
-          userId: email})
+    const response = await fetch('http://localhost:8080/changeProfileInfo?' + new URLSearchParams({
+      userId: email
+    })
       , {
-      method: 'GET',
-  });
-
-  console.log("SALDO");
-  console.log(response);
-  const data = await response.json();
-  console.log(data);
-  setSaldo(data);
-}
-
-
-
-    useEffect(()=>{
-      const user = JSON.parse(sessionStorage.getItem('user'));
-      getSaldo(user);
-      },[]);
-  
-
-    return(     
-     <div className = "AlterarInformacaoUser"> 
-      <Container>
-        <h1> {props.nome} </h1>
-        <h2> Saldo: {saldo} </h2> 
-        <Transacoes getSaldo={getSaldo} saldo={saldo}/>
-
-            <HistoricoApostas/>
-            
-            {/** aceder a base de dados para alterar a informação de um perfil */}
-        </Container>
-      </div>
-      
-        );
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      });
 
   }
+
+
+  const validateEmail = (email) => {
+    if (validator.isEmail(email)) {
+      return true;
+    }
+    return false;
+  }
+
+  
+
+
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    setEmail(user);
+  }, []);
+
+
+  return (
+    <div className="AlterarInformacaoUser">
+      <Container maxWidth="sm">
+      <Box sx={{ width: '10%' }} component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField  name="Email" label="Email" id="Email"
+          fullWidth
+          type="email"
+          value={email}
+          error={!validateEmail(email)}
+          helperText={!validateEmail(email) ? 'Valor inválido' : ' '}
+          onChange={(e) => setEmail(e.target.value)} />
+        <TextField  name="nome" label="Nome" id="nome"
+          fullWidth
+          type="text"
+          value={nome}
+          error={nome.length > 45}
+          helperText={nome.length > 45 ? 'Número máximo de caratéres atingido' : ' '}
+          onChange={(e) => setNome(e.target.value)} />
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ m: 3, mb: 2 }}
+        >
+          Alterar
+        </Button>
+      </Box>
+      </Container>
+    </div>
+
+  );
+
+}
 export default AlterarInformacaoUser;

@@ -1,32 +1,31 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import validator from 'validator'
+import FormControl from '@mui/material/FormControl';
 
 
-const theme = createTheme();
 
  function Registo(props) {
+
+
+  const [email, setEmail] = React.useState('');
+  const [NIF, setNIF] = React.useState('');
+
   const handleSubmit = async (event) => {
+    console.log("HERE");
     event.preventDefault();
 
-    /*
     const data = new FormData(event.currentTarget);
-    const email = data.get('E-mail');
-    const password = data.get('Palavra-Pass');
-    const datanascimento = data.get('Data de Nascimento');
-    const nif = data.get('NIF');
-
+    const password = data.get('password');
+    const datanascimento = data.get('date');
+    console.log(datanascimento);
+    const nif = data.get('nif');
+    const nome = data.get('username');
+    const morada = data.get('morada');
+    const telemovel = data.get('tel');
 
     const response = await fetch('http://localhost:8080/register', {
         method: 'POST',
@@ -43,10 +42,37 @@ const theme = createTheme();
             "telemovel":telemovel
         }),
     });
-    */
-    
+    if (response.status === 200) {
+      props.login(email);
+      
+    }
+    else{
+      alert("Erro ao registar");
+    }
 
   };
+
+  const validateEmail = (email) => {
+    if (validator.isEmail(email)) {
+      return true;
+    }
+    return false;
+  }
+
+  const validateNIF = (NIF) => {
+    if (validator.isNumeric(NIF) && NIF.length == 9) {
+      return true;
+    }
+    return false;
+  }
+
+  const allValid = () => {
+    if (validateEmail(email) && validateNIF(NIF)) {
+      return true;
+    }
+    return false;
+  }
+
 
   return (
     <div>
@@ -70,16 +96,18 @@ const theme = createTheme();
           </Typography>
           */
         }
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>        
+          <Box  component="form" onSubmit={handleSubmit}  sx={{ mt: 1 }}>        
             <TextField
               margin="normal"
               required
               fullWidth
+              error={!(email =='' || validateEmail(email))}
+              helperText={!(email =='' || validateEmail(email)) ? 'E-mail inválido' : ''}
+              onChange={(e) => setEmail(e.target.value)}
               id="email"
               label="E-mail"
               name="email"
               type="email"
-              autoFocus
             />
             <TextField
               margin="normal"
@@ -129,15 +157,18 @@ const theme = createTheme();
               name="nif"
               label="NIF"
               id="nif"
+              onChange={(e) => setNIF(e.target.value)}
+              error={!(NIF == '' || validateNIF(NIF))}
+              helperText={!(NIF == '' || validateNIF(NIF)) ? 'NIF inválido' : ''}
             />
 
             <TextField
               margin="normal"
               required
               fullWidth
-              name="telemovel"
+              name="tel"
               label="Telemóvel"
-              id="telemovel"
+              id="tel"
               type="tel"
             />            
             <Button

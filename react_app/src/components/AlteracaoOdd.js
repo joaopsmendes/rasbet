@@ -15,6 +15,7 @@ function AlteracaoOdd() {
     const [open, setOpen] = React.useState(false);
     const [open1, setOpen1] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
+    const [odd, setOdd] = React.useState(1);
 
 
     const handleClickOpen = () => {
@@ -47,6 +48,23 @@ function AlteracaoOdd() {
         setOpen2(false);
       }
 
+    {/**  const getSaldo=async()=>{
+        const response = await fetch('http://localhost:8080/jogos?' + new URLSearchParams({
+                desporto: "futebol"})
+            , {
+            method: 'GET',
+        });
+        const data = await response.json();
+        //const data =response.json();
+        var result = Object.keys(data).map((key) => data[key]);
+        console.log("RESULT");
+        console.log(result);
+        setJogos(result);
+
+    } */}
+    
+        
+
       return (
         <div>
           <Button variant="text" onClick={handleClickOpen}>
@@ -65,17 +83,26 @@ function AlteracaoOdd() {
           </Dialog>
 
           <Dialog open={open1} onClose={handleClose}>
-            <IconButton onClick={handleClose}>
+            <IconButton onClick={handleClose1}>
               <CloseIcon />
             </IconButton>
             <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
               <DialogContent>
                 <h1> </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
-                <TextField size="sm" placeholder="Inserir Odd" />
+                <TextField  
+                onChange={(e)=>setOdd(e.target.value)} 
+                size="sm" 
+                type="number"
+                placeholder="Inserir Odd" 
+                error={odd < 1 }
+                defaultValue={odd}
+                helperText={odd < 1 ? 'Valor inválido' : ' '}
+                InputProps={{ inputProps: { min: 1 } }} />
                 <Button
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={odd < 1 }
                   sx={{ mt: 3, mb: 2 }}
                   onClick={ handleClickOpen2}
             >
@@ -85,7 +112,7 @@ function AlteracaoOdd() {
           </Dialog>
 
           <Dialog open={open2} onClose={handleClose}>
-            <IconButton onClick={handleClose}>
+            <IconButton onClick={handleClose2}>
               <CloseIcon />
             </IconButton>
             <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
