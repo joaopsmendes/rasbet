@@ -2,6 +2,7 @@ package rasbetLN.GestaoApostas;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface IGestaoApostas {
     Aposta getAposta(int idAposta, String email) throws SQLException;
@@ -13,4 +14,7 @@ public interface IGestaoApostas {
     void createAposta(String userId, float montante, List<Integer> listOdds) throws SQLException;
 
     float cashout(int idAposta) throws SQLException;
+
+    void updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
+
 }

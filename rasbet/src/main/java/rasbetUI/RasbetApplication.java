@@ -243,10 +243,12 @@ public class RasbetApplication {
 	public void updateResultados(){
 		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
 			Map<String,String> map = entry.getValue().updateResultados();
-			try {
-				rasbetLN.updateResultados(map,entry.getKey());
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+			if (!map.isEmpty()) {
+				try {
+					rasbetLN.updateResultados(map, entry.getKey());
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
 			}
 		}
 	}

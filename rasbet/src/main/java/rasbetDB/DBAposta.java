@@ -8,9 +8,7 @@ import rasbetLN.GestaoApostas.Simples;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DBAposta {
     private Connection c;
@@ -219,5 +217,62 @@ public class DBAposta {
             montante = rs.getFloat("montante");
         }
         return montante;
+    }
+
+    public void updateResulados(Map<Integer, List<Integer>> res) throws SQLException {
+        updateVencedores(res.get(1));
+        updatePerdedores(res.get(0));
+    }
+
+
+    private void updatePerdedores(List<Integer> list) throws SQLException{
+        for (int id : list) {
+            String query = "UPDATE Aposta SET resultado=0 WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1,id);
+            ps.executeUpdate();
+
+            query = "UPDATE Aposta SET resultado=0 WHERE idAposta IN" +
+                    "(SELECT Multipla_Aposta_idAposta FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idOdd = ?)";
+            ps = c.prepareStatement(query);
+            ps.setInt(1,id);
+            ps.executeUpdate();
+        }
+    }
+
+    private void updateVencedores(List<Integer> list) throws SQLException {
+        Set<Integer> vencedores = new HashSet<>();
+        Set<Integer> losers = new HashSet<>();
+        for (int id : list) {
+            String query = "UPDATE Aposta SET resultado=1 WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1,id);
+            ps.executeUpdate();
+
+            query = "SELECT Multipla_Aposta_idAposta,Resultado FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idOdd = ?";
+            ps = c.prepareStatement(query);
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int resultado = rs.getInt("resultado");
+                System.out.println(resultado);
+                int idAposta = rs.getInt("Multipla_Aposta_idAposta");
+                if (resultado == 1){
+                    if(!losers.contains(idAposta))
+                        vencedores.add(idAposta);
+                }
+                else{
+                    if(!vencedores.contains(idAposta))
+                        vencedores.remove(idAposta);
+                    losers.add(idAposta);
+                }
+            }
+            for (int idAposta : vencedores){
+                query = "UPDATE Aposta set resultado=1 WHERE idAposta= ?";
+                ps = c.prepareStatement(query);
+                ps.setInt(1,idAposta);
+                ps.executeUpdate();
+            }
+        }
     }
 }

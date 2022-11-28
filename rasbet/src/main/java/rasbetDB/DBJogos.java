@@ -173,7 +173,7 @@ public class DBJogos {
         return rs.next();
     }
 
-    public void updateVencedor(String idJogo, String vencedor) throws SQLException {
+    public int updateVencedor(String idJogo, String vencedor) throws SQLException {
         String query ="SELECT idOdd FROM Jogo " +
                 "INNER JOIN ApostaJogo ON idJogo=Jogo_idJogo " +
                 "INNER JOIN Odd ON idApostaJogo=ApostaJogo_idApostaJogo " +
@@ -182,15 +182,19 @@ public class DBJogos {
         ps.setString(1,idJogo);
         ps.setString(2,vencedor);
         ResultSet rs = ps.executeQuery();
+        int win = 0;
         if(rs.next()){
             int idOdd = rs.getInt("idOdd");
+            win = idOdd;
             query="UPDATE Odd SET Resultado=1 WHERE idOdd =?";
             ps = c.prepareStatement(query);
             ps.setInt(1,idOdd);
             ps.execute();
         }
+        return win;
     }
-    public void updatePerdedores(String idJogo, String vencedor) throws SQLException {
+    public List<Integer> updatePerdedores(String idJogo, String vencedor) throws SQLException {
+        List<Integer> list = new ArrayList<>();
         String query ="SELECT idOdd FROM Jogo " +
                 "INNER JOIN ApostaJogo ON idJogo=Jogo_idJogo " +
                 "INNER JOIN Odd ON idApostaJogo=ApostaJogo_idApostaJogo " +
@@ -201,16 +205,24 @@ public class DBJogos {
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             int idOdd = rs.getInt("idOdd");
+            list.add(idOdd);
             query="UPDATE Odd SET Resultado=0 WHERE idOdd =?";
             ps = c.prepareStatement(query);
             ps.setInt(1,idOdd);
             ps.execute();
         }
+        return list;
     }
 
-    public void updateResultado(String idJogo, String vencedor) throws SQLException {
-        updateVencedor(idJogo,vencedor);
-        updatePerdedores(idJogo, vencedor);
+    public Map<Integer,List<Integer>> updateResultado(String idJogo, String vencedor) throws SQLException {
+        Map<Integer,List<Integer>> map = new HashMap<>();
+        int winner = updateVencedor(idJogo,vencedor);
+        List<Integer> winnerList = new ArrayList<>();
+        winnerList.add(winner);
+        map.put(1,winnerList);
+        List<Integer> losers = updatePerdedores(idJogo, vencedor);
+        map.put(0,losers);
+        return map;
     }
 
     public void updateOdd(int idOdd, float valor) throws SQLException{
@@ -219,7 +231,7 @@ public class DBJogos {
         ps.setFloat(1, valor);
         ps.setInt(2, idOdd);
         ps.execute();
-        }
+    }
 
 //    public Desporto getDesporto(String idJogo) throws SQLException {
 //        String query = "SELECT * FROM Jogo INNER JOIN Desporto ON idDesporto = Desporto_idDesporto WHERE idJogo = ?";

@@ -127,7 +127,8 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void updateResultados(Map<String, String> map,String desporto) throws SQLException {
         Desporto d = mapDesportos.get(desporto);
-        gestaoJogos.updateResultados(map,d);
+        Map<Integer,List<Integer>> res = gestaoJogos.updateResultados(map,d);
+        gestaoApostas.updateResultados(res);
     }
 
     public void addNotificacao(String userId, String conteudo) throws SQLException {

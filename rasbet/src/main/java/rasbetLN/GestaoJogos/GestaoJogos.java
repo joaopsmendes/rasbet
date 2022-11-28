@@ -5,6 +5,9 @@ import rasbetLN.GestaoApostas.Odd;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GestaoJogos implements IGestaoJogos {
@@ -45,13 +48,19 @@ public class GestaoJogos implements IGestaoJogos {
     }
 
     @Override
-    public void updateResultados(Map<String, String> map, Desporto desporto) throws SQLException {
+    public Map<Integer, List<Integer>> updateResultados(Map<String, String> map, Desporto desporto) throws SQLException {
+        Map <Integer, List<Integer>> res = new HashMap<>();
+        res.put(0,new ArrayList<>());
+        res.put(1,new ArrayList<>());
         for (Map.Entry<String, String> entry : map.entrySet()){
             if(jogos.existeJogo(entry.getKey(),desporto)) {
                 System.out.println(entry.getValue());
-                jogos.updateResultado(entry.getKey(), entry.getValue());
+                Map <Integer, List<Integer>> m = jogos.updateResultado(entry.getKey(), entry.getValue());
+                res.get(0).addAll(m.get(0));
+                res.get(1).addAll(m.get(1));
             }
         }
+        return res;
     }
 
     @Override

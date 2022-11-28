@@ -5,6 +5,7 @@ import rasbetDB.DBAposta;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class GestaoApostas implements IGestaoApostas {
     private DBAposta apostas;
@@ -30,6 +31,11 @@ public class GestaoApostas implements IGestaoApostas {
     public float cashout(int idAposta) throws SQLException {
         apostas.cashout(idAposta);
         return (float) (0.5 * apostas.getMontante(idAposta));
+    }
+
+    @Override
+    public void updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
+        apostas.updateResulados(res);
     }
 
     @Override

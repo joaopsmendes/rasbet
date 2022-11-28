@@ -3,6 +3,7 @@ package rasbetLN.GestaoJogos;
 import rasbetLN.GestaoApostas.Odd;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public interface IGestaoJogos {
@@ -21,8 +22,7 @@ public interface IGestaoJogos {
 
     boolean existeJogo(String gameId, Desporto desporto) throws SQLException;
 
-    void updateResultados(Map<String, String> map, Desporto desporto) throws SQLException;
-
+    Map<Integer, List<Integer>> updateResultados(Map<String, String> map, Desporto desporto) throws SQLException;
     void alterarOdd(int idOdd, float valor) throws SQLException;
 
 //    Desporto getDesporto(String idJogo) throws SQLException;
