@@ -49,6 +49,11 @@ public class GameUcras implements Game{
         return whoWon();
     }
 
+    @Override
+    public String getTitulo() {
+        return homeTeam + " vs " + awayTeam;
+    }
+
     public void setId(String id) {
         this.id = id;
     }

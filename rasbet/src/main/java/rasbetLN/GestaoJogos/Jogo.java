@@ -7,6 +7,7 @@ import java.util.*;
 
 public class Jogo {
     private String idJogo;
+    private String titulo;
     private Desporto desporto;
     private LocalDateTime data;
     private Map<String, ApostaJogo> apostas;
@@ -25,21 +26,19 @@ public class Jogo {
         }
     }
 
-    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, Estado estado) {
+    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, String titulo) {
         this.idJogo = idJogo;
         this.desporto = desporto;
         this.data = data;
         this.estado = estado;
+        this.titulo = titulo;
         this.apostas = new HashMap<>();
     }
 
 
-    public Jogo(String idJogo, Desporto desporto, LocalDateTime data) {
-        this.idJogo = idJogo;
-        this.desporto = desporto;
-        this.data = data;
-        this.apostas = new HashMap<>();
-        this.estado = Estado.ATIVO;
+
+    public String getTitulo() {
+        return titulo;
     }
 
     public Estado getEstado() {

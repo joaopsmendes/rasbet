@@ -80,7 +80,7 @@ public class DBJogos {
     public Map<String,Jogo> getJogos(Desporto desporto) throws SQLException{
         Map<String,Jogo> map = new HashMap<>();
         //String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
-        String query2 ="SELECT Jogo.idJogo, Jogo.Data,Odd.idOdd,ApostaJogo.idApostaJogo,ApostaJogo.tema,Odd.valor,Jogo.Desporto_idDesporto,Odd.opcao FROM ApostaJogo " +
+        String query2 ="SELECT * FROM ApostaJogo " +
                 "INNER JOIN Jogo ON Jogo.idJogo=ApostaJogo.Jogo_idJogo AND Jogo.Desporto_idDesporto=ApostaJogo.Jogo_Desporto_idDesporto " +
                 "INNER JOIN Odd ON Odd.ApostaJogo_idApostaJogo=ApostaJogo.idApostaJogo WHERE Jogo.Desporto_idDesporto = ? and Jogo.Estado_idEstado = ?";
         PreparedStatement ps = c.prepareStatement(query2);
@@ -96,10 +96,12 @@ public class DBJogos {
             float valorOdd = rs.getFloat("valor");
             String tema = rs.getString("tema");
             String opcao = rs.getString("opcao");
+            String titulo = rs.getString("titulo");
 
 
-            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data, Jogo.Estado.ATIVO));
+            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data,titulo));
             Jogo jogo = map.get(idJogo);
+            jogo.setEstado(Jogo.Estado.ATIVO);
 
             Odd odd = new Odd(idOdd,valorOdd, opcao, jogo.getIdJogo());
             jogo.addOdd(tema,odd);

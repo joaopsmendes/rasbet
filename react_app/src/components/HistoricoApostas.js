@@ -14,11 +14,20 @@ import Box from '@mui/material/Box';
 
 function HistoricoApostas(props) {
 
-  const [simples, setSimples] = React.useState(false)
+  const [simples, setSimples] = React.useState(true)
   const [multipla, setMultipla] = React.useState(false)
 
 
+  const handleSimples = () => {
+    setSimples(true);
+    setMultipla(false);
+  }
 
+  const handleMultipla = () => {
+    setSimples(false);
+    setMultipla(true);
+  }
+  
 
   return (
 
@@ -26,10 +35,10 @@ function HistoricoApostas(props) {
       <Container maxWidth="lg">
         <Box sx={{ border: 3, borderRadius: '15%',  margin: 'auto' }} >
           <h2> Histórico de apostas </h2>
-          <Button sx={{ m: 2 }} variant="contained" size="md" color={simples ? "primary" : "inherit"} value="Simples">Simples</Button>
-          <Button sx={{ m: 2 }} variant="contained" size="md" color={multipla ? "primary" : "inherit"} value="Multipla">Múltipla</Button>
+          <Button onClick={handleSimples} sx={{ m: 2 }} variant="contained" size="md" color={simples ? "primary" : "inherit"} value="Simples">Simples</Button>
+          <Button onClick={handleMultipla} sx={{ m: 2 }} variant="contained" size="md" color={multipla ? "primary" : "inherit"} value="Multipla">Múltipla</Button>
           {
-            <Apostas simples={setSimples} multipla={setMultipla} />
+            <Apostas setSimples={setSimples} simples={simples} multipla={multipla} setMultipla={setMultipla} />
           }
         </Box>
       </Container>

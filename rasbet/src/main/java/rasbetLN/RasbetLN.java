@@ -38,7 +38,7 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void addGame(Game game, String bookmaker, String desporto) throws SQLException{
         Desporto d = mapDesportos.get(desporto);
-        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco());
+        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco(),game.getTitulo());
         Map<String,List<Outcome>> mapOdds = game.getOdds(bookmaker);
         for (Map.Entry<String, List<Outcome>> entry :mapOdds.entrySet()){
             for (Outcome outcome : entry.getValue()){
@@ -109,7 +109,7 @@ public class RasbetLN implements IRasbetLN{
     }
 
     public void registarApostador(String email, String password, String nome,String nif,LocalDate date, String morada, String telemovel) throws SQLException {
-        Apostador apostador = new Apostador(email,password,date,nif,nome,morada,telemovel);
+        Apostador apostador = new Apostador(email,password,date,nif,nome,telemovel,morada);
         gestaoUtilizadores.newApostador(apostador);
     }
 
@@ -151,14 +151,14 @@ public class RasbetLN implements IRasbetLN{
 
     public void alterarPerfil(String userID, Map<String, String> dados) throws SQLException{
         Utilizador user = gestaoUtilizadores.getByEmail(userID);
-        if (dados.containsKey("nome")){
-            String name = dados.get("nome");
+        if (dados.containsKey("username")){
+            String name = dados.get("username");
             user.setNome(name);
         }
 
-        if (dados.containsKey("email")){
-            String email = dados.get("email");
-            user.setEmail(email);
+        if (dados.containsKey("password")){
+            String pass = dados.get("password");
+            user.setPassword(pass);
         }
 
         if (dados.containsKey("telemovel")){

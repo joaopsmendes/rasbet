@@ -1,16 +1,10 @@
 
 import React, { useState, useEffect } from "react";
 import Grid from '@mui/material/Grid';
+import { Box } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
-import {
-    createTheme,
-    responsiveFontSizes,
-    ThemeProvider,
-} from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-
-let theme = createTheme();
-theme = responsiveFontSizes(theme);
 
 function Aposta(props) {
 
@@ -31,37 +25,43 @@ function Aposta(props) {
             setOdds(props.aposta.oddList);
         }
         setResultado(props.aposta.resultado);
-    }, [props.index])
+    }, [props.index]);
 
     const infoOdd = (odd) => {
         return (
-            <Grid direction="column" container spacing={2}>
-                <Grid item xs={4}>
-                    <h3>{odd.desJogo}</h3>
-                </Grid>
-                <Grid item xs={4}>
-                    <h4>Opção: {odd.opcao} </h4>
-                </Grid>
-                <Grid item xs={4}>
-                    <h4>Valor Odd: {odd.valor} </h4>
-                </Grid>
-            </Grid>
-        )
+            <div>
+                <h3>{odd.desJogo}</h3>
+                <p>{odd.opcao} : {odd.valor}</p>
+            </div>
+        );
+    }
+
+    const totalGanhos = () => {
+        let total = 1;
+        odds.map((odd) => {
+            total *= odd.valor;
+        });
+        return (total * montante).toFixed(2);
     }
 
 
     return (
-        <Grid container spacing={2}>
+        <Grid container>
             <Grid item xs={12} sm={6} >
                 {odds.length > 0 && odds.map((odd) => (infoOdd(odd)))}
             </Grid>
             <Grid item xs={12} sm={6}>
-                <Grid direction="column" container spacing={2}>
-                    <Grid item xs={6}>
-                        <h4>Dia: {date}</h4>
+                <Grid direction="column" container >
+                    <Grid item >
+                        <p>Dia: <b>{date}</b></p>
+                        <hr />
                     </Grid>
-                    <Grid item xs={6}>
-                        <h4>Montante Apostado: {montante} €</h4>
+                    <Grid item>
+                        <p>Montante Apostado: <b>{montante} €</b></p>
+                    </Grid>
+                    <Grid item>
+                        <p>Possíveis Ganhos: <b>{totalGanhos()}</b></p>
+                        {resultado ? <CheckIcon  fontSize="large" color="success"/> : <CloseIcon fontSize="large" color="error"/>}
                     </Grid>
                 </Grid>
             </Grid>

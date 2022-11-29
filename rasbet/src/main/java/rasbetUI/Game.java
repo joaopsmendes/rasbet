@@ -16,4 +16,6 @@ public interface Game {
 
     String vencedor();
 
+    String getTitulo();
+
 }

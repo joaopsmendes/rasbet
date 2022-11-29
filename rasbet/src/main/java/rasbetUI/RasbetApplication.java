@@ -145,7 +145,7 @@ public class RasbetApplication {
 	//TODO
 	@PostMapping(path ="changeProfile")
 	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("userId");
+		String id = myJsonRequest.get("email");
 		try{
 			rasbetLN.alterarPerfil(id,myJsonRequest);
 		} catch (SQLException e) {

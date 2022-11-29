@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Jogo from "./Jogo";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -6,7 +6,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Pagamento from "./Pagamento";
-
+import { Container } from "@mui/material";
+import { flexbox } from '@mui/system';
 
 
 
@@ -14,22 +15,23 @@ import Pagamento from "./Pagamento";
 function Jogos(props) {
     //passar os desportos no props
     //passar desporto ativo no props
-    
-    const[jogos,setJogos]=useState({})
-    const[aposta,setAposta]=useState([])
-    const[montante,setMontante]=useState(1)
-    const[isSimples,setIsSimples]=useState(true)
-    const[pagamento,setPagamento]=useState(false)
+
+    const [jogos, setJogos] = useState({})
+    const [aposta, setAposta] = useState([])
+    const [montante, setMontante] = useState(1)
+    const [isSimples, setIsSimples] = useState(true)
+    const [pagamento, setPagamento] = useState(false)
 
 
 
 
-    const getJogos=async()=>{
+    const getJogos = async () => {
         const response = await fetch('http://localhost:8080/jogos?' + new URLSearchParams({
-                desporto: "futebol"})
+            desporto: "futebol"
+        })
             , {
-            method: 'GET',
-        });
+                method: 'GET',
+            });
         const data = await response.json();
         //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
@@ -39,24 +41,25 @@ function Jogos(props) {
 
     }
 
-    useEffect(()=>{    
-        
-        getJogos(); 
+    useEffect(() => {
+
+        getJogos();
         //fetch('http://localhost:8080/api/jogos')
         //.then(response=>response.json())
         //.then(data=>setJogos(data))
 
-    },[])
+    }, [])
 
 
-    const addOdd= (newAposta) => {
-        console.log("NEW APOSTA");
+    const addOdd = (newAposta) => {
         var newApostaArray = aposta.slice();
+        console.log(newAposta)
         for (var i = 0; i < newApostaArray.length; i++) {
-            if (newApostaArray[i].idJogo === newAposta.idJogo && newApostaArray[i].tema === newAposta.tema) {
-                console.log("Já existe");
+            console.log(newApostaArray[i])
+            if (newApostaArray[i].desJogo === newAposta.desJogo && newApostaArray[i].tema === newAposta.tema) {
                 newApostaArray[i] = newAposta;
                 setAposta(newApostaArray);
+                console.log("ja existe");
                 return;
             }
         }
@@ -64,8 +67,7 @@ function Jogos(props) {
         setAposta(newApostaArray);
     }
 
-    const removeOdd= (idOdd) => {
-        console.log("REMOVE APOSTA");
+    const removeOdd = (idOdd) => {
         console.log(idOdd);
         var newApostaArray = aposta.slice();
         newApostaArray = newApostaArray.filter((aposta) => aposta.idOdd !== idOdd);
@@ -76,7 +78,7 @@ function Jogos(props) {
 
     const getTypesApostas = () => {
 
-        return <h1>{(isSimples  ? "Simples" : "Múltipla")}</h1>;
+        return <h1>{(aposta.length == 1 ? "Simples" : "Múltipla")}</h1>;
     }
 
 
@@ -97,18 +99,19 @@ function Jogos(props) {
     }
 
     const montanteField = () => {
-        return(
-        <TextField margin="normal" required fullWidth name="Montante" label="Montante" id="Montante" 
-            type="number"
-            defaultValue={1}
-            onChange={(e)=>setMontante(e.target.value)}
-            error={montante <= 0 }
-            helperText={montante <= 0 ? 'Valor inválido' : ' '}
-            InputProps={{ inputProps: { min: 0.01 } }} />
+        return (
+            <TextField margin="normal" required fullWidth name="Montante" label="Montante" id="Montante"
+                sx={{mr: 2}} 
+                type="number"
+                defaultValue={1}
+                onChange={(e) => setMontante(e.target.value)}
+                error={montante <= 0}
+                helperText={montante <= 0 ? 'Valor inválido' : ' '}
+                InputProps={{ inputProps: { min: 0.01 } }} />
         );
     }
 
-    const doAposta = async() => {
+    const doAposta = async () => {
 
         console.log("DO APOSTA");
         console.log(props.user);
@@ -149,38 +152,53 @@ function Jogos(props) {
                     {props.desportos.map((desporto)=>(<p>{desporto}</p>))}
             </div>}}
             */}
-            {pagamento && <Pagamento valor={montante} setPagamento={setPagamento} pagamento={pagamento} submit={doAposta}/>}
-                <Box sx={{ flexGrow: 1 }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs>
-                          {jogos.length  > 0 && jogos.map((jogo)=>(<Jogo removeOdd={removeOdd} addOdd={addOdd} key={jogo.idJogo} jogo={jogo}/>))}
-                        </Grid>
-                        {aposta.length > 0 ?
-                            <Grid item xs={2}>
+            {pagamento && <Pagamento valor={montante} setPagamento={setPagamento} pagamento={pagamento} submit={doAposta} />}
+            <Grid container spacing={2} alignItems="center" justifyContent="center">
+                <Grid item xs={10} md={9} xl={9}>
+                    <Box sx={{ m: 5, border: 2, borderRadius: '10%', width: '90%' }}>
+                        {jogos.length > 0 && jogos.map((jogo) => (<Jogo removeOdd={removeOdd} addOdd={addOdd} key={jogo.idJogo} jogo={jogo} />))}
+                    </Box>
+                </Grid>
+                {aposta.length > 0 ?
+                    <Grid item xs={12} md={3} xl={3}>
+                        <Box size="md" sx={{ m: 3, border: 2, borderRadius: '10%', alignItems: "center", justifyContent: "center", width: '90%' }} >
+                            <Grid item xs={12}>
                                 <div>{getTypesApostas()}</div>
-                                <div>{aposta.length > 0 && aposta.map((aposta)=>(<p>{aposta.nome}: {aposta.opcao}<br/><br/> Cota : {aposta.valor} </p>))}</div>
-                                <Grid container spacing={2}>
-                                    <Grid item > 
-                                        <div><p>Cota Total: {getCotaTotal()}<br/>Total de Ganhos:{getMontanteTotal()}</p></div>
-                                    </Grid>  
-                                    <Grid item xs={3}>
+                                <div>{aposta.length > 0 && aposta.map((aposta) => (<p>{aposta.nome}: {aposta.opcao}<br /><br /> Cota : {aposta.valor} </p>))}</div>
+                                <hr/>
+                                <Grid container spacing={2} alignItems="center" justifyContent="center">
+                                    <Grid item xs={6}>
+                                        <p>Cota: {getCotaTotal()}</p>
+                                    </Grid>
+                                    <Grid item xs={5}>
                                         {montanteField()}
                                     </Grid>
+                                    <Grid item xs={1}/>
+                                        
                                 </Grid>
-                                <Button disabled={montante <= 0} onClick={handlePagamento} variant="contained">
-                                    Apostar
-                                </Button>
+                                <Grid container spacing={2} alignItems="center" justifyContent="center">
+                                    <Grid item xs={6}>
+                                        <p>Total de Ganhos <br/></p><b style={{color:"#E67644"}}>{getMontanteTotal()}</b>
+                                    </Grid>
+                                    <Grid item xs={5}>
+                                        <Button color="secondary" sx={{ borderRadius: '30px' }} disabled={montante <= 0} onClick={handlePagamento} variant="contained">
+                                            <b>Apostar</b>
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={1}/>
+
+
+                                </Grid>
                             </Grid>
-                        : 
-                        <Grid item xs={2}>
-                            <h1>No Odds</h1>
-                        </Grid>
-                        }
+
+                        </Box>
                     </Grid>
-                </Box>
+                    : null
+                }
+            </Grid>
 
         </div>
     );
-  }
+}
 
 export default Jogos;

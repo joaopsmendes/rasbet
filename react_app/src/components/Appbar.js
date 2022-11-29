@@ -64,7 +64,6 @@ function ResponsiveAppBar(props) {
     <AppBar position="static">
       <Container maxWidth="false">
         <Toolbar disableGutters>
-
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
@@ -85,12 +84,10 @@ function ResponsiveAppBar(props) {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           <ToggleButtonGroup
-              fullWidth={true}
               color="warning"
               value={alignment}
               exclusive
@@ -102,7 +99,12 @@ function ResponsiveAppBar(props) {
                 key={page}
                 value={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                style={{ borderRadius: "20px", padding:' 2% 15%',}}
+                sx={{ ml:5, mr: 5, p: 2,color: 'white', display: 'block',
+                "&.Mui-selected, &.Mui-selected:hover": {
+                  color: "#000000",
+                  backgroundColor: '#FFFFFF'
+                },}}
               >
                 {page}
               </ToggleButton>

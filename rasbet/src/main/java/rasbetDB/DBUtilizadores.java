@@ -70,10 +70,10 @@ public class DBUtilizadores {
         }
     }
 
+
     public Utilizador getUtilizador(String email) throws SQLException {
-        String query = "SELECT Utilizador.nome, Utilizador.pass, Utilizador.dataNAscimento, Utilizador.nif, TipoUtilizador.tipo FROM Utilizador" +
-                " INNER JOIN TipoUtilizador ON Utilizador.email = TipoUtilizador.Utilizador_email" +
-                " WHERE email = ?";
+        String query = "SELECT nome, pass, dataNascimento, NIF, Telemovel,Morada FROM Utilizador"
+                + " WHERE email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
@@ -81,18 +81,10 @@ public class DBUtilizadores {
             String nome = rs.getString("nome");
             String password = rs.getString("pass");
             LocalDate dataNascimento = LocalDate.parse(rs.getString("dataNascimento"));
-            String nif = rs.getString("nif");
-            String telemovel = rs.getString("telemovel");
+            String nif = rs.getString("NIF");
+            String telemovel = rs.getString("Telemovel");
             String morada = rs.getString("morada");
-            String tipo = rs.getString("tipo");
-            if (tipo.equals("Apostador")) {
-                return new Apostador(email, password, dataNascimento, nif, nome, telemovel, morada);
-            } else if (tipo.equals("Administrador")) {
-                return new Administrador(email, password, dataNascimento, nif, nome, telemovel, morada);
-            } else if (tipo.equals("Especialista")) {
-                return new Especialista(email, password, dataNascimento, nif, nome, telemovel, morada);
-            } else throw new SQLException("Utilizador não existe");
-
+            return new Apostador(email, password, dataNascimento, nif, nome, telemovel, morada);
         }
         throw new SQLException("Can't get user");
     }
@@ -349,19 +341,10 @@ public class DBUtilizadores {
         }
         return lista;
     }
-    /*
-    | email
-            | dataNascimento
-            | NIF
-            | pass
-            | nome
-            | Telemovel
-            | Morada
 
-*/
     public Map<String, String> info(String userId) throws SQLException{
         Map<String,String> map = new HashMap<>();
-        String query ="SELECT * FROM Utilizador Where Utilizador_email = ?";
+        String query ="SELECT * FROM Utilizador Where email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();

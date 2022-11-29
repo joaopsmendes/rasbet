@@ -11,94 +11,108 @@ function AlterarInformacaoUser(props) {
 
 
   const [email, setEmail] = useState("")
-  const [nome, setNome] = useState("")
-  const [morada, setMorada] = useState("")
-  const [password, setPassword] = useState("")
-  const [telemovel, setTelemovel] = useState("")
-
-  //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
-  const paperStyle = { height: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }
+  const [username, setUsername] = useState()
+  const [morada, setMorada] = useState()
+  const [password, setPassword] = useState()
+  const [telemovel, setTelemovel] = useState()
 
 
 
-  const handleSubmit = async (email) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    
     const body = { email: email }
 
-    if (nome !== '') {
-      body['nome'] = nome;
+    if (username) {
+      body['username'] = username;
     }
-    if (morada !== '') {
-      body['morada'] = morada
+    if (morada) {
+      body['morada'] = morada;
     }
-    if (telemovel !== '') {
-      body['telemovel'] = telemovel
+    if (telemovel) {
+      body['telemovel'] = telemovel;
     }
-    if (email !== '') {
-      body['email'] = email
-    }
-    if (password !== '') {
-      body['password'] = password
-    }
-    
 
-    const response = await fetch('http://localhost:8080/changeProfileInfo?' + new URLSearchParams({
-      userId: email
-    })
-      , {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      });
+    if (password) {
+      body['password'] = password;
+    }
+
+
+
+    const response = await fetch('http://localhost:8080/changeProfile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (response.status === 200) {
+      props.altera();
+    }
+    else {
+      alert("Erro ao alterar informação!")
+    }
 
   }
 
-
-  const validateEmail = (email) => {
-    if (validator.isEmail(email)) {
-      return true;
-    }
-    return false;
-  }
-
-  
 
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    setEmail(user);
-  }, []);
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    setEmail(user)
+  }, [props.update]);
+
+
+
 
 
   return (
     <div className="AlterarInformacaoUser">
       <Container maxWidth="sm">
-      <Box sx={{ width: '10%' }} component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField  name="Email" label="Email" id="Email"
-          fullWidth
-          type="email"
-          value={email}
-          error={!validateEmail(email)}
-          helperText={!validateEmail(email) ? 'Valor inválido' : ' '}
-          onChange={(e) => setEmail(e.target.value)} />
-        <TextField  name="nome" label="Nome" id="nome"
-          fullWidth
-          type="text"
-          value={nome}
-          error={nome.length > 45}
-          helperText={nome.length > 45 ? 'Número máximo de caratéres atingido' : ' '}
-          onChange={(e) => setNome(e.target.value)} />
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ m: 3, mb: 2 }}
-        >
-          Alterar
-        </Button>
-      </Box>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            fullWidth
+            name="password"
+            label="Palavra-Passe"
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            id="password"
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            name="username"
+            label="Username"
+            onChange={(e) => setUsername(e.target.value)}
+            id="username"
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            name="morada"
+            label="Morada"
+            onChange={(e) => setMorada(e.target.value)}
+            id="morada"
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            name="tel"
+            label="Telemóvel"
+            onChange={(e) => setTelemovel(e.target.value)}
+            id="tel"
+            type="tel"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}>
+            Alterar
+          </Button>
+        </Box>
       </Container>
     </div>
 

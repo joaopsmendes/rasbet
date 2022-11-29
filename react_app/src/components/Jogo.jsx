@@ -15,6 +15,8 @@ function Jogo(props) {
         setTime(date.toLocaleString());
         let apostasArray = Object.keys(props.jogo.apostas).map((key) => [key,props.jogo.apostas[key]]); 
         setApostas(apostasArray);
+        console.log("Jogo");
+        console.log(props.jogo);
     },[])
 
 
@@ -23,8 +25,8 @@ function Jogo(props) {
 
     return (
         <div className="Jogo">
-            <Container sx={{ maxWidth:'70%'  }}maxWidth="false">
-                <h3>{time}</h3>
+            <Container sx={{ maxWidth:'80%' , margin: 'auto'}}maxWidth="false">
+                <h2>{props.jogo.titulo}</h2>
                 <div className="Container">
                         {
                             apostas.length > 0 && apostas.map((aposta)=>(<ApostaJogo removeOdd={props.removeOdd} addOdd={props.addOdd} key={aposta.tema} aposta={aposta}/>))

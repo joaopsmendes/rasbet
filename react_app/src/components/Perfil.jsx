@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Transacoes from "./Transacoes";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-
+import Box from '@mui/material/Box';
 
 
 
@@ -18,6 +18,7 @@ function Perfil(props) {
   const [freeBets, setFreeBets] = useState(0)
   const [alterarInfo, setAlterarInfo] = useState(false)
   const [user, setUser] = useState('')
+  const [info, setInfo] = useState('')
 
 
   const getSaldo = async (email) => {
@@ -38,22 +39,24 @@ function Perfil(props) {
 
   const handleAlterarInfo = () => {
     setAlterarInfo(!alterarInfo);
-    }
+  }
 
 
-    const getInfo = async (email) => {
+  const getInfo = async (email) => {
 
-        const response = await fetch('http://localhost:8080/info?' + new URLSearchParams({
-            userId: email})
-            , {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
+    const response = await fetch('http://localhost:8080/info?' + new URLSearchParams({
+      userId: email
+    })
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
-      const data = await response.json();
-      console.log(data);
-    }
+    const data = await response.json();
+    setInfo(data);
+    console.log(data);
+  }
 
 
   useEffect(() => {
@@ -61,26 +64,34 @@ function Perfil(props) {
     getSaldo(username);
     getInfo(username);
     setUser(username);
-  }, []);
+  }, [alterarInfo]);
 
 
   return (
     <div className="Peril">
       <Container maxWidth="xl">
-            <h1> {user} </h1>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <h2> Saldo: {saldo}€ </h2>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <h2> FreeBets: {freeBets}€</h2>
-              </Grid>
-
+        <h2> Bem vindo, {info['username']} </h2>
+        <Box sx={{mb: 2, p: 2, flexGrow: 1,display: 'flex',flexDirection: 'row' ,justifyContent: 'space-between', border: 1}}>
+        
+            <div><h3> NIF </h3><p>{info['nif']} </p></div>
+            <div><h3> Telemovel </h3><p>{info['telemovel']} </p></div>
+            <div><h3> Data de Nascimento</h3> <p>{info['date']} </p></div>
+            <div><h3> Morada </h3><p>{info['morada']} </p></div>
+        </Box>
+        <Box sx={{ border: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <h2> Saldo: {saldo}€ </h2>
             </Grid>
-            <Transacoes getSaldo={getSaldo} saldo={saldo} />
-        <Button sx={{ mt:10, mb: 4}} color={alterarInfo ? "primary" : "inherit"} onClick={handleAlterarInfo} variant="contained" size="md" value="AlterarInfo">Alterar Informações</Button>
-        {alterarInfo && <AlterarInformacaoUser />}
-        </Container>
+            <Grid item xs={12} sm={6}>
+              <h2> FreeBets: {freeBets}€</h2>
+            </Grid>
+          </Grid>
+          <Transacoes getSaldo={getSaldo} saldo={saldo} />
+        </Box>
+        <Button sx={{ mt: 10, mb: 4 }} color={alterarInfo ? "primary" : "inherit"} onClick={handleAlterarInfo} variant="contained" size="md" value="AlterarInfo">Alterar Informações</Button>
+        {alterarInfo && <AlterarInformacaoUser update={alterarInfo} user={user} altera={handleAlterarInfo} />}
+      </Container>
     </div>
 
   );

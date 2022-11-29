@@ -25,13 +25,15 @@ function Pagamento(props) {
   const [outro, setOutro] = React.useState(false);
 
   const [saldoAtual, setSaldoAtual] = React.useState(0);
+  const [freebetsAtual, serFreebetsAtual] = React.useState(0);
+
 
 
 
 
   const getSaldo = async (email) => {
     console.log(email)
-    const response = await fetch('http://localhost:8080/getSaldo?' + new URLSearchParams({
+    const response = await fetch('http://localhost:8080/saldo?' + new URLSearchParams({
       userId: email
     })
       , {
@@ -42,7 +44,9 @@ function Pagamento(props) {
     //setSaldo(data.get('saldo'));
     //setFreeBets(data.get('freeBets'));
     console.log(data);
-    setSaldoAtual(data);
+    setSaldoAtual(data['saldo']);
+    setFreeBets(data['freebets']);
+
   }
 
   const handleClickOpen = () => {
@@ -64,6 +68,8 @@ function Pagamento(props) {
 
   const handleClickOutro = () => {
     setOutro(!outro);
+    setSaldo(false);
+    setFreeBets(false);
   };
 
 
@@ -83,30 +89,30 @@ function Pagamento(props) {
   }, [props.pagamento]);
 
 
-  const montanteField = (nome,bool,montante,setter) => {
-    return(
-    <TextField requiredname={nome} fullWidth label={nome} id={nome} 
+  const montanteField = (nome, bool, montante, setter) => {
+    return (
+      <TextField requiredname={nome} fullWidth label={nome} id={nome}
         type="number"
         defaultValue={1}
         disabled={!bool}
-        onChange={(e)=>setter(e.target.value)}
+        onChange={(e) => setter(e.target.value)}
         error={valorAPagar() < 0}
-        helperText={valorAPagar() < 0? 'Valor inválido' : ' '}
-        InputProps={{ inputProps: { min: 0.01} }} />
+        helperText={valorAPagar() < 0 ? 'Valor inválido' : ' '}
+        InputProps={{ inputProps: { min: 0.01 } }} />
     );
-}
+  }
 
 
   const valorPago = () => {
     let valor = 0;
     if (saldo) {
-        valor += montanteSaldo;
+      valor += montanteSaldo;
     }
     if (freeBets) {
-        valor += montanteFreeBets;
+      valor += montanteFreeBets;
     }
-    if(outro){
-        valor += montanteOutros;
+    if (outro) {
+      valor += montanteOutros;
     }
     console.log(valor);
     return valor;
@@ -129,17 +135,17 @@ function Pagamento(props) {
                 Saldo
               </Button>
             </Grid>
-              <Grid item xs={6}>
-                {montanteField("Saldo",saldo,montanteSaldo,setMontanteSaldo)}
-              </Grid>
+            <Grid item xs={6}>
+              {montanteField("Saldo", saldo, montanteSaldo, setMontanteSaldo)}
+            </Grid>
             <Grid item xs={6}>
               <Button disabled={!freeBets && valorAPagar() == 0} fullWidth variant="contained" color={freeBets ? "primary" : "inherit"} onClick={handleClickFreeBets} >
                 FreeBets
               </Button>
             </Grid>
             <Grid item xs={6}>
-                {montanteField("FreeBets",freeBets,montanteFreeBets,setMontanteFreeBets)}
-              </Grid>
+              {montanteField("FreeBets", freeBets, montanteFreeBets, setMontanteFreeBets)}
+            </Grid>
             <Grid item xs={12}>
               <Button disabled={!outro && valorAPagar() == 0} fullWidth variant="contained" color={outro ? "primary" : "inherit"} onClick={handleClickOutro} >
                 Outro
@@ -149,16 +155,18 @@ function Pagamento(props) {
           {outro &&
             <Grid container spacing={2}>
               <Grid item xs={4}>
-                <Button fullWidth sx={{ mt: 2}} color="inherit" variant="contained">MULTIBANCO</Button>
+                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">MULTIBANCO</Button>
               </Grid>
               <Grid item xs={4}>
-                <Button fullWidth sx={{ mt:2}}  color="inherit" variant="contained" onClick={handleMbway}>MBWAY</Button>
+                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained" onClick={handleMbway}>MBWAY</Button>
               </Grid>
               <Grid item xs={4}>
-                <Button fullWidth sx={{ mt:2}}  color="inherit" variant="contained">VISA</Button>
+                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">VISA</Button>
               </Grid>
             </Grid>
           }
+          <Button sx={{ mt: 2 }}fullWidth variant="contained" color="inherit" >Pagar</Button>
+
         </DialogContent>
       </Dialog>
       {mbway && <MBWAY mbway={mbway} close={handleCloseMbway} />}
