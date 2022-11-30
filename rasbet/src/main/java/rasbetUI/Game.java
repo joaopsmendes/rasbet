@@ -14,6 +14,8 @@ public interface Game {
 
     Map<String, List<Outcome>> getOdds(String bookmaker);
 
+    Map<String,Map<String, List<Outcome>>> getOdds();
+
     String vencedor();
 
     String getTitulo();

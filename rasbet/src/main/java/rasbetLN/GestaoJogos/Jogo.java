@@ -26,7 +26,7 @@ public class Jogo {
         }
     }
 
-    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, String titulo) {
+    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, String titulo,Estado estado) {
         this.idJogo = idJogo;
         this.desporto = desporto;
         this.data = data;

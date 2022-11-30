@@ -31,7 +31,7 @@ public class Bookmaker {
         mapMarkets = new HashMap<>();
         for (Market market : markets){
             if (market.key.equals("h2h"))
-                mapMarkets.put(market.key,market);
+                mapMarkets.put("Resultado Final",market);
         }
     }
 

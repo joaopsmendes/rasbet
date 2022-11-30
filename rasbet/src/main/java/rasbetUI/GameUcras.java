@@ -2,11 +2,7 @@ package rasbetUI;
 
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 public class GameUcras implements Game{
@@ -38,8 +34,23 @@ public class GameUcras implements Game{
         Map<String,List<Outcome>> map =  new HashMap<>();
         Bookmaker b = mapBookmakers.get(bookmaker);
         for (Map.Entry<String, Market> entry : b.mapMarkets.entrySet()){
-            List<Outcome> list = List.of(entry.getValue().outcomes);
+            List<Outcome> list = new ArrayList<>();
+            for (int i = 0; i<3;i++) list.add(null);
+            for (Outcome out : entry.getValue().outcomes ){
+                if (out.name.equals(homeTeam)) list.set(0,out);
+                else if (out.name.equals(awayTeam)) list.set(2,out);
+                else list.set(1,out);
+            }
             map.put(entry.getKey(),list);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Map<String, List<Outcome>>> getOdds() {
+        Map<String, Map<String, List<Outcome>>> map = new HashMap<>();
+        for (String bookmaker : mapBookmakers.keySet()){
+            map.put(bookmaker,getOdds(bookmaker));
         }
         return map;
     }

@@ -38,7 +38,7 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void addGame(Game game, String bookmaker, String desporto) throws SQLException{
         Desporto d = mapDesportos.get(desporto);
-        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco(),game.getTitulo());
+        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco(),game.getTitulo(), Jogo.Estado.ATIVO);
         Map<String,List<Outcome>> mapOdds = game.getOdds(bookmaker);
         for (Map.Entry<String, List<Outcome>> entry :mapOdds.entrySet()){
             for (Outcome outcome : entry.getValue()){

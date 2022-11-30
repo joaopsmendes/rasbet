@@ -9,9 +9,10 @@ public abstract class Aposta {
     private int idAposta;
     private float montante;
     private LocalDate dataAposta;
-    boolean resultado;
+    Boolean resultado;
 
-    public Aposta(int idAposta, float montante, LocalDate dataAposta, boolean resultado) {
+
+    public Aposta(int idAposta, float montante, LocalDate dataAposta, Boolean resultado) {
         this.idAposta = idAposta;
         this.montante = montante;
         this.dataAposta = dataAposta;
@@ -43,7 +44,7 @@ public abstract class Aposta {
         return dataAposta;
     }
 
-    public boolean getResultado(){
+    public Boolean getResultado(){
         return resultado;
     }
 

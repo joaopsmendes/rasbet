@@ -75,7 +75,10 @@ public class DBAposta {
         while(rs.next()){
             float montante = rs.getFloat("montante");
             LocalDate dataAposta = rs.getDate("data").toLocalDate();
-            boolean resultado = rs.getBoolean("resultado");
+            Boolean resultado = rs.getBoolean("resultado");
+            if (rs.wasNull()){
+                resultado = null;
+            }
             query ="SELECT * FROM Simples WHERE Aposta_idAposta = ?";
             ps = c.prepareStatement(query);
             ps.setInt(1, idAposta);

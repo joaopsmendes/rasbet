@@ -23,12 +23,13 @@ public class DBJogos {
 
 
     public void adicionarJogo(Jogo jogo) throws SQLException {
-        String query = "INSERT INTO Jogo(idJogo,Desporto_idDesporto,Estado_idEstado,data)VALUES(?,?,?,?)";
+        String query = "INSERT INTO Jogo(idJogo,Desporto_idDesporto,Estado_idEstado,titulo,data)VALUES(?,?,?,?,?)";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1,jogo.getIdJogo());
         ps.setInt(2,jogo.getDesporto());
         ps.setInt(3,jogo.getEstadoValue());
-        ps.setString(4,jogo.getData().toString());
+        ps.setString(4,jogo.getTitulo());
+        ps.setString(5,jogo.getData().toString());
         ps.execute();
 
         for (ApostaJogo apostaJogo : jogo.getApostas().values()){
@@ -99,9 +100,8 @@ public class DBJogos {
             String titulo = rs.getString("titulo");
 
 
-            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data,titulo));
+            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data,titulo, Jogo.Estado.ATIVO));
             Jogo jogo = map.get(idJogo);
-            jogo.setEstado(Jogo.Estado.ATIVO);
 
             Odd odd = new Odd(idOdd,valorOdd, opcao, jogo.getIdJogo());
             jogo.addOdd(tema,odd);
@@ -224,6 +224,7 @@ public class DBJogos {
         map.put(1,winnerList);
         List<Integer> losers = updatePerdedores(idJogo, vencedor);
         map.put(0,losers);
+        alteraEstado(idJogo, Jogo.Estado.FECHADO.value);
         return map;
     }
 

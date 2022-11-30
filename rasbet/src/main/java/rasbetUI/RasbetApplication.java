@@ -104,16 +104,17 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path = "showGamesToAdd")
-	public Map<String,List<Game>> showGamesToAdd() {
-		Map<String,List<Game>> map = new HashMap<>();
+	public Map<String,List<GameOutput>> showGamesToAdd() {
+		Map<String,List<GameOutput>> map = new HashMap<>();
 		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
 			Map<String,Game> games = entry.getValue().getGames();
-			List<Game> toAdd = new ArrayList<>();
+			List<GameOutput> toAdd = new ArrayList<>();
 			for (Game g: games.values()){
 				if(!g.concluido()) {
 					try {
 						if (!rasbetLN.existsGame(g.getId(),entry.getKey())) {
-							toAdd.add(g);
+							GameOutput game = new GameOutput(g);
+							toAdd.add(game);
 						}
 					} catch (SQLException ignored) {
 
@@ -122,7 +123,7 @@ public class RasbetApplication {
 			}
 			map.putIfAbsent(entry.getKey(), toAdd);
 		}
-
+		System.out.println(map);
 		return map;
 	}
 
