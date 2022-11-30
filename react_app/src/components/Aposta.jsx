@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import Grid from '@mui/material/Grid';
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -50,18 +50,25 @@ function Aposta(props) {
             <Grid item xs={12} sm={6} >
                 {odds.length > 0 && odds.map((odd) => (infoOdd(odd)))}
             </Grid>
+
             <Grid item xs={12} sm={6}>
+                <Divider sx={{ display: { xs: 'block', sm: 'none' } }} />
                 <Grid direction="column" container >
+
                     <Grid item >
                         <p>Dia: <b>{date}</b></p>
-                        <hr />
                     </Grid>
                     <Grid item>
                         <p>Montante Apostado: <b>{montante} €</b></p>
                     </Grid>
                     <Grid item>
                         <p>Possíveis Ganhos: <b>{totalGanhos()}</b></p>
-                        {resultado ? <CheckIcon  fontSize="large" color="success"/> : <CloseIcon fontSize="large" color="error"/>}
+                        {   
+                        resultado === null ?  null
+                        :resultado ? 
+                            <CheckIcon fontSize="large" color="success" /> 
+                            : <CloseIcon fontSize="large" color="error" />
+                        }
                     </Grid>
                 </Grid>
             </Grid>

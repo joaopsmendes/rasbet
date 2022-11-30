@@ -2,27 +2,15 @@ import './App.css';
 import React, { useState } from 'react';
 
 import PageUtilizador from './components/PageUtilizador';
-import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { createTheme } from '@mui/material/styles';
+import PageEspecialista from './components/Especialista/PageEspecialista';
 
 
 const defaultTheme = createTheme();
 
 const theme = createTheme({
   components: {
-    MuiButton: {
-      variants: [
-        {
-          props: { variant: 'dashed' },
-          style: {
-            textTransform: 'none',
-            border: `2px dashed ${defaultTheme.palette.primary.main}`,
-            color: defaultTheme.palette.primary.main,
-          },
-        },
-      ]
-    },
     MuiToggleButton: {
       styleOverrides: {
         root: {
@@ -42,15 +30,21 @@ const theme = createTheme({
     secondary: {
       main: '#E67644',
     },
+    neutral: {
+      light: '#ffa726',
+      main: '#FFFFFF',
+      dark: '#ef6c00',
+      contrastText: 'rgba(0, 0, 0, 0.87)'
+    }
   },
 });
 
 
 function App() {
 
-  const [isUser, setUser] = useState(true);
+  const [isUser, setUser] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
-  const [isEspecialista, setEspecialista] = useState(false);
+  const [isEspecialista, setEspecialista] = useState(true);
 
 
 
@@ -60,6 +54,7 @@ function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         {isUser && <PageUtilizador setAdmin={setAdmin} setEspecialista={setEspecialista} />}
+        {isEspecialista && <PageEspecialista />}
       </ThemeProvider>
     </div>
   );

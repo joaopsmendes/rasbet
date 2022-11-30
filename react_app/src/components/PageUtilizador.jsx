@@ -3,12 +3,13 @@ import ResponsiveAppBar from './Appbar';
 import Jogos from './Jogos';
 import { useEffect, useState } from 'react';
 import Registo from './Registo';
-import AlteracaoOdd from './AlteracaoOdd'
 import Pagamento from './Pagamento';
 import Historico from './Historico';
 import Dialogo from './Dialogo';
 import Perfil from './Perfil';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import SearchIcon from '@mui/icons-material/Search';
 
 function PageUtilizador() {
 
@@ -16,11 +17,12 @@ function PageUtilizador() {
   const [login, setLogin] = useState(false);
   const [signUp, setSignUp] = useState(false);
   const [user, setUser] = useState();
-  const [desportos, setDesportos] = useState([]);
   const [showJogos, setShowJogos] = useState(true);
   const [showHistorico, setShowHistorico] = useState(false);
   const [showPerfil, setShowPerfil] = useState(false);
   const [isDown, setIsDown] = useState(false);
+  const [desportos, setDesportos] = useState([]);
+  const [desportoAtivo, setDesportoAtivo] = useState('futebol');
 
 
 
@@ -30,7 +32,7 @@ function PageUtilizador() {
       setLogin(true);
       setUser(JSON.parse(sessionStorage.getItem('user')));
     }
-  }, [login]);
+  }, []);
 
 
 
@@ -67,6 +69,13 @@ function PageUtilizador() {
   }
 
 
+  const settingsOptions = {
+    'Perfil': handlePerfil,
+    'Histórico': handleHistorico,
+    'Terminar Sessão': handleLogout
+  }
+
+
   const getDesportos = async () => {
     const response = await fetch('http://localhost:8080/desportos', {
       method: 'GET',
@@ -83,11 +92,11 @@ function PageUtilizador() {
     <div className="App">
       {!isDown ?
         <div>
-          <ResponsiveAppBar pages={desportos} isLogin={login} login={handleLogin} historico={handleHistorico} perfil={handlePerfil} logout={handleLogout} />
+          <ResponsiveAppBar desportoAtivo={desportoAtivo} setDesportoAtivo={setDesportoAtivo} pages={desportos} isLogin={login} login={handleLogin} settings={settingsOptions} />
           {showPerfil && <Perfil />}
           {login && <Dialogo form={<Login login={handleLogin} />} title="Login" />}
           {signUp && <Dialogo form={<Registo />} title="Registo" />}
-          {showJogos && <Jogos userId={user} />}
+          {showJogos && <Jogos desportoAtivo={desportoAtivo} userId={user} login={login}/>}
           {showHistorico && <Historico nome={user} />}
         </div>
         :

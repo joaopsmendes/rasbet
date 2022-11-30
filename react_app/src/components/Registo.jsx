@@ -108,6 +108,7 @@ import FormControl from '@mui/material/FormControl';
               label="E-mail"
               name="email"
               type="email"
+              autoFocus
             />
             <TextField
               margin="normal"

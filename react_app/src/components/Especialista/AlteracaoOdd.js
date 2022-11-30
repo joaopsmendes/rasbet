@@ -98,7 +98,7 @@ function AlteracaoOdd() {
         </IconButton>
         <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
         <DialogContent>
-          <h1> </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
+          <h1>  </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
           <Button variant="Contained" onClick={handleClickOpen1}>SIM</Button>
           <Button variant="Contained" onClick={handleClose} >NÂO</Button>
         </DialogContent>

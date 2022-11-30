@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,15 +16,13 @@ import Dialogo from './Dialogo';
 import Login from './Login';
 import Registo from './Registo';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ToggleButton } from "@mui/material";
+import { Grid, ToggleButton } from "@mui/material";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-//const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Perfil', 'Histórico',  'Terminar Sessão'];
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] =useState(null);
-  const [alignment, setAlignment] = useState();
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
 
   const handleOpenNavMenu = (event) => {
@@ -42,24 +40,19 @@ function ResponsiveAppBar(props) {
     setAnchorElUser(null);
   };
   const handleChange = (event, newAlignment) => {
-    setAlignment(newAlignment);
+    if (newAlignment !== null) {
+      props.setDesportoAtivo(newAlignment);
+    }
   };
 
   const handleSettings = (event) => {
-    if(event.target.innerText === 'Histórico'){
-      props.historico();
-    }
-    if(event.target.innerText === 'Perfil'){
-      props.perfil();
-    }
-    if(event.target.innerText === 'Terminar Sessão'){
-      props.logout();
-    }
+    let handler = props.settings[event.target.innerText];
+    console.log(handler());
     handleCloseUserMenu();
   }
 
 
-  
+
   return (
     <AppBar position="static">
       <Container maxWidth="false">
@@ -83,71 +76,74 @@ function ResponsiveAppBar(props) {
             RASBET
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          <ToggleButtonGroup
-              color="warning"
-              value={alignment}
+          <Box sx={{ flexGrow: 1, display: { md: 'flex', xs: 'flex' }, overflow: 'auto' }}>
+            <ToggleButtonGroup
+              value={props.desportoAtivo}
               exclusive
               onChange={handleChange}
-              >
-            {props.pages.map((page) => (
-              <ToggleButton
-                variant="contained"
-                key={page}
-                value={page}
-                onClick={handleCloseNavMenu}
-                style={{ borderRadius: "20px", padding:' 2% 15%',}}
-                sx={{ ml:5, mr: 5, p: 2,color: 'white', display: 'block',
-                "&.Mui-selected, &.Mui-selected:hover": {
-                  color: "#000000",
-                  backgroundColor: '#FFFFFF'
-                },}}
-              >
-                {page}
-              </ToggleButton>
-            ))}
+            >
+              {props.pages.map((page) => (
+                <ToggleButton
+                  variant="contained"
+                  key={page}
+                  value={page}
+                  onClick={handleCloseNavMenu}
+                  style={{ borderRadius: "20px", padding: ' 2% 15%', }}
+                  sx={{
+                    ml: 5, mr: 5, p: 2, color: 'white', display: 'block',
+                    "&.Mui-selected, &.Mui-selected:hover": {
+                      color: "#000000",
+                      backgroundColor: '#FFFFFF'
+                    },
+                  }}
+                >
+                  {page}
+                </ToggleButton>
+              ))}
             </ToggleButtonGroup>
           </Box>
+
           {
             props.isLogin ?
-          
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} size="large"  color="inherit" aria-label="menu" sx={{ p: 0}}>
-                <MenuIcon />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleSettings}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          :<div>
-            <Dialogo form={<Login login={props.login}/>} title="Login"/>
-            <Dialogo form={<Registo login={props.login} />} title="Registo"/>
-           </div>
-           }
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
+                    <MenuIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {Object.keys(props.settings).map((setting) => (
+                    <MenuItem key={setting} onClick={handleSettings}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+              : <Box sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexDirection: 'row',
+              }}>
+                <Dialogo form={<Login login={props.login} />} title="Login" />
+                <Dialogo form={<Registo login={props.login} />} title="Registo" />
+              </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>

@@ -27,19 +27,20 @@ function Jogos(props) {
 
     const getJogos = async () => {
         const response = await fetch('http://localhost:8080/jogos?' + new URLSearchParams({
-            desporto: "futebol"
-        })
+            desporto: props.desportoAtivo        })
             , {
                 method: 'GET',
             });
         const data = await response.json();
         //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
-        console.log("RESULT");
-        console.log(result);
+        console.log("JOGOS");
+        console.log(data)
         setJogos(result);
 
     }
+
+
 
     useEffect(() => {
 
@@ -48,7 +49,7 @@ function Jogos(props) {
         //.then(response=>response.json())
         //.then(data=>setJogos(data))
 
-    }, [])
+    }, [props.desportoAtivo])
 
 
     const addOdd = (newAposta) => {
@@ -156,7 +157,9 @@ function Jogos(props) {
             <Grid container spacing={2} alignItems="center" justifyContent="center">
                 <Grid item xs={10} md={9} xl={9}>
                     <Box sx={{ m: 5, border: 2, borderRadius: '10%', width: '90%' }}>
-                        {jogos.length > 0 && jogos.map((jogo) => (<Jogo removeOdd={removeOdd} addOdd={addOdd} key={jogo.idJogo} jogo={jogo} />))}
+                        {jogos.length > 0 ? 
+                        jogos.map((jogo) => (<Jogo removeOdd={removeOdd} addOdd={addOdd} key={jogo.idJogo} jogo={jogo} />))
+                        : <h1>Não existem jogos disponíveis neste momento</h1>}
                     </Box>
                 </Grid>
                 {aposta.length > 0 ?
@@ -181,13 +184,11 @@ function Jogos(props) {
                                         <p>Total de Ganhos <br/></p><b style={{color:"#E67644"}}>{getMontanteTotal()}</b>
                                     </Grid>
                                     <Grid item xs={5}>
-                                        <Button color="secondary" sx={{ borderRadius: '30px' }} disabled={montante <= 0} onClick={handlePagamento} variant="contained">
-                                            <b>Apostar</b>
+                                        <Button  color="secondary" sx={{ borderRadius: '30px' }}  disabled={montante <= 0 || !props.login} onClick={handlePagamento} variant="contained">
+                                            <b>{props.login ? "Apostar" : "Login Necessário"}</b>
                                         </Button>
                                     </Grid>
                                     <Grid item xs={1}/>
-
-
                                 </Grid>
                             </Grid>
 

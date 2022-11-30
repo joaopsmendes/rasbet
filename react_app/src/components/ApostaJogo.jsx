@@ -63,7 +63,7 @@ function ApostaJogo(props) {
       onChange={handleChange}
     >
       {
-        odds.length > 0 && odds.map((odd) => (<ToggleButton  style={{outlineWidth: '2px', outlineStyle: 'solid', margin: '1%',borderRadius: "10px"}} sx={{ m: 4, }}  value={odd[1].idOdd}><Odd key={odd[0]} odd={odd} /></ToggleButton>))
+        odds.length > 0 && odds.map((odd) => (<ToggleButton  style={{outlineWidth: '2px', outlineStyle: 'solid', margin: '1%',borderRadius: "10px", padding: '1%'}} sx={{ m: 4, }}  value={odd[1].idOdd}><Odd key={odd[0]} odd={odd} /></ToggleButton>))
       }
     </ToggleButtonGroup>
   </div>

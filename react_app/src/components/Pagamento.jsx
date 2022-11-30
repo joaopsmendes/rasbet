@@ -25,7 +25,7 @@ function Pagamento(props) {
   const [outro, setOutro] = React.useState(false);
 
   const [saldoAtual, setSaldoAtual] = React.useState(0);
-  const [freebetsAtual, serFreebetsAtual] = React.useState(0);
+  const [freebetsAtual, setFreebetsAtual] = React.useState(0);
 
 
 
@@ -45,7 +45,7 @@ function Pagamento(props) {
     //setFreeBets(data.get('freeBets'));
     console.log(data);
     setSaldoAtual(data['saldo']);
-    setFreeBets(data['freebets']);
+    setFreebetsAtual(data['freebets']);
 
   }
 
@@ -60,10 +60,12 @@ function Pagamento(props) {
 
   const handleClickSaldo = () => {
     setSaldo(!saldo);
+    setOutro(false);
   };
 
   const handleClickFreeBets = () => {
     setFreeBets(!freeBets);
+    setOutro(false);
   };
 
   const handleClickOutro = () => {
@@ -71,7 +73,6 @@ function Pagamento(props) {
     setSaldo(false);
     setFreeBets(false);
   };
-
 
 
   const handleMbway = () => {
@@ -89,32 +90,41 @@ function Pagamento(props) {
   }, [props.pagamento]);
 
 
-  const montanteField = (nome, bool, montante, setter) => {
+  const montanteField = (nome, bool, montante, setter, atual) => {
     return (
       <TextField requiredname={nome} fullWidth label={nome} id={nome}
         type="number"
-        defaultValue={1}
+        defaultValue={montante}
         disabled={!bool}
-        onChange={(e) => setter(e.target.value)}
-        error={valorAPagar() < 0}
-        helperText={valorAPagar() < 0 ? 'Valor inválido' : ' '}
+        onChange={(e) => setter(Number(e.target.value))}
+        error={valorAPagar() < 0 || montante > atual}
+        helperText={valorAPagar() < 0  || montante > atual ? 'Valor inválido' : ' '}
         InputProps={{ inputProps: { min: 0.01 } }} />
     );
   }
+
+  const handleSubmit = () => {
+    
+  }
+
 
 
   const valorPago = () => {
     let valor = 0;
     if (saldo) {
       valor += montanteSaldo;
+      console.log(valor);
+
     }
     if (freeBets) {
       valor += montanteFreeBets;
+      console.log(valor);
     }
     if (outro) {
       valor += montanteOutros;
+      console.log(valor);
+
     }
-    console.log(valor);
     return valor;
   }
 
@@ -128,7 +138,9 @@ function Pagamento(props) {
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <h3>Valor a pagar : {valorAPagar()}</h3>
-          <h3>Saldo Atual : {saldoAtual - valorPago()}</h3>
+          <h3>Saldo Atual : {saldoAtual - montanteSaldo}</h3>
+          <h3>FreeBets Atual : {freebetsAtual- montanteFreeBets}</h3>
+
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Button disabled={!saldo && valorAPagar() == 0} fullWidth variant="contained" color={saldo ? "primary" : "inherit"} onClick={handleClickSaldo}>
@@ -136,7 +148,7 @@ function Pagamento(props) {
               </Button>
             </Grid>
             <Grid item xs={6}>
-              {montanteField("Saldo", saldo, montanteSaldo, setMontanteSaldo)}
+              {montanteField("Saldo", saldo, montanteSaldo, setMontanteSaldo, saldoAtual)}
             </Grid>
             <Grid item xs={6}>
               <Button disabled={!freeBets && valorAPagar() == 0} fullWidth variant="contained" color={freeBets ? "primary" : "inherit"} onClick={handleClickFreeBets} >
@@ -144,7 +156,7 @@ function Pagamento(props) {
               </Button>
             </Grid>
             <Grid item xs={6}>
-              {montanteField("FreeBets", freeBets, montanteFreeBets, setMontanteFreeBets)}
+              {montanteField("FreeBets", freeBets, montanteFreeBets, setMontanteFreeBets, freebetsAtual)}
             </Grid>
             <Grid item xs={12}>
               <Button disabled={!outro && valorAPagar() == 0} fullWidth variant="contained" color={outro ? "primary" : "inherit"} onClick={handleClickOutro} >
@@ -165,7 +177,7 @@ function Pagamento(props) {
               </Grid>
             </Grid>
           }
-          <Button sx={{ mt: 2 }}fullWidth variant="contained" color="inherit" >Pagar</Button>
+          <Button  disabled={valorAPagar() != 0} sx={{ mt: 2 }}fullWidth variant="contained" color={valorAPagar() == 0  ? "primary" : "inherit"} onClick={props.submit}>Pagar</Button>
 
         </DialogContent>
       </Dialog>

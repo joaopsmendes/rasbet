@@ -83,7 +83,7 @@ function InserirOdd() {
         />
       </Search>
       </Box>
-      {/* aparecer os jogos para alterar a odd, uma box para cada jogo individualizado */}
+      {/* aparecer os jogos para alterar a odd, uma box para cada jogo individualizado  */}
 
       <Button
         type="submit"

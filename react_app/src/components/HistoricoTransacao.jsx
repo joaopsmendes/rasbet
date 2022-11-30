@@ -50,7 +50,7 @@ function HistoricoTransacoes(props) {
         });
 
         let array = data['levantamento'].concat(data['deposito']);
-        array.sort((a, b) => b['data'] - a['data']);
+        array.sort((a, b) => a['data'] - b['data']);
         setTransacoes(array);
 
     }

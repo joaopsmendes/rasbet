@@ -3,18 +3,11 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
-import { createTheme ,ThemeProvider} from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
 
-const theme = createTheme({
-  palette: {
-    custom: {
-      light: '#ffa726',
-      main: '#FFFFFF',
-      dark: '#ef6c00',
-      contrastText: 'rgba(0, 0, 0, 0.87)'
-    }
-}});
 
 
 
@@ -30,17 +23,17 @@ function Dialogo(props) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Button variant="text" color="custom" onClick={handleClickOpen}>
+    <div>
+      <Button variant="text" color="neutral" onClick={handleClickOpen}>
         {props.title}
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{props.title}</DialogTitle>
         <DialogContent>
-            {props.form}
+          {props.form}
         </DialogContent>
       </Dialog>
-  </ThemeProvider>
+    </div>
 
   );
 }
