@@ -70,8 +70,17 @@ public class RasbetLN implements IRasbetLN{
     public void aposta(ApostaRequest apostaRequest) throws SQLException {
 
         String userId = apostaRequest.getUserId();
-        float montante = apostaRequest.getValor();
+        float montante; //= apostaRequest.getValor();
+        float freebets = apostaRequest.getFreebets();
+        float saldo = apostaRequest.getSaldo();
         List<Integer> listOdds = List.of(apostaRequest.getOdds());
+
+        if(montante == freebets || montante == saldo){
+            montante = freebets + saldo;            
+        }    
+        else {
+            apostaRequest.getValor();
+            }
 
         gestaoUtilizadores.updateSaldo(userId,montante*-1);
         gestaoApostas.createAposta(userId,montante,listOdds);
