@@ -11,10 +11,10 @@ public interface IGestaoApostas {
 
     float fecharAposta(int id, boolean resultado) throws SQLException;
 
-    void createAposta(String userId, float montante, List<Integer> listOdds) throws SQLException;
+    void createAposta(String userId, float montante, float ganhos,List<Integer> listOdds) throws SQLException;
 
     float cashout(int idAposta) throws SQLException;
 
-    void updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
+    Map<String, Float> updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
 
 }

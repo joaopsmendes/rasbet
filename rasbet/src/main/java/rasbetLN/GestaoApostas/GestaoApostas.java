@@ -22,9 +22,9 @@ public class GestaoApostas implements IGestaoApostas {
 
 
 
-    public void createAposta(String userId,float montante,List<Integer> listaOdd) throws SQLException{
-        if (listaOdd.size() == 1) this.apostas.createSimples(userId,montante,listaOdd.get(0));
-        else this.apostas.createMultipla(userId,montante,listaOdd);
+    public void createAposta(String userId,float montante, float ganhos, List<Integer> listaOdd) throws SQLException{
+        if (listaOdd.size() == 1) this.apostas.createSimples(userId,montante,ganhos,listaOdd.get(0));
+        else this.apostas.createMultipla(userId,montante,ganhos,listaOdd);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class GestaoApostas implements IGestaoApostas {
     }
 
     @Override
-    public void updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
-        apostas.updateResulados(res);
+    public Map<String, Float> updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
+        return apostas.updateResulados(res);
     }
 
     @Override

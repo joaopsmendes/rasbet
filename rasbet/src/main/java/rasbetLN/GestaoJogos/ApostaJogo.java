@@ -2,31 +2,31 @@ package rasbetLN.GestaoJogos;
 
 import rasbetLN.GestaoApostas.Odd;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApostaJogo {
 
     private int idApostaJogo;
     private String tema;
-    private Map<String, Odd> mapOdd;
+    private List<Odd> listOdd;
     private Odd resultado;
 
 
     public ApostaJogo(String tema) {
         this.tema = tema;
-        mapOdd = new HashMap<>();
+        listOdd = new ArrayList<>();
         resultado = null;
     }
 
     public ApostaJogo(ApostaJogo apostaJogo) {
         this.tema = apostaJogo.getTema();
-        this.mapOdd = apostaJogo.getMapOdd();
+        this.listOdd = apostaJogo.getListOdd();
         this.resultado = apostaJogo.getResultado();
     }
 
     public void addOdd(Odd odd){
-        mapOdd.put(odd.getOpcao(),odd);
+        listOdd.add(odd);
     }
 
     public String getTema() {
@@ -37,20 +37,16 @@ public class ApostaJogo {
         this.tema = tema;
     }
 
-    public Map<String, Odd> getMapOdd() {
-        return mapOdd;
+    public List<Odd> getListOdd() {
+        return listOdd;
     }
 
     public void setIdApostaJogo(int idApostaJogo) {
         this.idApostaJogo = idApostaJogo;
     }
 
-    public void setMapOdd(Map<String, Odd> mapOdd) {
-        Map<String, Odd> map = new HashMap<>();
-        for(Map.Entry<String, Odd> entry : mapOdd.entrySet()){
-            this.mapOdd.put(entry.getKey(), entry.getValue().clone());
-        }
-        this.mapOdd = map;
+    public void setListOdd(List<Odd> listOdd) {
+        this.listOdd = listOdd;
     }
 
     public int getIdApostaJogo() {

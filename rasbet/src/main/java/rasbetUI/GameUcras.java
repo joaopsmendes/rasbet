@@ -65,6 +65,11 @@ public class GameUcras implements Game{
         return homeTeam + " vs " + awayTeam;
     }
 
+    @Override
+    public String getDesporto() {
+        return "futebol";
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -116,6 +121,18 @@ public class GameUcras implements Game{
     public void setBookmakers(Bookmaker[] bookmakers) {
         mapBookmakers = new HashMap<>();
         for (Bookmaker bookmaker : bookmakers){
+            /*
+            for (Market m : bookmaker.mapMarkets.values()){
+                Outcome[] list = new Outcome[3];
+                for (Outcome out : m.outcomes ){
+                    if (out.name.equals(homeTeam)) list[0]= out;
+                    else if (out.name.equals(awayTeam)) list[2] =out;
+                    else list[1]= out;
+                }
+                m.setOutcomes(list);
+            }
+             */
+
             mapBookmakers.put(bookmaker.key,bookmaker);
         }
     }

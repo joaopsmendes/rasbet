@@ -6,19 +6,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameOutput {
+public class GameOutput{
 
     private String idJogo;
-    private LocalDateTime data;
-    private String titulo;
 
+    private String desporto;
+    private LocalDateTime data;
+
+    private String escolhido;
+    private String titulo;
+    private boolean concluido;
     private Map<String,List<ApostaOutput>> mapMercados;
 
+    public GameOutput(){
 
+    }
     public GameOutput (Game game){
+        this.concluido = game.concluido();
         this.idJogo = game.getId();
         this.data = game.getHoraComeco();
         this.titulo = game.getTitulo();
+        this.desporto = game.getDesporto();
         this.mapMercados =  new HashMap<>();
         for (Map.Entry<String, Map<String, List<Outcome>>> entry : game.getOdds().entrySet()){
             Map<String, List<Outcome>> map  = entry.getValue();
@@ -32,14 +40,26 @@ public class GameOutput {
     }
 
 
-
-    public String getIdJogo() {
-        return idJogo;
+    public String getDesporto() {
+        return desporto;
     }
 
     public LocalDateTime getData() {
         return data;
     }
+
+    public String getEscolhido() {
+        return escolhido;
+    }
+
+    public boolean isConcluido() {
+        return concluido;
+    }
+
+    public String getIdJogo() {
+        return idJogo;
+    }
+
 
     public String getTitulo() {
         return titulo;
@@ -47,5 +67,33 @@ public class GameOutput {
 
     public Map<String, List<ApostaOutput>> getMapMercados() {
         return mapMercados;
+    }
+
+    public void setIdJogo(String idJogo) {
+        this.idJogo = idJogo;
+    }
+
+    public void setDesporto(String desporto) {
+        this.desporto = desporto;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
+    }
+
+    public void setEscolhido(String escolhido) {
+        this.escolhido = escolhido;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setConcluido(boolean concluido) {
+        this.concluido = concluido;
+    }
+
+    public void setMapMercados(Map<String, List<ApostaOutput>> mapMercados) {
+        this.mapMercados = mapMercados;
     }
 }

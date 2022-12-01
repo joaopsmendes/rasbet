@@ -20,4 +20,5 @@ public interface Game {
 
     String getTitulo();
 
+    String getDesporto();
 }

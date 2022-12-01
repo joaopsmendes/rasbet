@@ -1,5 +1,6 @@
 package rasbetUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApostaOutput {
@@ -19,4 +20,5 @@ public class ApostaOutput {
     public List<Outcome> getOdds() {
         return odds;
     }
+
 }

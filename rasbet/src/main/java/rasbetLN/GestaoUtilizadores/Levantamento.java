@@ -13,6 +13,6 @@ public class Levantamento extends Transacao {
     }
 
     public Levantamento(Transacao transacao) {
-        super(transacao.getValor(),transacao.getData());
+        super(transacao.getSaldo(),transacao.getData());
     }
 }

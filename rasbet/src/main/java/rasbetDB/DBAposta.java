@@ -17,8 +17,8 @@ public class DBAposta {
         this.c = connection;
     }
 
-    public void createSimples(String idUtilizador, float montante,int idOdd) throws SQLException{
-        int idAposta = createAposta(idUtilizador,montante);
+    public void createSimples(String idUtilizador, float montante,float ganhos,int idOdd) throws SQLException{
+        int idAposta = createAposta(idUtilizador,montante, ganhos);
 
         String query2 = "INSERT INTO Simples(Aposta_idAposta, Odd_idOdd)VALUES(?,?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
@@ -27,8 +27,8 @@ public class DBAposta {
         pstmt2.execute();
     }
 
-    public void createMultipla(String idUtilizador,float montante,List<Integer> listaOdd) throws SQLException{
-        int idAposta = createAposta(idUtilizador,montante);
+    public void createMultipla(String idUtilizador,float montante,float ganhos,List<Integer> listaOdd) throws SQLException{
+        int idAposta = createAposta(idUtilizador,montante,ganhos);
 
         String query2 = "INSERT INTO Multipla(Aposta_idAposta)VALUES(?)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
@@ -41,12 +41,13 @@ public class DBAposta {
 
     }
 
-    public int createAposta(String idUtilizador,float montante) throws SQLException {
-        String query1 = "INSERT INTO Aposta(Utilizador_email,montante,data)VALUES(?,?,?)";
+    public int createAposta(String idUtilizador,float montante,float ganhos) throws SQLException {
+        String query1 = "INSERT INTO Aposta(Utilizador_email,montante,data, ganhoPossivel)VALUES(?,?,?,?)";
         PreparedStatement pstmt1 = c.prepareStatement(query1,Statement.RETURN_GENERATED_KEYS);
         pstmt1.setString(1, idUtilizador);
         pstmt1.setFloat(2, montante);
         pstmt1.setString(3, LocalDateTime.now().toString());
+        pstmt1.setFloat(4, ganhos);
         pstmt1.execute();
 
         ResultSet rs = pstmt1.getGeneratedKeys();
@@ -222,9 +223,9 @@ public class DBAposta {
         return montante;
     }
 
-    public void updateResulados(Map<Integer, List<Integer>> res) throws SQLException {
-        updateVencedores(res.get(1));
+    public Map<String, Float> updateResulados(Map<Integer, List<Integer>> res) throws SQLException {
         updatePerdedores(res.get(0));
+        return updateVencedores(res.get(1));
     }
 
 
@@ -243,19 +244,32 @@ public class DBAposta {
         }
     }
 
-    private void updateVencedores(List<Integer> list) throws SQLException {
+    private Map<String,Float> updateVencedores(List<Integer> list) throws SQLException {
         Set<Integer> vencedores = new HashSet<>();
         Set<Integer> losers = new HashSet<>();
+        Map<String,Float> mapSaldos = new HashMap<>();
         for (int id : list) {
             String query = "UPDATE Aposta SET resultado=1 WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1,id);
             ps.executeUpdate();
 
+            query = "SELECT utilizador_email,ganhoPossivel WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
+            ps = c.prepareStatement(query);
+            ps.setInt(1,id);
+            ResultSet rs=  ps.executeQuery();
+            while (rs.next()){
+                String userId = rs.getString("utilizador_email");
+                float ganho = rs.getFloat("ganhoPossivel");
+                mapSaldos.putIfAbsent(userId, (float) 0);
+                ganho += mapSaldos.get(userId);
+                mapSaldos.replace(userId,ganho);
+            }
+
             query = "SELECT Multipla_Aposta_idAposta,Resultado FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idOdd = ?";
             ps = c.prepareStatement(query);
             ps.setInt(1,id);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             while (rs.next()){
                 int resultado = rs.getInt("resultado");
                 System.out.println(resultado);
@@ -275,7 +289,20 @@ public class DBAposta {
                 ps = c.prepareStatement(query);
                 ps.setInt(1,idAposta);
                 ps.executeUpdate();
+
+                query = "SELECT utilizador_email,ganhoPossivel  FROM Aposta WHERE idAposta= ?";
+                ps = c.prepareStatement(query);
+                ps.setInt(1,idAposta);
+                ps.executeQuery();
+                if(rs.next()){
+                    String userId = rs.getString("utilizador_email");
+                    float ganho = rs.getFloat("ganhoPossivel");
+                    mapSaldos.putIfAbsent(userId,(float) 0);
+                    ganho += mapSaldos.get(userId);
+                    mapSaldos.replace(userId,ganho);
+                }
             }
         }
+        return mapSaldos;
     }
 }

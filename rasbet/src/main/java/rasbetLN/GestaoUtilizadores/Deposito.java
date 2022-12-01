@@ -13,6 +13,6 @@ public class Deposito extends Transacao {
     }
 
     public Deposito(Transacao transacao) {
-        super(transacao.getValor(),transacao.getData());
+        super(transacao.getSaldo(),transacao.getData());
     }
 }

@@ -49,7 +49,7 @@ public class DBJogos {
         int idApostaJogo =0;
         if (rs.next()) idApostaJogo = rs.getInt(1);
 
-        for (Odd odd : apostaJogo.getMapOdd().values()){
+        for (Odd odd : apostaJogo.getListOdd()){
             adicionarOdd(odd,idApostaJogo);
         }
     }
@@ -129,8 +129,8 @@ public class DBJogos {
 
             ApostaJogo apostaJogo = new ApostaJogo(tema);
 
-            Map<String,Odd> mapOdd = oddApostaJogo(tema,jogo);
-            apostaJogo.setMapOdd(mapOdd);
+            List<Odd> listOdd = oddApostaJogo(tema,jogo);
+            apostaJogo.setListOdd(listOdd);
 
             apostas.put(tema,apostaJogo);
         }
@@ -139,8 +139,8 @@ public class DBJogos {
     }
 
 
-    public Map<String,Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
-        Map<String,Odd> map = new HashMap<>();
+    public List<Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
+        List<Odd> list = new ArrayList<>();
         String query = "SELECT * FROM Odd Where ApostaJogo_tema = ? AND ApostaJogo_Jogo_idJogo = ? AND ApostaJogo_Jogo_Desporto_idDesporto = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, tema);
@@ -152,9 +152,9 @@ public class DBJogos {
             float valor = rs.getFloat("valor");
             String opcao = rs.getString("opcao");
             Odd odd = new Odd(idOdd,valor, opcao, jogo.getIdJogo());
-            map.put(odd.getOpcao(),odd);
+            list.add(odd);
         }
-        return map;
+        return list;
     }
 
 

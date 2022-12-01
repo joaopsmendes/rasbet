@@ -224,54 +224,32 @@ public class DBUtilizadores {
         ps.execute();
     }
 
-    public int novaTransacao(Transacao transacao,String userId) throws SQLException {
-        String query = "INSERT INTO Transacao(valor, dataTransacao, Utilizador_Email)VALUES (?,?,?)";
-        PreparedStatement ps = c.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-        ps.setFloat(1, transacao.getValor());
-        ps.setString(2, transacao.getData().toString());
+    public void updateSaldoFreebets(float saldo,float freebets, String userId) throws SQLException {
+        String query = "UPDATE Carteira SET freebets = ?, saldo = ? WHERE Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setFloat(1, freebets);
+        ps.setFloat(2, saldo);
         ps.setString(3, userId);
         ps.execute();
-
-        ResultSet rs = ps.getGeneratedKeys();
-        int value = 0;
-        if(rs.next()) value = rs.getInt(1);
-        return value;
     }
 
-    public void novoDeposito(Deposito deposito, String userId) throws SQLException {
-        int idTransacao = novaTransacao(deposito,userId);
-        String query = "INSERT INTO Deposito(Transacao_idTransacao)VALUES (?)";
-        PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1,idTransacao);
-        ps.execute();
-    }
 
-    public void novoLevantamento(Levantamento levantamento, String userId) throws SQLException {
-        int idTransacao = novaTransacao(levantamento,userId);
-        String query = "INSERT INTO Levantamento(Transacao_idTransacao)VALUES (?)";
+
+    public void novaTransacao(Transacao transacao,String userId) throws SQLException {
+        String query = "INSERT INTO Transacao(saldo, freebets, dataTransacao, Utilizador_Email,TipoTransacao_idTipoTransacao)VALUES (?,?,?,?,?)";
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1,idTransacao);
+        ps.setFloat(1, transacao.getSaldo());
+        ps.setFloat(2, transacao.getFreebets());
+        ps.setString(3, transacao.getData().toString());
+        ps.setString(4, userId);
+        ps.setInt(5,transacao.getTipo().value);
         ps.execute();
 
     }
 
-    public void getTransacao(int idT, LocalDateTime dataTransacao, float valor,Map<String,List<Transacao>> map) throws SQLException{
-        String query ="SELECT * FROM Deposito WHERE Transacao_idTransacao = ? ";
-        PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1, idT);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()){
-            map.get("deposito").add(new Deposito(valor, dataTransacao));
-        }
-        else{
-             map.get("levantamento").add(new Levantamento(valor, dataTransacao));
-        }
-    }
 
-    public Map<String,List<Transacao>> getHistTransacoes(String userId) throws SQLException{
-        Map<String,List<Transacao>> map = new HashMap<>();
-        map.put("deposito",new ArrayList<>());
-        map.put("levantamento",new ArrayList<>());
+    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
+        List<Transacao> list = new ArrayList<>();
         String query = "SELECT * FROM Transacao WHERE Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
@@ -279,12 +257,16 @@ public class DBUtilizadores {
         ResultSet rs = ps.executeQuery();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         while(rs.next()){
-            int idtransacao = rs.getInt("idTransacao");
             LocalDateTime dataTransacao = LocalDateTime.parse(rs.getString("dataTransacao"),formatter);
-            float valor = rs.getFloat("valor");
-            getTransacao(idtransacao,dataTransacao,valor,map);
+            float saldo = rs.getFloat("saldo");
+            float freebets = rs.getFloat("freebets");
+            int tipoIndex = rs.getInt("TipoTransacao_idTipoTransacao");
+            Transacao transacao = new Transacao(saldo,freebets,dataTransacao, Transacao.Tipo.values()[tipoIndex]);
+            list.add(transacao);
+
+
         }
-        return map;
+        return list;
     }
 
     public void addNotificacao(String userId, Notificacao notificacao) throws SQLException{

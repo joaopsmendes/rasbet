@@ -38,10 +38,6 @@ public class GestaoJogos implements IGestaoJogos {
         return this.jogos.apostasJogo(jogo);
     }
 
-    public Map<String, Odd> oddApostaJogo(String tema, Jogo jogo) throws SQLException{
-        return this.jogos.oddApostaJogo(tema, jogo);
-    }
-
     @Override
     public boolean existeJogo(String gameId, Desporto desporto) throws SQLException {
         return this.jogos.existeJogo(gameId,desporto);

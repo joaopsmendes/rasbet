@@ -7,6 +7,9 @@ public class ApostaRequest {
 
     String userId;
     float valor;
+    float saldo;
+    float freebets;
+    float ganhoPossivel;
     Integer []odds;
 
     public String getUserId() {
@@ -25,6 +28,13 @@ public class ApostaRequest {
         this.valor = valor;
     }
 
+    public void setSaldo(float saldo) {
+        this.saldo = saldo;
+    }
+
+    public void setFreebets(float freebets) {
+        this.freebets = freebets;
+    }
 
     public Integer[] getOdds() {
         return odds;
@@ -34,12 +44,19 @@ public class ApostaRequest {
         this.odds = odds;
     }
 
-    @Override
-    public String toString() {
-        return "ApostaRequest{" +
-                "userId='" + userId + '\'' +
-                ", valor=" + valor +
-                ", odds=" + Arrays.toString(odds) +
-                '}';
+    public float getSaldo() {
+        return saldo;
+    }
+
+    public float getGanhoPossivel() {
+        return ganhoPossivel;
+    }
+
+    public void setGanhoPossivel(float ganhoPossivel) {
+        this.ganhoPossivel = ganhoPossivel;
+    }
+
+    public float getFreebets() {
+        return freebets;
     }
 }

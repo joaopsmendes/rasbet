@@ -54,24 +54,16 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.removeFavorito(id, fav);
     }
 
-    @Override
-    public void deposito(String userId, Deposito deposito) throws SQLException {
-        updateSaldo(userId,deposito.getValor());
-        utilizadores.novoDeposito(deposito, userId);
-    }
 
-    public void levantamento(String userId, Levantamento levantamento) throws SQLException{
-        updateSaldo(userId, levantamento.getValor()*-1);
-        float saldo = utilizadores.getSaldo(userId);
-        utilizadores.novoLevantamento(levantamento, userId);
-    }
+
+
 
     public void updateFreebets(float freebets, String userId) throws SQLException{
         this.utilizadores.updateFreebets(freebets,userId);
     }
 
 
-    public Map<String, List<Transacao>> getHistTransacoes(String userId) throws SQLException{
+    public List<Transacao> getHistTransacoes(String userId) throws SQLException{
         return this.utilizadores.getHistTransacoes(userId);
     }
 
@@ -83,13 +75,34 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return utilizadores.getFavoritos(idUser);
     }
 
-    public void updateSaldo(String userId, float value) throws SQLException {
-        float saldo = utilizadores.getSaldo(userId);
-        saldo += value;
-        if (saldo < 0){
-            throw new SQLException("Saldo insuficiente");
+    public void updateSaldoFreebets(String userId, float saldo, float freebets) throws SQLException {
+        Map<String, Float> mapSaldo = utilizadores.getSaldoFreeBets(userId);
+        float saldoAtual = mapSaldo.get("saldo");
+        saldoAtual -= saldo;
+        if (saldoAtual < 0){
+            throw new SQLException("Saldo Insuficiente");
         }
-        utilizadores.updateSaldo(saldo, userId);
+        float freebestAtual = mapSaldo.get("freebets");
+        freebestAtual-=freebets;
+        if (freebestAtual < 0){
+            throw new SQLException("Freebets Insuficiente");
+        }
+        utilizadores.updateSaldoFreebets(saldoAtual,freebestAtual,userId);
+    }
+
+    public void updateSaldo(String userId, float saldo) throws SQLException {
+        float saldoAtual = utilizadores.getSaldo(userId);
+        saldoAtual += saldo;
+        if (saldoAtual < 0){
+            throw new SQLException("Saldo Insuficiente");
+        }
+
+        utilizadores.updateSaldo(saldoAtual,userId);
+    }
+
+    @Override
+    public void transacao(String userId, Transacao transacao) throws SQLException {
+        utilizadores.novaTransacao(transacao,userId);
     }
 
     public float getSaldo(String userId) throws SQLException {

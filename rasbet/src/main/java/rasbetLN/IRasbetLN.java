@@ -7,6 +7,7 @@ import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
+import rasbetUI.GameOutput;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -17,6 +18,9 @@ public interface IRasbetLN {
 
     void validateLogin (String email, String password) throws SQLException;
     void addGame(Game game, String bookmaker, String desporto) throws SQLException;
+
+    void addGame(GameOutput game) throws SQLException;
+
 
     // Class Apostador
     void addFavorito(String id,String desporto,String f) throws SQLException;
@@ -47,7 +51,7 @@ public interface IRasbetLN {
 
     List<Aposta> historicoApostas(String userId) throws SQLException;
 
-    Map<String, List<Transacao>> historicoTransacoes(String userId) throws SQLException;
+    List<Transacao> historicoTransacoes(String userId) throws SQLException;
 
     void alterarOdd(int idOdd, float valor) throws SQLException;
 

@@ -140,7 +140,16 @@ public class RasbetApplication {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
 
+	@PostMapping(path = "adicionarJogo")
+	public void adicionarJogo(@RequestBody GameOutput game) {
+		System.out.println("ADICIONAR JOGO");
+		try {
+			rasbetLN.addGame(game);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	//TODO
@@ -228,7 +237,6 @@ public class RasbetApplication {
 
 	@PostMapping(path="fecharAposta")
 	public void fecharAposta(@RequestBody Map<String, String> myJsonRequest){
-		//Get List of favorites
 		String idUser = myJsonRequest.get("userId");
 		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
 		boolean resultado = Boolean.parseBoolean(myJsonRequest.get("resultado"));
@@ -265,7 +273,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path= "historicoTransacoes")
-	public Map<String, List<Transacao>> historicoTransacoes(@RequestParam(name = "userId") String userId){
+	public List<Transacao> historicoTransacoes(@RequestParam(name = "userId") String userId){
 		try {
 			return rasbetLN.historicoTransacoes(userId);
 		} catch (SQLException e) {
