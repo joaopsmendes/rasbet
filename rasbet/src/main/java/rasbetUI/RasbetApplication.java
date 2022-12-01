@@ -225,11 +225,10 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="favorites")
-	public List<Favorito> getFavorites(@RequestBody Map<String, String> myJsonRequest){
+	public List<Favorito> getFavorites(@RequestParam(name = "userId") String userId){
 		//Get List of favorites
-		String id = myJsonRequest.get("userId");
 		try {
-			return rasbetLN.getFavorites(id);
+			return rasbetLN.getFavorites(userId);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
