@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface IGestaoUtilizadores {
     void newApostador(Apostador apostador) throws SQLException;
-    void logIn(String email, String password) throws SQLException;
+    String logIn(String email, String password) throws SQLException;
     void logOut(String email) throws SQLException;
     void replace(String email, Utilizador user) throws SQLException;
     Utilizador getByEmail(String email) throws SQLException;

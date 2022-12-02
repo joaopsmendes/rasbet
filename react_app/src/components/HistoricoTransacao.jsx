@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ConstructionOutlined } from "@mui/icons-material";
+import { Box, Container } from "@mui/material";
 
 
 function HistoricoTransacoes(props) {
@@ -25,7 +26,8 @@ function HistoricoTransacoes(props) {
     const [deposito, setDeposito] = useState();
     const [transacoes, setTransacoes] = useState([]);
 
-    let valor = 0;
+    let valorSaldo = 0;
+    let valorFreebets = 0;
 
     const getHistoricoTransacao = async (email) => {
 
@@ -39,19 +41,13 @@ function HistoricoTransacoes(props) {
                 }
             });
         const data = await response.json();
-        data['levantamento'].forEach(element => {
+        console.log(data);
+        data.forEach(element => {
             element['data'] = new Date(Date.parse(element['data']));
-            element['operacao'] = "Levantamento";
         });
 
-        data['deposito'].forEach(element => {
-            element['data'] = new Date(Date.parse(element['data']));
-            element['operacao'] = "Depósito";
-        });
-
-        let array = data['levantamento'].concat(data['deposito']);
-        array.sort((a, b) => a['data'] - b['data']);
-        setTransacoes(array);
+        data.sort((a, b) => a['data'] - b['data']);
+        setTransacoes(data);
 
     }
 
@@ -70,62 +66,74 @@ function HistoricoTransacoes(props) {
 
     const dateString = (date) => {
         var year = date.getFullYear();
-        var mes =  date.getMonth()+1;
-        var dia =  date.getDate();
-        return dia+"-"+mes+"-"+year;
+        var mes = date.getMonth() + 1;
+        var dia = date.getDate();
+        return dia + "-" + mes + "-" + year;
     }
 
     const saldoAposMovimento = (movimento) => {
-        if(movimento['operacao'] == "Levantamento"){
-            valor -= movimento['valor'];
-            return valor;
-        }
-        else{
-            valor += movimento['valor'];
-            //setSaldo(valor);
-            return valor;
+        console.log(movimento['saldo']);
+        valorSaldo += movimento['saldo'];
+        return valorSaldo + "€";
+    }
+
+    const freebetsAposMovimento = (movimento) => {
+        valorFreebets += movimento['freebets'];
+        return valorFreebets + "f";
+    }
+
+    const getOpercaoNome = (operacao) => {
+        if (operacao === 'DEPOSITO') {
+            return 'Depósito';
+        } else if (operacao === 'LEVANTAMENTO') {
+            return 'Levantamento';
+        } else if (operacao === 'APOSTA') {
+            return 'Aposta';
+        } else if (operacao === 'CRIACAO_CONTA') {
+            return 'Criação de conta';
         }
     }
 
-
+    const getValor = (transacao) => {
+        let valor = transacao.saldo + transacao.freebets;
+        return (valor > 0 ? "+" + valor : valor) + "€";
+    }
 
     return (
-        <div className="HistoricoTransacoes">
-            <h1>Historico de Transações</h1>
-            {/*<Button onclick={"history.go(-1);"}>Voltar</Button>*/}
-            <IconButton onClick={goBack}>
-                < ArrowBackIcon />
-            </IconButton>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="right">Data</TableCell>
-                            <TableCell align="right">Descrição</TableCell>
-                            <TableCell align="right">Operação</TableCell>
-                            <TableCell align="right">Saldo após movimento&nbsp;(€)</TableCell>
-                            <TableCell align="right">Freebets após movimento&nbsp;(€)</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {/** preencher a tabela */}
-                        {transacoes.map((transacao) => (
-                            
-                            <TableRow
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell align="right">{dateString(transacao.data)}</TableCell>
-                                <TableCell align="right">{transacao.operacao}</TableCell>
-                                <TableCell align="right">{transacao.operacao ==='Depósito' ? '+' : '-'}{transacao.valor}</TableCell>
-                                <TableCell align="right">{saldoAposMovimento(transacao)}</TableCell>
-                                <TableCell align="right">?</TableCell>
+        <Container maxWidth="xl" sx={{ p: '1%' }}>
+            <Box sx={{border: 2, borderRadius: '10px'}}>
+                <h1>Historico de Transações</h1>
+                <TableContainer component={Box} sx={{mb: '5%',mt:'5%'}}>
+                    <Table  size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="right">Data</TableCell>
+                                <TableCell align="right">Descrição</TableCell>
+                                <TableCell align="right">Operação</TableCell>
+                                <TableCell align="right">Saldo após movimento</TableCell>
+                                <TableCell align="right">Freebets após movimento</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {/** preencher a tabela */}
+                            {transacoes.map((transacao) => (
 
-        </div>
+                                <TableRow
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                    <TableCell align="right">{dateString(transacao.data)}</TableCell>
+                                    <TableCell align="right">{getOpercaoNome(transacao.tipo)}</TableCell>
+                                    <TableCell align="right">{getValor(transacao)}</TableCell>
+                                    <TableCell align="right">{saldoAposMovimento(transacao)}</TableCell>
+                                    <TableCell align="right">{freebetsAposMovimento(transacao)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+            </Box>
+        </Container>
     );
 }
 

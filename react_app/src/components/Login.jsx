@@ -45,8 +45,9 @@ function Copyright(props) {
         }),
     });
     if(response.status === 200){
+        const tipoUtilizador = await response.text();
         console.log("Login Success")
-        props.login(email);
+        props.login(email,tipoUtilizador);
     }
     else{
         setError(true);

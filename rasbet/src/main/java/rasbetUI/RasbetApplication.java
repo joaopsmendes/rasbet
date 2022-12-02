@@ -73,8 +73,8 @@ public class RasbetApplication {
 		System.out.println(password);
 
 		try {
-			rasbetLN.validateLogin(email,password);
-			return new ResponseEntity<>("Sucesso", HttpStatus.OK);
+			String tipo = rasbetLN.validateLogin(email,password);
+			return new ResponseEntity<>(tipo, HttpStatus.OK);
 		}
 		catch (SQLException e){
 			System.out.println(e.getMessage());

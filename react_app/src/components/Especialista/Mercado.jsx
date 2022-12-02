@@ -15,7 +15,7 @@ function Mercado(props) {
     useEffect(() => {
         setNome(props.mercado[0]);
         setApostas(props.mercado[1]);
-    }, [])
+    }, [props.jogos])
 
 
     const addJogo = () => {  

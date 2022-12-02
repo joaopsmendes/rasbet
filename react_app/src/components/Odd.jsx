@@ -10,11 +10,11 @@ function Odd(props) {
     const[idOdd,setIdOdd]=useState();
     
     useEffect(()=>{
-        console.log("here");
+        console.log("ODD");
         console.log(props.odd);
-        setValor(props.odd[1].valor)
-        setNome(props.odd[1].opcao)
-        setIdOdd(props.odd[1].valor)
+        setValor(props.odd.valor)
+        setNome(props.odd.opcao)
+        setIdOdd(props.odd.valor)
     },[])
 
     

@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { Divider, ToggleButton } from "@mui/material";
+import { Divider, Grid, ToggleButton } from "@mui/material";
 import Apostas from "./Apostas";
 import Box from '@mui/material/Box';
 
@@ -16,8 +16,9 @@ function HistoricoApostas(props) {
 
   const [ativas, setAtivas] = useState(true);
   const [finalizadas, setFinalizadas] = useState(false);
-  const [simples, setSimples] = React.useState(true)
-  const [multipla, setMultipla] = React.useState(false)
+  const [simples, setSimples] = useState(true)
+  const [multipla, setMultipla] = useState(false)
+  const [update, setUpdate] = useState(false)
 
 
   const handleAtivas = () => {
@@ -39,23 +40,41 @@ function HistoricoApostas(props) {
     setSimples(false);
     setMultipla(true);
   }
-  
+
+  useEffect(() => {
+  }, [simples,ativas])
+
 
   return (
 
     <div className="Historico">
       <Container maxWidth="lg">
-        <Box sx={{ border: 3, borderRadius: '15%',  margin: 'auto' }} >
+        <Box sx={{ border: 2, borderRadius: '20px', margin: 'auto' }} >
           <h2> Histórico de apostas </h2>
-            <Button onClick={handleAtivas} sx={{ m: 2 }} variant="contained" size="md" color={ativas ? "primary" : "inherit"} value="Ativas">Ativas</Button>
-            <Button onClick={handleFinalizadas} sx={{ m: 2 }} variant="contained" size="md" color={finalizadas ? "primary" : "inherit"} value="Ativas"> Finalizadas</Button>
-            <Divider />
-            
-            <Button onClick={handleSimples} sx={{ m: 2 }} variant="contained" size="md" color={simples ? "primary" : "inherit"} value="Simples">Simples</Button>
-            <Button onClick={handleMultipla} sx={{ m: 2 }} variant="contained" size="md" color={multipla ? "primary" : "inherit"} value="Multipla">Múltipla</Button>
-          {
-            <Apostas ativas={ativas} simples={simples}/>
-          }
+          <Container maxWidth="xs" >
+            <Grid container spacing={2} >
+              <Grid item xs={6} >
+                <Button fullWidth onClick={handleAtivas} sx={{ mt: '2%', mb: '2%' }} variant="contained" size="md" color={ativas ? "primary" : "inherit"} value="Ativas">Ativas</Button>
+              </Grid>
+              <Grid item xs={6} >
+                <Button fullWidth onClick={handleFinalizadas} sx={{ mt: '2%', mb: '2%' }} variant="contained" size="md" color={finalizadas ? "primary" : "inherit"} value="Ativas"> Finalizadas</Button>
+              </Grid>
+            </Grid>
+          </Container>
+          <Divider />
+
+          <Container maxWidth="xs" >
+            <Grid container spacing={2} >
+              <Grid item xs={6} >
+                <Button fullWidth onClick={handleSimples} sx={{ mt: '2%', mb: '2%' }} variant="contained" size="xs" color={simples ? "primary" : "inherit"} value="Simples">Simples</Button>
+              </Grid>
+              <Grid item xs={6} >
+                <Button fullWidth onClick={handleMultipla} sx={{ mt: '2%', mb: '2%' }} variant="contained" size="xs" color={multipla ? "primary" : "inherit"} value="Multipla">Múltipla</Button>
+              </Grid>
+            </Grid>
+          </Container>
+          <Divider />
+          <Apostas ativas={ativas} simples={simples} />
         </Box>
       </Container>
     </div>

@@ -130,8 +130,8 @@ public class RasbetLN implements IRasbetLN{
     }
 
 
-    public void validateLogin (String email, String password) throws SQLException {
-        gestaoUtilizadores.logIn(email,password);
+    public String validateLogin (String email, String password) throws SQLException {
+        return gestaoUtilizadores.logIn(email,password);
     }
 
     public void registarApostador(String email, String password, String nome,String nif,LocalDate date, String morada, String telemovel) throws SQLException {

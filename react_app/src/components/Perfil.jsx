@@ -71,13 +71,13 @@ function Perfil(props) {
     <div className="Peril">
       <Container maxWidth="xl">
         <h2> Bem vindo, {info['username']} </h2>
-        <Box sx={{mb: 2, p: 2, flexGrow: 1,display: 'flex',flexDirection: 'row' ,justifyContent: 'space-between', border: 1,flexWrap: 'wrap',}}>
+        <Box sx={{mb: 2, p: 2, flexGrow: 1,display: 'flex',flexDirection: 'row' ,justifyContent: 'space-between', border: 1,flexWrap: 'wrap',borderRadius: '20px' }}>
             <div><h3> NIF </h3><p>{info['nif']} </p></div>
             <div><h3> Telemovel </h3><p>{info['telemovel']} </p></div>
             <div><h3> Data de Nascimento</h3> <p>{info['date']} </p></div>
             <div><h3> Morada </h3><p>{info['morada']} </p></div>
         </Box>
-        <Box sx={{ border: 1 }}>
+        <Box sx={{ border: 1 , borderRadius:'20px'}}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <h2> Saldo: {saldo}€ </h2>

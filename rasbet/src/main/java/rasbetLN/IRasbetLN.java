@@ -16,7 +16,7 @@ import java.util.Map;
 
 public interface IRasbetLN {
 
-    void validateLogin (String email, String password) throws SQLException;
+    String validateLogin (String email, String password) throws SQLException;
     void addGame(Game game, String bookmaker, String desporto) throws SQLException;
 
     void addGame(GameOutput game) throws SQLException;

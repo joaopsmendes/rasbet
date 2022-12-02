@@ -11,11 +11,7 @@ import Box from '@mui/material/Box';
 
 
 function Apostas(props) {
-    const [arraySimples, setSimples] = useState([])
-    const [arrayMultipla, setMultipla] = useState([])
-    const [indexSimples, setIndexSimples] = useState(0)
-    const [indexMultipla, setIndexMultipla] = useState(0)
-    const [mapIndex, setMapIndex] = useState([[0,0],[0,0]])
+    const [mapIndex, setMapIndex] = useState([[0, 0], [0, 0]])
     const [index, setIndex] = useState(0)
     const [apostasMap, setApostasMap] = useState()
     const [apostas, setApostas] = useState([])
@@ -60,14 +56,15 @@ function Apostas(props) {
     }, [])
 
     useEffect(() => {
+        console.log("EFFECT");
         if (apostasMap) {
             let array = props.ativas ? apostasMap["ativas"] : apostasMap["finalizadas"];
             array = props.simples ? array["simples"] : array["multiplas"];
-            let arrayIndex = mapIndex.slice();
+            console.log("ARRAY", array);
             setIndex(getIndex())
             setApostas(array);
         }
-    }, [props.ativas, props.simples])
+    }, [props.ativas, props.simples, apostasMap])
 
     const hasnext = () => {
         return index < apostas.length - 1;
@@ -78,7 +75,7 @@ function Apostas(props) {
     }
 
     const getIndex = () => {
-        return mapIndex[props.ativas ? 0: 1][props.simples ? 0 : 1];
+        return mapIndex[props.ativas ? 0 : 1][props.simples ? 0 : 1];
     }
 
     const increment = () => {
@@ -96,29 +93,47 @@ function Apostas(props) {
     }
 
 
+    const buttonPrev = () => {
+        return (
+            hasprev() &&
+            <Button variant="standard" onClick={decrement}>
+                <ArrowBackIosIcon />
+            </Button>
+        );
+    };
+
+    const buttonNext = () => {
+        return (
+            hasnext() &&
+            <Button variant="standard" onClick={increment}>
+                <ArrowForwardIosIcon />
+            </Button>
+        );
+    }
+
+
     return (
         <div className="Apostas">
             <Grid container spacing={2}>
-                <Grid item xs={1}>
-                    {hasprev() &&
-                        <Button variant="standard" onClick={decrement}>
-                            <ArrowBackIosIcon />
-                        </Button>
-                    }
+                <Grid sx={{ display: { xs: 'none', md: 'flex' } }} item xs={1}>
+                    {buttonPrev()}
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={12} md={10}>
                     {
                         apostas.length > 0 &&
                         <Aposta index={index} aposta={apostas[index]} />
                     }
                 </Grid>
 
-                <Grid item xs={1}>
-                    {hasnext() &&
-                        <Button variant="standard" onClick={increment}>
-                            <ArrowForwardIosIcon />
-                        </Button>
-                    }
+                <Grid sx={{ display: { xs: 'none', md: 'flex' } }} item xs={1}>
+                    {buttonNext()}
+                </Grid>
+                <Grid sx={{ display: { xs: 'flex', md: 'none' } }} item xs={2} >
+                    {buttonPrev()}
+                </Grid>
+                <Grid item xs={8}/>
+                <Grid sx={{ display: { xs: 'flex', md: 'none' } }} item xs={2} >
+                    {buttonNext()}
                 </Grid>
             </Grid>
         </div>

@@ -18,8 +18,8 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.createApostador(apostador );
     }
 
-    public void logIn(String email, String password) throws SQLException{
-        utilizadores.logIn(email, password);
+    public String logIn(String email, String password) throws SQLException{
+        return utilizadores.logIn(email, password);
     }
 
     public void logOut(String email) throws SQLException{

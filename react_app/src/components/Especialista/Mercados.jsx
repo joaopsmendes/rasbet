@@ -12,7 +12,7 @@ function Mercados(props) {
         let mercadosArray = Object.keys(props.mercados).map((key) => [key, props.mercados[key]]);
         console.log(mercadosArray[0])
         setMercados(mercadosArray);
-    }, [props.jogos])
+    }, [])
 
 
 
@@ -24,7 +24,7 @@ function Mercados(props) {
     return (
         <div className="Jogo">
             {mercados.length > 0 && mercados.map((mercado) =>
-                <Mercado key={mercado[0]} mercado={mercado} addJogo={addJogo}/>
+                <Mercado key={mercado[0]} mercado={mercado} addJogo={addJogo} jogos={props.jogos}/>
             )}
         </div>
     );

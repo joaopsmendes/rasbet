@@ -57,7 +57,25 @@ public class DBUtilizadores {
     }
 
 
-    public void logIn(String email, String password) throws SQLException {
+    private boolean isTipo(String tipo, String email) throws SQLException{
+        String query = "SELECT * FROM "+ tipo + " WHERE Utilizador_email = ?" ;
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, email);
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    private String getTipoUtilizador(String email) throws SQLException {
+        if (isTipo("Apostador",email)) return "Apostador";
+        if (isTipo("Especialista",email)) return "Especialista";
+        return "Adminstrador";
+    }
+
+    public String logIn(String email, String password) throws SQLException {
         String query = "SELECT email, pass FROM Utilizador WHERE email = ? AND pass = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, email);
@@ -66,7 +84,7 @@ public class DBUtilizadores {
         if (!rs.next()) {
             throw new SQLException("Utilizador não existe");
         } else {
-            System.out.println("Login feito com sucesso");
+            return getTipoUtilizador(email);
         }
     }
 

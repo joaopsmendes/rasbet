@@ -70,7 +70,7 @@ function AlterarInformacaoUser(props) {
   return (
     <div className="AlterarInformacaoUser">
       <Container maxWidth="sm">
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: '5%', mt: 1,border: 1, borderRadius: '20px',  margin: 'auto' }} >
           <TextField
             margin="normal"
             fullWidth

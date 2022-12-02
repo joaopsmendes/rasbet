@@ -7,9 +7,10 @@ function Odd(props) {
 
     const[valor,setValor]=useState();
     const[nome,setNome]=useState();
-    const[idOdd,setIdOdd]=useState();
     
     useEffect(()=>{
+        console.log("Odd");
+        console.log(props.odd);
         setValor(props.odd.price)
         setNome(props.odd.name)
     },[])

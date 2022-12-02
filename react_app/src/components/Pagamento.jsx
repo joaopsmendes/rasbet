@@ -8,6 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import MBWAY from './MBWay';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 
 
@@ -26,6 +28,7 @@ function Pagamento(props) {
 
   const [saldoAtual, setSaldoAtual] = React.useState(0);
   const [freebetsAtual, setFreebetsAtual] = React.useState(0);
+  const [pago, setPago] = React.useState(false);
 
 
 
@@ -98,13 +101,13 @@ function Pagamento(props) {
         disabled={!bool}
         onChange={(e) => setter(Number(e.target.value))}
         error={valorAPagar() < 0 || montante > atual}
-        helperText={valorAPagar() < 0  || montante > atual ? 'Valor inválido' : ' '}
+        helperText={valorAPagar() < 0 || montante > atual ? 'Valor inválido' : ' '}
         InputProps={{ inputProps: { min: 0.01 } }} />
     );
   }
 
   const handleSubmit = () => {
-    
+
   }
 
 
@@ -133,52 +136,68 @@ function Pagamento(props) {
   }
 
 
+  const submit = () => {
+    props.submit(montanteSaldo, montanteFreeBets,setPago);
+  }
+
+  const close = () => {
+    handleClose();
+    setPago(false);
+  }
+
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <h3>Valor a pagar : {valorAPagar()}</h3>
-          <h3>Saldo Atual : {saldoAtual - montanteSaldo}</h3>
-          <h3>FreeBets Atual : {freebetsAtual- montanteFreeBets}</h3>
+          {!pago ? <div>
+            <h3>Valor a pagar : {valorAPagar()}</h3>
+            <h3>Saldo Atual : {saldoAtual - montanteSaldo}</h3>
+            <h3>FreeBets Atual : {freebetsAtual - montanteFreeBets}</h3>
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Button disabled={!saldo && valorAPagar() == 0} fullWidth variant="contained" color={saldo ? "primary" : "inherit"} onClick={handleClickSaldo}>
-                Saldo
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              {montanteField("Saldo", saldo, montanteSaldo, setMontanteSaldo, saldoAtual)}
-            </Grid>
-            <Grid item xs={6}>
-              <Button disabled={!freeBets && valorAPagar() == 0} fullWidth variant="contained" color={freeBets ? "primary" : "inherit"} onClick={handleClickFreeBets} >
-                FreeBets
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              {montanteField("FreeBets", freeBets, montanteFreeBets, setMontanteFreeBets, freebetsAtual)}
-            </Grid>
-            <Grid item xs={12}>
-              <Button disabled={!outro && valorAPagar() == 0} fullWidth variant="contained" color={outro ? "primary" : "inherit"} onClick={handleClickOutro} >
-                Outro
-              </Button>
-            </Grid>
-          </Grid>
-          {outro &&
             <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">MULTIBANCO</Button>
+              <Grid item xs={6}>
+                <Button disabled={!saldo && valorAPagar() == 0} fullWidth variant="contained" color={saldo ? "primary" : "inherit"} onClick={handleClickSaldo}>
+                  Saldo
+                </Button>
               </Grid>
-              <Grid item xs={4}>
-                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained" onClick={handleMbway}>MBWAY</Button>
+              <Grid item xs={6}>
+                {montanteField("Saldo", saldo, montanteSaldo, setMontanteSaldo, saldoAtual)}
               </Grid>
-              <Grid item xs={4}>
-                <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">VISA</Button>
+              <Grid item xs={6}>
+                <Button disabled={!freeBets && valorAPagar() == 0} fullWidth variant="contained" color={freeBets ? "primary" : "inherit"} onClick={handleClickFreeBets} >
+                  FreeBets
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                {montanteField("FreeBets", freeBets, montanteFreeBets, setMontanteFreeBets, freebetsAtual)}
+              </Grid>
+              <Grid item xs={12}>
+                <Button disabled={!outro && valorAPagar() == 0} fullWidth variant="contained" color={outro ? "primary" : "inherit"} onClick={handleClickOutro} >
+                  Outro
+                </Button>
               </Grid>
             </Grid>
-          }
-          <Button  disabled={valorAPagar() != 0} sx={{ mt: 2 }}fullWidth variant="contained" color={valorAPagar() == 0  ? "primary" : "inherit"} onClick={props.submit}>Pagar</Button>
+            {outro &&
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">MULTIBANCO</Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained" onClick={handleMbway}>MBWAY</Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button fullWidth sx={{ mt: 2 }} color="inherit" variant="contained">VISA</Button>
+                </Grid>
+              </Grid>
+            }
+            <Button disabled={valorAPagar() != 0 || montanteSaldo > saldoAtual || montanteFreeBets > freebetsAtual} sx={{ mt: 2 }} fullWidth variant="contained" color={valorAPagar() == 0 ? "primary" : "inherit"} onClick={submit}>Pagar</Button>
+          </div> :
+            <Alert onClose={close} severity="success">
+              <AlertTitle>Pagamento feito com sucesso!</AlertTitle>
+            </Alert>
 
+          }
         </DialogContent>
       </Dialog>
       {mbway && <MBWAY mbway={mbway} close={handleCloseMbway} />}

@@ -17,8 +17,12 @@ import Login from './Login';
 import Registo from './Registo';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Grid, ToggleButton } from "@mui/material";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+import logo from '../rasbet.png';
+import Link from "@mui/material/Link";
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import { Select } from "@mui/material";
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -45,6 +49,11 @@ function ResponsiveAppBar(props) {
     }
   };
 
+  const handleChangeSelect = (event) => {
+    props.setDesportoAtivo(event.target.value);
+  };
+
+
   const handleSettings = (event) => {
     let handler = props.settings[event.target.innerText];
     console.log(handler());
@@ -57,96 +66,111 @@ function ResponsiveAppBar(props) {
     <AppBar position="static">
       <Container maxWidth="false">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            RASBET
-          </Typography>
+          <Link href="/">
+            <Box
 
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Box sx={{ flexGrow: 1, display: { md: 'flex', xs: 'flex' }, overflow: 'auto' }}>
-            <ToggleButtonGroup
-              value={props.desportoAtivo}
-              exclusive
-              onChange={handleChange}
-            >
-              {props.pages.map((page) => (
-                <ToggleButton
-                  variant="contained"
-                  key={page}
-                  value={page}
-                  onClick={handleCloseNavMenu}
-                  style={{ borderRadius: "20px", padding: ' 2% 15%', }}
-                  sx={{
-                    ml: 5, mr: 5, p: 2, color: 'white', display: 'block',
-                    "&.Mui-selected, &.Mui-selected:hover": {
-                      color: "#000000",
-                      backgroundColor: '#FFFFFF'
-                    },
-                  }}
-                >
-                  {page}
-                </ToggleButton>
-              ))}
-            </ToggleButtonGroup>
-          </Box>
-
-          {
-            props.isLogin ?
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
-                    <MenuIcon />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {Object.keys(props.settings).map((setting) => (
-                    <MenuItem key={setting} onClick={handleSettings}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-              : <Box sx={{
+              component="img"
+              sx={{
                 display: 'flex',
-                alignItems: 'flex-start',
-                flexDirection: 'row',
-              }}>
-                <Dialogo form={<Login login={props.login} />} title="Login" />
-                <Dialogo form={<Registo login={props.login} />} title="Registo" />
-              </Box>
+                maxHeight: { xs: 80, md: 167 },
+                maxWidth: { xs: 80, md: 250 },
+              }}
+              alt="The house from the offer."
+              src={logo}
+            /></Link>
+          <Box sx={{ flexGrow: 1, display: { md: 'flex', xs: 'none' }, overflow: 'auto' }}>
+            {props.showDesportos &&
+              <ToggleButtonGroup
+                value={props.desportoAtivo}
+                exclusive
+                onChange={handleChange}
+              >
+                {props.pages.map((page) => (
+                  <ToggleButton
+                    variant="contained"
+                    key={page}
+                    value={page}
+                    onClick={handleCloseNavMenu}
+                    style={{ borderRadius: "20px", padding: ' 2% 15%', }}
+                    color="secondary"
+                    sx={{
+                      ml: 5, mr: 5, p: 2, display: 'block', color:"#FFFFFF",
+                      "&.Mui-selected, &.Mui-selected:hover": {
+                        color: "#000000",
+                        backgroundColor: '#FFFFFF'
+                      },
+                    }}
+                  >
+                {page}
+              </ToggleButton>
+                ))}
+          </ToggleButtonGroup>
+            }
+        </Box>
+        <Box sx={{ flexGrow: 1, display: { md: 'none', xs: 'flex' }, overflow: 'auto' }}>
+          {props.showDesportos &&
+            <FormControl fullWidth>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={props.desportoAtivo}
+                onChange={handleChangeSelect}
+              >
+                {props.pages.map((page) => (
+                  <MenuItem value={page} color="secondary">{String(page).toUpperCase()}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+
           }
-        </Toolbar>
-      </Container>
-    </AppBar>
+        </Box>
+
+        {
+          props.isLogin ?
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
+                  <MenuIcon />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {Object.keys(props.settings).map((setting) => (
+                  <MenuItem key={setting} onClick={handleSettings}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            : <Box sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              flexDirection: {xs: 'column', md:'row'},
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <Dialogo form={<Login login={props.login}/>} title="Iniciar Sessão" />
+              <Dialogo form={<Registo login={props.login} />} title="Registo" />
+            </Box>
+        }
+      </Toolbar>
+    </Container>
+    </AppBar >
   );
 }
 export default ResponsiveAppBar;

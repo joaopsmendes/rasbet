@@ -25,7 +25,7 @@ function Aposta(props) {
             setOdds(props.aposta.oddList);
         }
         setResultado(props.aposta.resultado);
-    }, [props.index]);
+    }, [props.aposta]);
 
     const infoOdd = (odd) => {
         return (

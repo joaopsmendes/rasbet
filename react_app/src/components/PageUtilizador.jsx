@@ -10,51 +10,57 @@ import Perfil from './Perfil';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import SearchIcon from '@mui/icons-material/Search';
+import Favoritos from './Favoritos';
 
-function PageUtilizador() {
+
+function PageUtilizador(props) {
 
 
-  const [login, setLogin] = useState(false);
-  const [signUp, setSignUp] = useState(false);
-  const [user, setUser] = useState();
   const [showJogos, setShowJogos] = useState(true);
   const [showHistorico, setShowHistorico] = useState(false);
   const [showPerfil, setShowPerfil] = useState(false);
   const [isDown, setIsDown] = useState(false);
   const [desportos, setDesportos] = useState([]);
   const [desportoAtivo, setDesportoAtivo] = useState('futebol');
+  const [aposta, setAposta] = useState([])
 
+
+
+
+  const handleClickOdd = (newAposta) => {
+    let newApostaArray = aposta.slice();
+    for (var i = 0; i < newApostaArray.length; i++) {
+      if (newApostaArray[i].idOdd === newAposta.idOdd) {
+        removeOdd(newAposta.idOdd);
+        return;
+      }
+      if (newApostaArray[i].desJogo === newAposta.desJogo && newApostaArray[i].tema === newAposta.tema) {
+        newApostaArray[i] = newAposta;
+        setAposta(newApostaArray);
+        console.log("ja existe");
+        return;
+      }
+    }
+    newApostaArray.push(newAposta);
+    console.log(newApostaArray);
+    setAposta(newApostaArray);
+  }
+
+
+  const removeOdd = (idOdd) => {
+    var newApostaArray = aposta.slice();
+    newApostaArray = newApostaArray.filter((aposta) => aposta.idOdd !== idOdd);
+    setAposta(newApostaArray);
+  }
 
 
   useEffect(() => {
     getDesportos();
-    if (sessionStorage.getItem('user')) {
-      setLogin(true);
-      setUser(JSON.parse(sessionStorage.getItem('user')));
-    }
   }, []);
 
 
 
-  const handleSignUp = () => {
-    setSignUp(true);
-  }
 
-  const handleLogin = (user) => {
-    setLogin(true);
-    sessionStorage.setItem('user', JSON.stringify(user));
-    console.log("SESSION STORAGE");
-    setUser(user);
-  }
-
-  const handleLogout = () => {
-    setLogin(false);
-    sessionStorage.removeItem('user');
-    setUser(null);
-    setShowPerfil(false);
-    setShowHistorico(false);
-    setShowJogos(true);
-  }
 
   const handleHistorico = () => {
     setShowJogos(false);
@@ -68,12 +74,28 @@ function PageUtilizador() {
     setShowHistorico(false);
   }
 
+  const handleJogos = () => {
+    setShowJogos(true);
+    setShowPerfil(false);
+    setShowHistorico(false);
+  }
+
+
+  const loggout = () => {
+    props.loggout();
+    setShowJogos(true);
+    setShowPerfil(false);
+    setShowHistorico(false);
+  }
+
 
   const settingsOptions = {
     'Perfil': handlePerfil,
     'Histórico': handleHistorico,
-    'Terminar Sessão': handleLogout
+    'Terminar Sessão': loggout
   }
+
+
 
 
   const getDesportos = async () => {
@@ -82,7 +104,7 @@ function PageUtilizador() {
     });
     const data = await response.json();
     //array to map
-    
+
     var result = Object.keys(data).map((key) => data[key].modalidade);
     console.log("DATA");
     console.log(result);
@@ -92,21 +114,27 @@ function PageUtilizador() {
     <div className="App">
       {!isDown ?
         <div>
-          <ResponsiveAppBar desportoAtivo={desportoAtivo} setDesportoAtivo={setDesportoAtivo} pages={desportos} isLogin={login} login={handleLogin} settings={settingsOptions} />
+          <ResponsiveAppBar
+            showDesportos={showJogos}
+            desportoAtivo={desportoAtivo}
+            setDesportoAtivo={setDesportoAtivo}
+            pages={desportos}
+            isLogin={props.isLogin}
+            login={props.login}
+            settings={settingsOptions}
+          />
           {showPerfil && <Perfil />}
-          {login && <Dialogo form={<Login login={handleLogin} />} title="Login" />}
-          {signUp && <Dialogo form={<Registo />} title="Registo" />}
-          {showJogos && <Jogos desportoAtivo={desportoAtivo} userId={user} login={login}/>}
-          {showHistorico && <Historico nome={user} />}
+          {showJogos && <Jogos showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showHistorico && <Historico nome={props.user} />}
         </div>
         :
         <div>
-        <PublicOffIcon sx={{ fontSize:'200px'}}/>
-        <h1>Sorry, the app is down</h1>
+          <PublicOffIcon sx={{ fontSize: '200px' }} />
+          <h1>Sorry, the app is down</h1>
         </div>
 
 
-}
+      }
     </div>
   );
 }
