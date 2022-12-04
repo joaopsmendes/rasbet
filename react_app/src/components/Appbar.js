@@ -28,7 +28,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [not, setNot] = useState();
+  const [not, setNot] = useState(false);
   
   const getNotifications = async (email) => {
     console.log(email)
