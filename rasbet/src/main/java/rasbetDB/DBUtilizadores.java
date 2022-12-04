@@ -24,7 +24,7 @@ public class DBUtilizadores {
 
         createUtilizador(apostador);
 
-        String query2 = "INSERT INTO Apostador(Utilizador_email)VALUES(?)";
+        String query2 = "INSERT INTO Apostador(Utilizador_email,seguidas,ganhos)VALUES(?,0,0)";
         PreparedStatement pstmt2 = c.prepareStatement(query2);
         pstmt2.setString(1, apostador.getEmail());
         pstmt2.execute();
@@ -326,14 +326,15 @@ public class DBUtilizadores {
     }
 
     public List<Favorito> getFavoritos(String userId) throws SQLException{
+        Map<String,List<Favorito>> map = new HashMap<>();
         List<Favorito> lista = new ArrayList<>();
-        String query ="SELECT * FROM Favorito INNER JOIN Desporto ON Desporto_idDesporto=idDesporto Where Utilizador_email = ?";
+        String query ="SELECT * FROM Favorito INNER JOIN Desporto ON Participante_Desporto_idDesporto=idDesporto Where Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            String favorito = rs.getString("favorito");
-            int idDesporto = rs.getInt("Desporto_idDesporto");
+            String favorito = rs.getString("Participante_idParticipante");
+            int idDesporto = rs.getInt("Participante_Desporto_idDesporto");
             String modalidade = rs.getString("modalidade");
             Desporto desp = new Desporto(idDesporto, modalidade);
             Favorito fav = new Favorito(favorito, desp);
@@ -356,5 +357,25 @@ public class DBUtilizadores {
             map.put("morada",rs.getString("Morada"));
         }
         return map;
+    }
+
+    public void updateStreak(String id, float valor) throws SQLException{
+        String query ="SELECT * FROM Apostador Where Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            int streak = rs.getInt("seguidas");
+            float ganhos = rs.getFloat("ganhos");
+            streak++;
+            ganhos+= valor;
+            String query2 = "UPDATE Apostador SET seguidas = ?, ganhos = ? WHERE Utilizador_email=?";
+            PreparedStatement ps2 = c.prepareStatement(query2);
+            ps2.setInt(1,streak);
+            ps2.setFloat(2,ganhos);
+            ps2.setString(3,id);
+            ps2.executeUpdate();
+        }
+// TODO Verificar se ganhou 5, caso sim -> dar o bonus e dar reset aos ganhos e seguidas
     }
 }

@@ -7,6 +7,10 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Pagamento from "./Pagamento";
 import Boletim from "./Boletim";
+import SearchIcon from '@mui/icons-material/Search';
+import { styled, alpha } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+
 
 
 
@@ -16,6 +20,11 @@ function Jogos(props) {
     //passar desporto ativo no props
 
     const [jogos, setJogos] = useState({})
+    const [search, setSearch] = useState("")
+    const [dataInicial, setDataInicial] = useState()
+    const [dataFinal, setDataFinal] = useState()
+    const [filtro, setFiltro] = useState(false)
+
 
 
 
@@ -69,17 +78,17 @@ function Jogos(props) {
         }
         */
 
-    const handleClick = (odd) => {
-        if(props.showBoletim){
+    const handleClick = (odd,) => {
+        if (props.showBoletim) {
             props.handleClick(odd);
         }
         else {
             let idJogo = odd.desJogo;
-            console.log("JOGO");
             jogos.map((jogo) => {
                 if (jogo.idJogo === idJogo) {
                     odd['titulo'] = jogo.titulo;
-                    odd['idJogo'] = idJogo; 
+                    odd['idJogo'] = idJogo;
+                    odd['estado'] = jogo.estado;
                 }
             });
             props.handleClick(odd);
@@ -87,17 +96,113 @@ function Jogos(props) {
     }
 
 
+    const formatDateToday = () => {
+        let dtToday = new Date();
+        let month = dtToday.getMonth() + 1;
+        let day = dtToday.getDate();
+        let year = dtToday.getFullYear();
+        if (month < 10)
+            month = '0' + month.toString();
+        if (day < 10)
+            day = '0' + day.toString();
+        return year + '-' + month + '-' + day;
+    }
+
+
+    const dateField = (nome, change) => {
+        return (
+            <TextField
+                margin="normal"
+                name="date"
+                id="date"
+                label={nome}
+                type="date"
+                fullWidth
+                onChange={change}
+                InputProps={{
+                    inputProps: {
+                        min: formatDateToday(),
+                    }
+                }}
+
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />);
+    }
+
+    const isSearch = (jogo) => {
+        if (search === "") {
+            return true;
+        }
+        else {
+            return jogo.titulo.toLowerCase().includes(search.toLowerCase());
+        }
+    }
+
+    const filterByDate = (jogo) => {
+        if (!filtro) return true;
+        if (dataInicial === undefined || dataFinal === undefined) {
+            return true;
+        }
+        else {
+            let dataJogo = new Date(jogo.data);
+            dataJogo.setHours(0, 0, 0, 0);
+            let dataInicialDate = new Date(dataInicial);
+            let dataFinalDate = new Date(dataFinal);
+            return dataJogo >= dataInicialDate && dataJogo <= dataFinalDate;
+        }
+    }
+
+
+
+
+    const changeDataInicial = (event) => {
+        setDataInicial(event.target.value);
+    }
+    const changeDataFinal = (event) => {
+        setDataFinal(event.target.value);
+    }
+
 
     return (
         <div>
+            <Box sx={{ flexGrow: 1, m: 2 }}>
+                {jogos.length > 0 &&
+                    <Grid container spacing={2} >
+                        <Grid item xs={12} >
+                            <TextField
+                                fullWidth
+                                id="outlined-basic"
+                                label="Pesquisar"
+                                onChange={(event) => setSearch(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={2}>
+                            <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtro ? "primary" : "inherit"} onClick={() => (setFiltro(!filtro))} >Filtrar por Data</Button>
+                        </Grid>
+                        {filtro &&
+                            <Grid item xs={12} md={1}>
+                                {dateField("Data Inicial", changeDataInicial)}
+                            </Grid>
+                        }
+                        {filtro &&
+                            <Grid item xs={12} md={1}>
+                                {dateField("Data Final", changeDataFinal)}
+                            </Grid>
+                        }
+                    </Grid>
+                }
+            </Box>
+
             <Grid container spacing={2}>
                 <Grid item xs={12} md={9} xl={9}>
                     {jogos.length > 0 ?
-                        jogos.map((jogo) => (<Jogo handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
+                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && <Jogo showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&
-                    <Boletim user={props.user} login={props.login} apostas={props.aposta} setAposta={props.setAposta} />
+                    <Boletim handleClick={handleClick} user={props.user} login={props.login} jogos={jogos} apostas={props.aposta} setAposta={props.setAposta} />
                 }
             </Grid>
 

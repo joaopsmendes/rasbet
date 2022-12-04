@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Pagamento from "./Pagamento";
 import { Container } from "@mui/material";
 import { flexbox } from '@mui/system';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -97,6 +97,13 @@ function Boletim(props) {
         console.log(response);
     }
 
+    const getTituloJogo = (idJogo) => {
+        for (var i = 0; i < props.jogos.length; i++) {
+            if (props.jogos[i].idJogo === idJogo) {
+                return props.jogos[i].titulo;
+            }
+        }
+    }
 
 
     return (
@@ -110,7 +117,23 @@ function Boletim(props) {
                         <Grid item xs={12}>
                             <div>{getTypesApostas()}</div>
                             <div>{props.apostas.length > 0 && props.apostas.map((aposta) =>
-                                (<p>{aposta.nome}: {aposta.opcao}<br /><br /> Cota : {aposta.valor} </p>))}</div>
+                            (
+                                <Grid container spacing={2}>
+                                    <Grid item xs={10} >
+                                        <b>{getTituloJogo(aposta.desJogo)}</b>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <DeleteIcon onClick={() => props.handleClick(aposta) } />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        {aposta.nome}: {aposta.opcao}
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        Cota : {aposta.valor}
+                                    </Grid>
+                                </Grid>
+                            ))}
+                            </div>
                             <hr />
                             <Grid container spacing={2} alignItems="center" justifyContent="center">
                                 <Grid item xs={6}>

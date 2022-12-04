@@ -83,8 +83,6 @@ function InserirOdd() {
         />
       </Search>
       </Box>
-      {/* aparecer os jogos para alterar a odd, uma box para cada jogo individualizado  */}
-
       <Button
         type="submit"
         variant="contained"
@@ -93,7 +91,6 @@ function InserirOdd() {
         GUARDAR ALTERAÇÔES
       </Button>
     </div>
-
   );
 }
 export default InserirOdd

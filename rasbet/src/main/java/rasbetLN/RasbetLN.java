@@ -39,7 +39,7 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void addGame(Game game, String bookmaker, String desporto) throws SQLException{
         Desporto d = mapDesportos.get(desporto);
-        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco(),game.getTitulo(), Jogo.Estado.ATIVO);
+        Jogo jogo = new Jogo(game.getId(),d, game.getHoraComeco(),game.getTitulo(), Jogo.Estado.ATIVO,game.getParticipantes());
         Map<String,List<Outcome>> mapOdds = game.getOdds(bookmaker);
         for (Map.Entry<String, List<Outcome>> entry :mapOdds.entrySet()){
             for (Outcome outcome : entry.getValue()){
@@ -56,7 +56,7 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void addGame(GameOutput game) throws SQLException {
         Desporto d = mapDesportos.get(game.getDesporto());
-        Jogo jogo = new Jogo(game.getIdJogo(),d, game.getData(),game.getTitulo(), Jogo.Estado.ATIVO);
+        Jogo jogo = new Jogo(game.getIdJogo(),d, game.getData(),game.getTitulo(), Jogo.Estado.ATIVO,game.getParticipantes());
         List<ApostaOutput> listApostas = game.getMapMercados().get(game.getEscolhido());
         for (ApostaOutput aposta : listApostas){
             for (Outcome outcome : aposta.getOdds()){
@@ -83,8 +83,6 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.removeFavorito(id,fav);
     }
 
-
-
     public void aposta(ApostaRequest apostaRequest) throws SQLException {
 
         String userId = apostaRequest.getUserId();
@@ -95,7 +93,7 @@ public class RasbetLN implements IRasbetLN{
         List<Integer> listOdds = List.of(apostaRequest.getOdds());
 
 
-        gestaoUtilizadores.updateSaldoFreebets(userId,saldo,freebets);
+        gestaoUtilizadores.updateSaldoFreebets(userId,saldo*-1,freebets*-1);
         gestaoApostas.createAposta(userId,montante,ganhos,listOdds);
         Transacao transacao = new Transacao(saldo*-1,freebets*-1,LocalDateTime.now(), Transacao.Tipo.APOSTA);
         gestaoUtilizadores.transacao(userId,transacao);
@@ -156,9 +154,12 @@ public class RasbetLN implements IRasbetLN{
     public void updateResultados(Map<String, String> map,String desporto) throws SQLException {
         Desporto d = mapDesportos.get(desporto);
         Map<Integer,List<Integer>> res = gestaoJogos.updateResultados(map,d);
-        Map<String,Float> mapSaldos = gestaoApostas.updateResultados(res);
-        for ( Map.Entry<String, Float> entry: mapSaldos.entrySet()){
-            gestaoUtilizadores.updateSaldo(entry.getKey(),entry.getValue());
+        Map<String,List<Float>> mapSaldos = gestaoApostas.updateResultados(res);
+        for (Map.Entry<String, List<Float>> entry: mapSaldos.entrySet()){
+            for (float valor : entry.getValue()){
+                gestaoUtilizadores.updateSaldo(entry.getKey(),valor);
+                gestaoUtilizadores.updateStreak(entry.getKey());
+            }
         }
     }
 
@@ -167,6 +168,9 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.addNotificacao(userId,notificacao);
     }
 
+    public List<Notificacao> getNotifications(String userId) throws SQLException{
+        return gestaoUtilizadores.getNotificacao(userId);
+    }
 
     public List<Favorito> getFavorites(String userId) throws SQLException{
         return gestaoUtilizadores.getFavoritos(userId);
@@ -206,7 +210,7 @@ public class RasbetLN implements IRasbetLN{
 
     public void cashout(int idAposta,String userId) throws SQLException {
         float montante = gestaoApostas.cashout(idAposta);
-        gestaoUtilizadores.updateSaldo(userId,montante);
+        gestaoUtilizadores.updateSaldoFreebets(userId,0,montante);
 
     }
 
@@ -233,6 +237,10 @@ public class RasbetLN implements IRasbetLN{
         gestaoJogos.alteraEstado(idJogo,estado);
     }
 
+    @Override
+    public void updateEstadoJogos() throws SQLException {
+        gestaoJogos.updateEstadoJogos();
+    }
 
 
 }

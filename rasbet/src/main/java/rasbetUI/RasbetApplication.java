@@ -12,30 +12,76 @@ import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
+import rasbetLN.GestaoUtilizadores.Notificacao;
 import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 @CrossOrigin(origins = "*")
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @RestController
 public class RasbetApplication {
 	IRasbetLN rasbetLN;
+	Timer timer ;
+	Set<LocalDateTime> set = new HashSet<>();
+
+
 	{
 		try {
 			rasbetLN = new RasbetLN();
+			timer = new Timer();
+			timer();
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	Map<String,Fornecedor> fornecedorMap = setuFornecedores();
+
+
+	private void createTimer (LocalDateTime localDateTime,String desporto) {
+		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+		if (!set.contains(localDateTime)) {
+			System.out.println(date);
+			set.add(localDateTime);
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						rasbetLN.updateEstadoJogos();
+					} catch (SQLException e) {
+						throw new RuntimeException(e);
+					}
+					//System.out.println("yes");
+				}
+			}, date);
+			LocalDateTime end = localDateTime.plusHours(2).plusMinutes(30);
+			Date dateEnd = Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					updateResultados(desporto);
+					//System.out.println("NO");
+				}
+			}, dateEnd);
+		}
+	}
+
+	private void timer() throws SQLException {
+		List<Desporto> list = rasbetLN.getDesporto();
+		for (Desporto d : list){
+			String desporto = d.getModalidade();
+			for (Jogo jogo : rasbetLN.getJogos(desporto).values()){
+				LocalDateTime localDateTime = jogo.getData();
+				createTimer(localDateTime,desporto);
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(RasbetApplication.class, args);
@@ -127,26 +173,13 @@ public class RasbetApplication {
 		return map;
 	}
 
-	@PostMapping(path = "addGame")
-	public void addGame(@RequestBody Map<String, String> myJsonRequest) {
-		String id =  myJsonRequest.get("gameId");
-		String keyB = myJsonRequest.get("keyBookmaker");
-		String forn = myJsonRequest.get("desporto");
-		Map<String, Game> mapGames  = fornecedorMap.get(forn).getGames();
-		Game game = mapGames.get(id);
-
-		try {
-			rasbetLN.addGame(game,keyB,forn);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 	@PostMapping(path = "adicionarJogo")
 	public void adicionarJogo(@RequestBody GameOutput game) {
 		System.out.println("ADICIONAR JOGO");
 		try {
 			rasbetLN.addGame(game);
+			createTimer(game.getData(),game.getDesporto());
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -161,8 +194,6 @@ public class RasbetApplication {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-
-
 	}
 
 	//pre-condition: deposit was valid
@@ -224,7 +255,17 @@ public class RasbetApplication {
 		}
 	}
 
-	@RequestMapping(path="favorites")
+	@RequestMapping(path="notificacoes")
+	public List<Notificacao> getNotifications(@RequestParam(name = "userId") String userId){
+		//Get List of notifications
+		try {
+			return rasbetLN.getNotifications(userId);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@RequestMapping(path="favoritos")
 	public List<Favorito> getFavorites(@RequestParam(name = "userId") String userId){
 		//Get List of favorites
 		try {
@@ -246,18 +287,22 @@ public class RasbetApplication {
 		}
 	}
 
+	public void updateResultados(String desporto){
+		Fornecedor fornecedor = fornecedorMap.get(desporto);
+		Map<String,String> map = fornecedor.updateResultados();
+		if (!map.isEmpty()) {
+			try {
+				rasbetLN.updateResultados(map, desporto);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 
 	@RequestMapping(path="updateResultados")
 	public void updateResultados(){
-		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
-			Map<String,String> map = entry.getValue().updateResultados();
-			if (!map.isEmpty()) {
-				try {
-					rasbetLN.updateResultados(map, entry.getKey());
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-			}
+		for (String entry : fornecedorMap.keySet()){
+			updateResultados(entry);
 		}
 	}
 
@@ -311,7 +356,6 @@ public class RasbetApplication {
 		//String idUser = myJsonRequest.get("idUser");
 		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
 		String userId = myJsonRequest.get("userId");
-
 		try {
 			rasbetLN.cashout(idAposta,userId);
 		} catch (SQLException e) {

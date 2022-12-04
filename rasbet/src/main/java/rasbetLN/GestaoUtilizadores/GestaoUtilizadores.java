@@ -71,6 +71,10 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.addNotificacao(idUser, notificacao);
     }
 
+    public List<Notificacao> getNotificacao(String idUser) throws SQLException{
+        return utilizadores.getListaNotificacao(idUser);
+    }
+
     public List<Favorito> getFavoritos(String idUser) throws SQLException{
         return utilizadores.getFavoritos(idUser);
     }
@@ -78,12 +82,12 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     public void updateSaldoFreebets(String userId, float saldo, float freebets) throws SQLException {
         Map<String, Float> mapSaldo = utilizadores.getSaldoFreeBets(userId);
         float saldoAtual = mapSaldo.get("saldo");
-        saldoAtual -= saldo;
+        saldoAtual += saldo;
         if (saldoAtual < 0){
             throw new SQLException("Saldo Insuficiente");
         }
         float freebestAtual = mapSaldo.get("freebets");
-        freebestAtual-=freebets;
+        freebestAtual+=freebets;
         if (freebestAtual < 0){
             throw new SQLException("Freebets Insuficiente");
         }
@@ -103,6 +107,11 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     @Override
     public void transacao(String userId, Transacao transacao) throws SQLException {
         utilizadores.novaTransacao(transacao,userId);
+    }
+
+    @Override
+    public void updateStreak(String id, float valor) {
+        utilizadores.updateStreak(id, valor);
     }
 
     public float getSaldo(String userId) throws SQLException {

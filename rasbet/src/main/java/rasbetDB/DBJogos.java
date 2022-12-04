@@ -6,6 +6,7 @@ import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,9 +33,41 @@ public class DBJogos {
         ps.setString(5,jogo.getData().toString());
         ps.execute();
 
+        adicionarParticipantes(jogo.getParticipantes(),jogo.getIdJogo(),jogo.getDesporto());
+
         for (ApostaJogo apostaJogo : jogo.getApostas().values()){
             adicionarApostaJogo(apostaJogo,jogo.getIdJogo(),jogo.getDesporto());
         }
+    }
+
+    public void adicionarParticipantes(List<String> list,String idJogo, int desporto) throws SQLException{
+        String query = "INSERT IGNORE INTO Participante(idParticipante,Desporto_idDesporto) VALUES(?,?)";
+        String query2 = "INSERT INTO Jogo_has_Participante(Participante_idParticipante,Desporto_idDesporto,Jogo_idJogo) VALUES(?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        PreparedStatement ps2 = c.prepareStatement(query2);
+
+        for (String participante: list){
+            ps.setString(1,participante);
+            ps.setInt(2,desporto);
+            ps.execute();
+            ps2.setString(1,participante);
+            ps2.setInt(2,desporto);
+            ps2.setString(3,idJogo);
+            ps2.execute();
+        }
+    }
+
+    public List<String> getParticipantes(String idJogo) throws SQLException {
+        List<String> list = new ArrayList<>();
+        String query = "SELECT Participante_idParticipante FROM Jogo_has_Participante WHERE Jogo_idJogo=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,idJogo);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            String id = rs.getString("Participante_idParticipante");
+            list.add(id);
+        }
+        return list;
     }
 
     public void adicionarApostaJogo(ApostaJogo apostaJogo,String idJogo,int idDesporto) throws SQLException {
@@ -100,7 +133,7 @@ public class DBJogos {
             String titulo = rs.getString("titulo");
 
 
-            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data,titulo, Jogo.Estado.ATIVO));
+            map.putIfAbsent(idJogo,new Jogo(idJogo, desporto, data,titulo, Jogo.Estado.ATIVO,getParticipantes(idJogo)));
             Jogo jogo = map.get(idJogo);
 
             Odd odd = new Odd(idOdd,valorOdd, opcao, jogo.getIdJogo());
@@ -235,6 +268,16 @@ public class DBJogos {
         ps.setInt(2, idOdd);
         ps.execute();
     }
+
+    public void updateEstadoJogos() throws SQLException {
+        String query = "UPDATE Jogo SET Estado_idEstado=? WHERE data <= ?";
+        LocalDateTime now = LocalDateTime.now();
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, Jogo.Estado.FECHADO.value);
+        ps.setString(2,now.toString());
+        ps.executeUpdate();
+    }
+
 
 //    public Desporto getDesporto(String idJogo) throws SQLException {
 //        String query = "SELECT * FROM Jogo INNER JOIN Desporto ON idDesporto = Desporto_idDesporto WHERE idJogo = ?";

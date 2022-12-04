@@ -19,6 +19,8 @@ public interface IGestaoUtilizadores {
 
     void addNotificacao(String idUser, Notificacao notificacao) throws SQLException;
 
+    List<Notificacao> getNotificacao(String idUser) throws SQLException;
+
     List<Favorito> getFavoritos(String idUser) throws SQLException;
 
     void updateSaldoFreebets(String userId, float saldo, float freebets) throws SQLException;
@@ -30,4 +32,6 @@ public interface IGestaoUtilizadores {
     void updateSaldo(String userId, float value)throws SQLException;
 
     void transacao(String userId, Transacao transacao)throws SQLException;;
+
+    void updateStreak(String id,float valor);
 }

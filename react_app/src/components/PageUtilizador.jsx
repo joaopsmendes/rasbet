@@ -23,29 +23,29 @@ function PageUtilizador(props) {
   const [desportos, setDesportos] = useState([]);
   const [desportoAtivo, setDesportoAtivo] = useState('futebol');
   const [aposta, setAposta] = useState([])
+  const [notificacoes, setNotificacoes] = useState(false);
+  const [favoritos,setFavoritos] = useState({});
 
 
 
-
-  const handleClickOdd = (newAposta) => {
+  const handleClickOdd = (odd) => {
     let newApostaArray = aposta.slice();
     for (var i = 0; i < newApostaArray.length; i++) {
-      if (newApostaArray[i].idOdd === newAposta.idOdd) {
-        removeOdd(newAposta.idOdd);
+      if (newApostaArray[i].idOdd === odd.idOdd) {
+        removeOdd(odd.idOdd);
         return;
       }
-      if (newApostaArray[i].desJogo === newAposta.desJogo && newApostaArray[i].tema === newAposta.tema) {
-        newApostaArray[i] = newAposta;
+      if (newApostaArray[i].desJogo === odd.desJogo && newApostaArray[i].tema === odd.tema) {
+        newApostaArray[i] = odd;
         setAposta(newApostaArray);
         console.log("ja existe");
         return;
       }
     }
-    newApostaArray.push(newAposta);
-    console.log(newApostaArray);
+    newApostaArray.push(odd);
+    console.log(odd);
     setAposta(newApostaArray);
   }
-
 
   const removeOdd = (idOdd) => {
     var newApostaArray = aposta.slice();
@@ -56,6 +56,7 @@ function PageUtilizador(props) {
 
   useEffect(() => {
     getDesportos();
+    getFavoritos();
   }, []);
 
 
@@ -86,6 +87,11 @@ function PageUtilizador(props) {
     setShowJogos(true);
     setShowPerfil(false);
     setShowHistorico(false);
+    setNotificacoes(false);
+  }
+
+  const handleNotifcacoes = () => {
+    
   }
 
 
@@ -95,6 +101,10 @@ function PageUtilizador(props) {
     'Terminar Sessão': loggout
   }
 
+
+  const setAlignment = (newAlignment) => {
+    return newAlignment;
+  }
 
 
 
@@ -110,6 +120,20 @@ function PageUtilizador(props) {
     console.log(result);
     setDesportos(result);
   }
+
+  const getFavoritos = async () => {
+
+    const response = await fetch('http://localhost:8080/favoritos?' + new URLSearchParams({
+      userId: props.user
+    }));
+    const data = await response.json();
+    //array to map
+    console.log("DATA");
+    console.log(data);
+    //setFavoritos(data);
+  }
+
+
   return (
     <div className="App">
       {!isDown ?
@@ -124,7 +148,7 @@ function PageUtilizador(props) {
             settings={settingsOptions}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showJogos && <Jogos setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
           {showHistorico && <Historico nome={props.user} />}
         </div>
         :

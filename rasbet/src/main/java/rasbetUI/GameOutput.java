@@ -18,6 +18,7 @@ public class GameOutput{
     private boolean concluido;
     private Map<String,List<ApostaOutput>> mapMercados;
 
+    private List<String> participantes;
     public GameOutput(){
 
     }
@@ -28,6 +29,7 @@ public class GameOutput{
         this.titulo = game.getTitulo();
         this.desporto = game.getDesporto();
         this.mapMercados =  new HashMap<>();
+        this.participantes = game.getParticipantes();
         for (Map.Entry<String, Map<String, List<Outcome>>> entry : game.getOdds().entrySet()){
             Map<String, List<Outcome>> map  = entry.getValue();
             mapMercados.putIfAbsent(entry.getKey(),new ArrayList<>());
@@ -39,6 +41,9 @@ public class GameOutput{
 
     }
 
+    public List<String> getParticipantes() {
+        return participantes;
+    }
 
     public String getDesporto() {
         return desporto;
@@ -95,5 +100,9 @@ public class GameOutput{
 
     public void setMapMercados(Map<String, List<ApostaOutput>> mapMercados) {
         this.mapMercados = mapMercados;
+    }
+
+    public void setParticipantes(List<String> participantes) {
+        this.participantes = participantes;
     }
 }

@@ -64,6 +64,13 @@ public class GestaoJogos implements IGestaoJogos {
         this.jogos.updateOdd(idOdd,valor);
     }
 
+    @Override
+    public void updateEstadoJogos() throws SQLException {
+        jogos.updateEstadoJogos();
+
+    }
+
+
 //    @Override
 //    public Desporto getDesporto(String idJogo) throws SQLException {
 //        return this.jogos.getDesporto(idJogo);

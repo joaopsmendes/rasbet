@@ -13,6 +13,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContentText from '@mui/material/DialogContentText';
+import AlteracaoOdd from './AlteracaoOdd';
 
 import { TextField } from '@mui/material';
 
@@ -25,8 +26,9 @@ function PageEspecialista(props) {
   const [desportoAtivo, setDesportoAtivo] = useState('futebol');
   const [toAdd, setToAdd] = useState(false);
   const [ativos, setAtivos] = useState(false);
-  const [open, setOpen] = useState([true, false, false]);
+  const [open, setOpen] = useState(false);
   const [jogoAlterado, setJogoAlterado] = useState();
+
 
   const getJogosAdd = async () => {
     const response = await fetch('http://localhost:8080/showGamesToAdd', {
@@ -107,7 +109,7 @@ function PageEspecialista(props) {
     console.log("CLICKED");
     console.log(odd);
     setJogoAlterado(odd);
-    setOpen([true,false, false]);
+    setOpen(true);
   }
 
 
@@ -138,6 +140,64 @@ function PageEspecialista(props) {
     return <Button variant="contained" color="inherit" sx={{ border: 1, borderRadius: '10px' }} onClick={onClick}>{texto}</Button>
   }
 
+  //TODO
+  const alterarOdd = async (odd) => {
+    const response = await fetch('http://localhost:8080/alterarOdd', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(odd)
+    });
+  }
+
+  //TODO
+  const alterarEstadoJogo = async (idJogo, estado) => {
+    const response = await fetch('http://localhost:8080/alterarEstadoJogo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ idJogo: idJogo, estado: estado })
+    });
+  }
+
+  const handleAlterarOdd = async () => {
+    //alterarOdd(jogoAlterado);
+    setOpen([false, false, true]);
+  }
+
+
+
+  const ativarJogo = async () => {
+    alterarEstadoJogo(jogoAlterado.idJogo, 'ativo');
+  }
+
+  const setAlignment = (alignment) => {
+    return null;
+  }
+
+
+  const cancelarAlteracao = () => {
+    setOpen([true, false, false]);
+    //ativarJogo();
+  }
+
+
+  const action = (event) => {
+    console.log(event.target.value);
+  }
+
+  const suspenderJogo = async () => {
+    //alterarEstadoJogo(jogoAlterado.idJogo, 'suspenso');
+    setOpen([false, true, false]);
+  }
+
+
+  const suspensoList = (jogo) => {
+    return (<li>{jogo.titulo}<Button  onClick={action} value={jogo.idJogo} sx={{ml:"2%"}}  variant="contained" color="inherit" >Ativar</Button></li>);
+  }
+
   return (
     <div className="App">
       <ResponsiveAppBar
@@ -148,24 +208,9 @@ function PageEspecialista(props) {
         settings={settingsOptions}
         isLogin={props.isLogin} />
 
-      {
-        jogoAlterado && dialogoAlterarOdd(open[0], "O jogo " + getTitulo() + " encontra-se ativo. Pretende suspender e prosseguir com a alteração da Odd?", [button("Sim", () => { setOpen([false, true, false]) }), button("Não", () => { })])
+      {open && <AlteracaoOdd jogo={jogoAlterado} setMaster={setOpen} />}
 
-      }
-      {
-        dialogoAlterarOdd(open[1], <div>O jogo encontra-se Suspenso. Pode inserir a nova odd
-          <TextField margin="normal" required name="Montante" label="Odd" id="Montante"
-            sx={{ mr: 2 }}
-            type="number"
-            autoFocus
-            defaultValue={1} /></div>, [button("Alterar", () => { setOpen([false, false, true]) })])
-      }
-
-      {
-        dialogoAlterarOdd(open[2], "Odd alterada com sucesso. Pretende REATIVAR o jogo?", [button("Sim", () => { setOpen([false, false, false]) }), button("Não", () => { })])
-      }
-
-
+      
 
       <Box sx={{ display: 'flex' }}>
         <Grid
@@ -183,7 +228,7 @@ function PageEspecialista(props) {
           </Grid>
           <Divider />
           <Grid item xs={12}>
-            {ativos && <Jogos showBoletim={false} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClick} />}
+            {ativos && <Jogos setAlignment={setAlignment} showBoletim={false} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClick} />}
             {toAdd &&
               !load ? <CircularProgress /> :
               <div>

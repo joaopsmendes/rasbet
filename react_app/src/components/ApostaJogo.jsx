@@ -17,32 +17,45 @@ function ApostaJogo(props) {
 
 
   useEffect(() => {
-    console.log("ApostaJogo");
     let arrayOdds = props.aposta[1].listOdd;
     console.log(arrayOdds);
     setOdds(arrayOdds)
     setNome(props.aposta[0])
   }, []);
 
+  useEffect(() => {
+    if (props.apostas) {
+      for (let i = 0; i < props.apostas.length; i++) {
+        let idOdd = props.apostas[i].idOdd;
+        for (let j = 0; j < odds.length; j++) {
+          if (odds[j].idOdd == idOdd) {
+            return;
+          }
+        }
+      }
+      setAlignment(null);
+    }
+  }, [props.apostas]);
+
+
 
 
 
 
   const handleChange = (event, newAlignment) => {
+
+    let other = newAlignment;
+
     if (newAlignment == null) {
-      newAlignment = alignment;
-      setAlignment(null);
-    }
-    else {
-      setAlignment(newAlignment);
+      other = alignment;
     }
     odds.map((odd) => {
-      if (odd.idOdd == newAlignment) {
+      if (odd.idOdd == other) {
         odd["nome"] = nome;
-        props.handleClick(odd)
+        props.handleClick(odd);
       }
     })
-
+    setAlignment(props.setAlignment(newAlignment));
   };
 
 

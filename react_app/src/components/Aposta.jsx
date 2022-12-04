@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { Box, Divider } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-
+import Button from '@mui/material/Button';
 
 function Aposta(props) {
 
@@ -12,12 +12,14 @@ function Aposta(props) {
     const [montante, setMontante] = useState(0);
     const [odds, setOdds] = useState([]);
     const [resultado, setResultado] = useState(false);
+    const [idAposta, setIdAposta] = useState();
 
     useEffect(() => {
         console.log("Aposta");
         console.log(props.aposta);
         setDate(props.aposta.dataAposta);
         setMontante(props.aposta.montante);
+        setIdAposta(props.aposta.idAposta);
         if (props.aposta.odd != undefined) {
             setOdds([props.aposta.odd]);
         }
@@ -44,6 +46,25 @@ function Aposta(props) {
         return (total * montante).toFixed(2);
     }
 
+    const cashOut = async () => {
+        const response = await fetch('http://localhost:8080/cashOut?' + new URLSearchParams({
+            idAposta: idAposta
+        })
+            , {
+                method: 'POST',
+            });
+        const data = await response.json();
+        console.log(data);
+    }
+
+    const formatDate = (date) => {
+        let dtToday = new Date(date);
+        let month = dtToday.getMonth() + 1;
+        let day = dtToday.getDate();
+        let year = dtToday.getFullYear();
+        return day + '-' + month + '-' + year;
+    }
+
 
     return (
         <Grid container>
@@ -56,7 +77,7 @@ function Aposta(props) {
                 <Grid direction="column" container >
 
                     <Grid item >
-                        <p>Dia: <b>{date}</b></p>
+                        <p>Dia: <b>{formatDate(date)}</b></p>
                     </Grid>
                     <Grid item>
                         <p>Montante Apostado: <b>{montante} €</b></p>
@@ -64,7 +85,8 @@ function Aposta(props) {
                     <Grid item>
                         <p>Possíveis Ganhos: <b>{totalGanhos()}</b></p>
                         {   
-                        resultado === null ?  null
+                        resultado === null ?  
+                        <Button variant="contained" color="inherit">Cashout</Button>
                         :resultado ? 
                             <CheckIcon fontSize="large" color="success" /> 
                             : <CloseIcon fontSize="large" color="error" />

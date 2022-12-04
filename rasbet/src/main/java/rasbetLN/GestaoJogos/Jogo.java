@@ -11,6 +11,7 @@ public class Jogo {
     private Desporto desporto;
     private LocalDateTime data;
     private Map<String, ApostaJogo> apostas;
+    private List<String> participantes;
     private Estado estado;
 
 
@@ -26,13 +27,14 @@ public class Jogo {
         }
     }
 
-    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, String titulo,Estado estado) {
+    public Jogo(String idJogo, Desporto desporto, LocalDateTime data, String titulo,Estado estado,List<String> participantes) {
         this.idJogo = idJogo;
         this.desporto = desporto;
         this.data = data;
         this.estado = estado;
         this.titulo = titulo;
         this.apostas = new HashMap<>();
+        this.participantes = participantes;
     }
 
 
@@ -61,6 +63,10 @@ public class Jogo {
         return desporto.getIdDesporto();
     }
 
+    public String getDesportoModalidade (){
+        return desporto.getModalidade();
+    }
+
     public LocalDateTime getData(){
         return data;
     }
@@ -69,7 +75,9 @@ public class Jogo {
         return apostas;
     }
 
-
+    public List<String> getParticipantes() {
+        return participantes;
+    }
 
     public void addOdd(String tema, Odd odd) {
         apostas.putIfAbsent(tema,new ApostaJogo(tema));

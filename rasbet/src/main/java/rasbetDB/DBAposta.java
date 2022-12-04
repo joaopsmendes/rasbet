@@ -4,10 +4,12 @@ import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoApostas.Multipla;
 import rasbetLN.GestaoApostas.Odd;
 import rasbetLN.GestaoApostas.Simples;
+import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DBAposta {
@@ -205,9 +207,26 @@ public class DBAposta {
         return valor*montante;
     }
 
-    public void cashout(int idAposta) {
-        //TODO Think about this
-        
+    public void cashout(int idAposta) throws SQLException {
+        /*
+        LocalDateTime now = LocalDateTime.now();
+        if (isSimples){
+            String query = "SELECT Aposta_idAposta,Estado_idEstado FROM Simples INNER JOIN Odd ON Odd_idOdd=idOdd " +
+                    "INNER JOIN ApostaJogo ON ApostaJogo_idApostaJogo=idApostaJogo " +
+                    "INNER JOIN Jogo ON Jogo_IdJogo=idJogo " +
+                    "WHERE Aposta_idAposta= ? AND  Estado_idEstado=?";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1, idAposta);
+            ps.setInt(2, Jogo.Estado.FECHADO.value);
+            ps.execute();
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                throw new SQLException("Existem Jogos a decorrer");
+            }
+        }
+
+         */
+
     }
     
     public float getMontante(int idAposta) throws SQLException {
@@ -223,7 +242,7 @@ public class DBAposta {
         return montante;
     }
 
-    public Map<String, Float> updateResulados(Map<Integer, List<Integer>> res) throws SQLException {
+    public Map<String, List<Float>> updateResulados(Map<Integer, List<Integer>> res) throws SQLException {
         updatePerdedores(res.get(0));
         return updateVencedores(res.get(1));
     }
@@ -244,26 +263,25 @@ public class DBAposta {
         }
     }
 
-    private Map<String,Float> updateVencedores(List<Integer> list) throws SQLException {
+    private Map<String,List<Float>> updateVencedores(List<Integer> list) throws SQLException {
         Set<Integer> vencedores = new HashSet<>();
         Set<Integer> losers = new HashSet<>();
-        Map<String,Float> mapSaldos = new HashMap<>();
+        Map<String,List<Float>>  mapSaldos = new HashMap<>();
         for (int id : list) {
             String query = "UPDATE Aposta SET resultado=1 WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1,id);
             ps.executeUpdate();
 
-            query = "SELECT utilizador_email,ganhoPossivel WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
+            query = "SELECT Utilizador_email,ganhoPossivel WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             ps = c.prepareStatement(query);
             ps.setInt(1,id);
             ResultSet rs=  ps.executeQuery();
             while (rs.next()){
-                String userId = rs.getString("utilizador_email");
+                String userId = rs.getString("Utilizador_email");
                 float ganho = rs.getFloat("ganhoPossivel");
-                mapSaldos.putIfAbsent(userId, (float) 0);
-                ganho += mapSaldos.get(userId);
-                mapSaldos.replace(userId,ganho);
+                mapSaldos.putIfAbsent(userId, new ArrayList<>());
+                mapSaldos.get(userId).add(ganho);
             }
 
             query = "SELECT Multipla_Aposta_idAposta,Resultado FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idOdd = ?";
@@ -290,16 +308,15 @@ public class DBAposta {
                 ps.setInt(1,idAposta);
                 ps.executeUpdate();
 
-                query = "SELECT utilizador_email,ganhoPossivel  FROM Aposta WHERE idAposta= ?";
+                query = "SELECT Utilizador_email,ganhoPossivel  FROM Aposta WHERE idAposta= ?";
                 ps = c.prepareStatement(query);
                 ps.setInt(1,idAposta);
                 ps.executeQuery();
                 if(rs.next()){
-                    String userId = rs.getString("utilizador_email");
+                    String userId = rs.getString("Utilizador_email");
                     float ganho = rs.getFloat("ganhoPossivel");
-                    mapSaldos.putIfAbsent(userId,(float) 0);
-                    ganho += mapSaldos.get(userId);
-                    mapSaldos.replace(userId,ganho);
+                    mapSaldos.putIfAbsent(userId,new ArrayList<>());
+                    mapSaldos.get(userId).add(ganho);
                 }
             }
         }

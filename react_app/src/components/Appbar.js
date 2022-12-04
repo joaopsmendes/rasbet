@@ -23,11 +23,16 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import { Select } from "@mui/material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
+
+  const handleOpenNotifications = () => {
+   //fazer
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -121,14 +126,17 @@ function ResponsiveAppBar(props) {
                 ))}
               </Select>
             </FormControl>
-
-
           }
         </Box>
 
         {
           props.isLogin ?
             <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open notifications">
+                <IconButton onClick={handleOpenNotifications} size="large" color="inherit" aria-label="notifications" sx={{ p: 0 }}>
+                  <NotificationsIcon />
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
                   <MenuIcon />

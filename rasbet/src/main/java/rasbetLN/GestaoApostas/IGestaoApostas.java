@@ -15,6 +15,6 @@ public interface IGestaoApostas {
 
     float cashout(int idAposta) throws SQLException;
 
-    Map<String, Float> updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
+    Map<String, List<Float>> updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
 
 }

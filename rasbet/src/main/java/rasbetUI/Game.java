@@ -21,4 +21,6 @@ public interface Game {
     String getTitulo();
 
     String getDesporto();
+
+    List<String> getParticipantes();
 }

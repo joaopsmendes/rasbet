@@ -4,6 +4,7 @@ import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
+import rasbetLN.GestaoUtilizadores.Notificacao;
 import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
@@ -43,6 +44,8 @@ public interface IRasbetLN {
 
     void addNotificacao(String userId, String conteudo) throws SQLException;
 
+    List<Notificacao> getNotifications(String userId) throws SQLException;
+
     List<Favorito> getFavorites(String userId) throws SQLException;
 
     public void fecharAposta(String userId,int idAposta, boolean resultado) throws SQLException;
@@ -66,4 +69,6 @@ public interface IRasbetLN {
     Map<String, String> infoUser(String userId)throws SQLException;
 
     void alterarEstado(String idJogo, int estado) throws SQLException;
+
+    void updateEstadoJogos() throws SQLException;
 }

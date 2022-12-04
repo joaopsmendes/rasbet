@@ -1,71 +1,111 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
+
+function AlteracaoOdd(props) {
+  const [open, setOpen] = React.useState([]);
 
 
-function AlteracaoOdd() {
-  const [open, setOpen] = React.useState(false);
-  const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-  const [odd, setOdd] = React.useState(1);
 
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const dialogoAlterarOdd = (open, texto, buttons) => {
+    return (
+      <Dialog open={open} >
+        <DialogTitle>Alteração de Odd - Jogo Ativo</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {texto}
+          </DialogContentText>
+          <DialogActions>
+            {buttons}
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    );
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const handleClickOpen1 = () => {
-    setOpen1(true);
-  };
+  React.useEffect(() => {
+    setOpen([true,false,false]);
+  }, []);
 
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
 
-  const handleClickOpen2 = () => {
-    setOpen2(true);
-  };
 
-  const handleClose2 = () => {
-    setOpen2(false);
-  };
-
-  const closeAll = () => {
-    setOpen(false);
-    setOpen1(false);
-    setOpen2(false);
+  const getTitulo = () => {
+    return props.jogo.titulo;
   }
 
-  {/**  const getSaldo=async()=>{
-        const response = await fetch('http://localhost:8080/jogos?' + new URLSearchParams({
-                desporto: "futebol"})
-            , {
-            method: 'GET',
-        });
-        const data = await response.json();
-        //const data =response.json();
-        var result = Object.keys(data).map((key) => data[key]);
-        console.log("RESULT");
-        console.log(result);
-        setJogos(result);
+  const button = (texto, onClick) => {
+    return <Button variant="contained" color="inherit" sx={{ border: 1, borderRadius: '10px' }} onClick={onClick}>{texto}</Button>
+  }
 
-    } */}
+  //TODO
+  const alterarOdd = async (odd) => {
+    const response = await fetch('http://localhost:8080/alterarOdd', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(odd)
+    });
+  }
+
+  //TODO
+  const alterarEstadoJogo = async (idJogo, estado) => {
+    const response = await fetch('http://localhost:8080/alterarEstadoJogo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ idJogo: idJogo, estado: estado })
+    });
+  }
+
+  const handleAlterarOdd = async () => {
+    //alterarOdd(props.jogo);
+    setOpen([false, false, true]);
+  }
+
+
+
+  const ativarJogo = async () => {
+    alterarEstadoJogo(props.jogo.idJogo, 'ativo');
+  }
+
+  const setAlignment = (alignment) => {
+    return null;
+  }
+
+
+  const cancelarAlteracao = () => {
+    setOpen([true, false, false]);
+    //ativarJogo();
+  }
+
+
+  const action = (event) => {
+    console.log(event.target.value);
+  }
+
+  const suspenderJogo = async () => {
+    //alterarEstadoJogo(props.jogo.idJogo, 'suspenso');
+    setOpen([false, true, false]);
+  }
+
 
   const alteraOdd = async () => {
     const response = await fetch('http://localhost:8080/alterarOdd', {
-      method: 'GET',
+      method: 'POST',
     });
 
     const data = await response.json();
@@ -89,6 +129,7 @@ function AlteracaoOdd() {
 
   return (
     <div>
+      {/*}
       <Button variant="text" onClick={handleClickOpen}>
         Alteração da Odd
       </Button>
@@ -98,7 +139,7 @@ function AlteracaoOdd() {
         </IconButton>
         <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
         <DialogContent>
-          <h1>  </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
+          <h1>  </h1> {/*alterar o estado do jogo, pedido a base de dados*
           <Button variant="Contained" onClick={handleClickOpen1}>SIM</Button>
           <Button variant="Contained" onClick={handleClose} >NÂO</Button>
         </DialogContent>
@@ -110,7 +151,7 @@ function AlteracaoOdd() {
         </IconButton>
         <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
         <DialogContent>
-          <h1> </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
+          <h1> </h1> {/*alterar o estado do jogo, pedido a base de dados*
           <TextField
             onChange={(e) => setOdd(e.target.value)}
             size="sm"
@@ -140,11 +181,39 @@ function AlteracaoOdd() {
         <DialogTitle>ALTERAÇÃO DE ODD - JOGO ATIVO</DialogTitle>
         <DialogContent>
           <h1> Odd alterada com sucesso.</h1>
-          <h1> Pretende REATIVAR o jogo? </h1> {/*alterar o estado do jogo, pedido a base de dados*/}
+          <h1> Pretende REATIVAR o jogo? </h1> {/*alterar o estado do jogo, pedido a base de dados*
           <Button variant="Contained" onClick={closeAll}>SIM</Button>
           <Button variant="Contained" onClick={handleClose2}>NÂO</Button>
         </DialogContent>
       </Dialog>
+      */}
+      {
+        open[0] && props.jogo && dialogoAlterarOdd(open[0],
+          "O jogo " + getTitulo() + " encontra-se ativo. Pretende suspender e prosseguir com a alteração da Odd?",
+          [button("Sim", () => { suspenderJogo() }),
+          button("Não", () => { props.setMaster(false)})])
+
+      }
+      {
+        open[1] && dialogoAlterarOdd(open[1], <div>O jogo encontra-se Suspenso. Pode inserir a nova odd.
+          <TextField margin="normal" required
+            name="Odd"
+            label={props.jogo.opcao}
+            id="Montante"
+            sx={{ mr: 2 }}
+            type="number"
+            autoFocus
+            defaultValue={1} /></div>,
+          [button("Alterar", () => { handleAlterarOdd() }),
+          button("Cancelar", () => { cancelarAlteracao() })])
+      }
+      {
+        open[2] && dialogoAlterarOdd(open[2], "Odd alterada com sucesso. Pretende REATIVAR o jogo?",
+          [button("Sim", () => { props.setMaster(false) }),
+          button("Não", () => { setOpen([false, true, false]) })])
+      }
+
+
     </div>
   );
 }

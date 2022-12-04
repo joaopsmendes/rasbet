@@ -34,7 +34,7 @@ public class GestaoApostas implements IGestaoApostas {
     }
 
     @Override
-    public Map<String, Float> updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
+    public Map<String, List<Float>> updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
         return apostas.updateResulados(res);
     }
 

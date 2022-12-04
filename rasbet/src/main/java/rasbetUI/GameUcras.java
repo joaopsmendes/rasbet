@@ -62,12 +62,20 @@ public class GameUcras implements Game{
 
     @Override
     public String getTitulo() {
-        return homeTeam + " vs " + awayTeam;
+        return homeTeam + " - " + awayTeam;
     }
 
     @Override
     public String getDesporto() {
         return "futebol";
+    }
+
+    @Override
+    public List<String> getParticipantes() {
+        List<String> list = new ArrayList<>();
+        list.add(homeTeam);
+        list.add(awayTeam);
+        return list;
     }
 
     public void setId(String id) {
