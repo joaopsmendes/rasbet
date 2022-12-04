@@ -53,30 +53,6 @@ function Jogos(props) {
         getJogos();
     }, [props.desportoAtivo])
 
-    /*
-        const addOdd = (newAposta) => {
-            var newApostaArray = aposta.slice();
-            console.log(newAposta)
-            for (var i = 0; i < newApostaArray.length; i++) {
-                console.log(newApostaArray[i])
-                if (newApostaArray[i].desJogo === newAposta.desJogo && newApostaArray[i].tema === newAposta.tema) {
-                    newApostaArray[i] = newAposta;
-                    setAposta(newApostaArray);
-                    console.log("ja existe");
-                    return;
-                }
-            }
-            newApostaArray.push(newAposta);
-            setAposta(newApostaArray);
-        }
-    
-        const removeOdd = (idOdd) => {
-            console.log(idOdd);
-            var newApostaArray = aposta.slice();
-            newApostaArray = newApostaArray.filter((aposta) => aposta.idOdd !== idOdd);
-            setAposta(newApostaArray);
-        }
-        */
 
     const handleClick = (odd,) => {
         if (props.showBoletim) {
@@ -109,6 +85,17 @@ function Jogos(props) {
     }
 
 
+
+    const isSearch = (jogo) => {
+        if (search === "") {
+            return true;
+        }
+        else {
+            return jogo.titulo.toLowerCase().includes(search.toLowerCase());
+        }
+    }
+
+
     const dateField = (nome, change) => {
         return (
             <TextField
@@ -129,15 +116,6 @@ function Jogos(props) {
                     shrink: true,
                 }}
             />);
-    }
-
-    const isSearch = (jogo) => {
-        if (search === "") {
-            return true;
-        }
-        else {
-            return jogo.titulo.toLowerCase().includes(search.toLowerCase());
-        }
     }
 
     const filterByDate = (jogo) => {
@@ -198,7 +176,7 @@ function Jogos(props) {
             <Grid container spacing={2}>
                 <Grid item xs={12} md={9} xl={9}>
                     {jogos.length > 0 ?
-                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && <Jogo showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
+                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && <Jogo favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&

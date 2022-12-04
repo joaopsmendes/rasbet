@@ -17,7 +17,6 @@ function Jogo(props) {
     const [participantes, setParticipantes] = useState([]);
     const [id, setID] = useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [favs, setFavs] = useState([]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -48,14 +47,14 @@ function Jogo(props) {
         return dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
     }
 
+
+
     useEffect(() => {
         setID(props.jogo.idJogo)
         setParticipantes(props.jogo.participantes)
         setTime(formatarData(props.jogo.data));
         let apostasArray = Object.keys(props.jogo.apostas).map((key) => [key, props.jogo.apostas[key]]);
         setApostas(apostasArray);
-        console.log("Jogo");
-        console.log(props.jogo);
     }, [])
 
 
@@ -85,20 +84,56 @@ function Jogo(props) {
         )
     }
 
+
+    const addFavorito =async (nome) => {
+        const user = sessionStorage.getItem('user');
+        const response = await fetch('http://localhost:8080/addFavorito', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+              },
+            body: JSON.stringify({
+                id: user, 
+                value : nome,
+                desporto : props.desporto
+            }),
+        });
+    }
+
+    const removeFavorito =async (nome) => {
+        const user = sessionStorage.getItem('user');
+        const response = await fetch('http://localhost:8080/removeFavorito', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+              },
+            body: JSON.stringify({
+                id: user, 
+                value : nome,
+                desporto : props.desporto
+            }),
+        });
+
+    }
+
     const handleClickFav = (event) => {
-        let obj = favs.slice();
+        let obj = props.favoritos.slice();
         let participante = event.currentTarget.value;
         if (isInFav(participante)) {
+            console.log("REMOVE");
+            removeFavorito(participante);
             obj.splice(obj.indexOf(participante), 1);
         } else {
+            console.log("ADD");
+            addFavorito(participante);
             obj.push(event.currentTarget.value);
         }
         setFavs(obj);
     }
 
     const isInFav = (participante) => {
-        for (let i = 0; i < favs.length; i++) {
-            if (favs[i] == participante) {
+        for (let i = 0; i < props.favoritos.length; i++) {
+            if (props.favoritos[i] == participante) {
                 return true;
             }
         }

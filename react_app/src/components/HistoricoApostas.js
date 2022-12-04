@@ -45,11 +45,14 @@ function HistoricoApostas(props) {
   }, [simples,ativas])
 
 
+
+
+
   return (
 
     <div className="Historico">
-      <Container maxWidth="lg">
-        <Box sx={{ border: 2, borderRadius: '20px', margin: 'auto' }} >
+      <Container maxWidth="lg" sx={{ p: 2 }}>
+        <Box sx={{ border: 2, borderRadius: '20px' }} >
           <h2> Histórico de apostas </h2>
           <Container maxWidth="xs" >
             <Grid container spacing={2} >
@@ -62,7 +65,6 @@ function HistoricoApostas(props) {
             </Grid>
           </Container>
           <Divider />
-
           <Container maxWidth="xs" >
             <Grid container spacing={2} >
               <Grid item xs={6} >
@@ -74,7 +76,7 @@ function HistoricoApostas(props) {
             </Grid>
           </Container>
           <Divider />
-          <Apostas ativas={ativas} simples={simples} />
+          <Apostas filtro={props.filtro} dataInicial={props.dataInicial} dataFinal={props.dataFinal} ativas={ativas} simples={simples} />
         </Box>
       </Container>
     </div>

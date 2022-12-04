@@ -148,7 +148,7 @@ function PageUtilizador(props) {
             settings={settingsOptions}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showJogos && <Jogos setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
           {showHistorico && <Historico nome={props.user} />}
         </div>
         :

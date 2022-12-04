@@ -24,11 +24,9 @@ function MBWAY(props) {
     const handleConfirm = () => {
         setConfirm(true);
         setOpen(false);
+        props.submit();
     };
 
-    const handleCloseConfirm = () => {
-        setConfirm(false);
-    };
 
     React.useEffect(() => {
         console.log("USE EFFECT");
@@ -60,11 +58,6 @@ function MBWAY(props) {
                     <Button variant="Contained" onClick={handleClose}>CANCELAR</Button>
                     <h6> Será enviada uma notificação para o seu telemóvel. </h6>
                     <h6> Aceite a transação com o seu PIN MB WAY dentro do tempo limite indicado </h6>
-                </DialogContent>
-            </Dialog>
-            <Dialog open={confirm} onClose={handleCloseConfirm}>
-                <DialogContent>
-                    <h1> Pagamento efetuado com sucesso.</h1>
                 </DialogContent>
             </Dialog>
         </div>

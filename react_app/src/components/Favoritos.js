@@ -55,24 +55,6 @@ function Favoritos() {
                 </IconButton>
             <DialogTitle>Favoritos</DialogTitle>
             <DialogContent>
-              {/*
-                <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                 {[1, 2, 3].map((value) => ( }
-                    <ListItem
-                        key={value}
-                        disableGutters
-                        secondaryAction={}
-                        >
-                    <IconButton aria-label="remove">
-                        <DeleteIcon />
-                    </IconButton>
-                }
-                >
-                 <ListItemText primary={`Line item ${value}`} />
-                </ListItem>
-                ))}
-            </List>
-              */}
             </DialogContent>
             </Dialog>
         </div>

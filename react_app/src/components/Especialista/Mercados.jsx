@@ -12,7 +12,7 @@ function Mercados(props) {
         let mercadosArray = Object.keys(props.mercados).map((key) => [key, props.mercados[key]]);
         console.log(mercadosArray[0])
         setMercados(mercadosArray);
-    }, [])
+    }, [props.jogos])
 
 
 

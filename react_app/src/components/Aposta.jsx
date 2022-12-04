@@ -27,7 +27,7 @@ function Aposta(props) {
             setOdds(props.aposta.oddList);
         }
         setResultado(props.aposta.resultado);
-    }, [props.aposta]);
+    }, [props.aposta, props.map]);
 
     const infoOdd = (odd) => {
         return (
@@ -47,14 +47,21 @@ function Aposta(props) {
     }
 
     const cashOut = async () => {
-        const response = await fetch('http://localhost:8080/cashOut?' + new URLSearchParams({
-            idAposta: idAposta
-        })
-            , {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const response = await fetch('http://localhost:8080/cashout',
+            {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                  },
+                body: JSON.stringify({
+                    userId: user,
+                    idAposta: idAposta
+                })
             });
-        const data = await response.json();
+        const data = await response.text();
         console.log(data);
+        props.update(user);
     }
 
     const formatDate = (date) => {
@@ -64,6 +71,8 @@ function Aposta(props) {
         let year = dtToday.getFullYear();
         return day + '-' + month + '-' + year;
     }
+
+
 
 
     return (
@@ -84,12 +93,12 @@ function Aposta(props) {
                     </Grid>
                     <Grid item>
                         <p>Possíveis Ganhos: <b>{totalGanhos()}</b></p>
-                        {   
-                        resultado === null ?  
-                        <Button variant="contained" color="inherit">Cashout</Button>
-                        :resultado ? 
-                            <CheckIcon fontSize="large" color="success" /> 
-                            : <CloseIcon fontSize="large" color="error" />
+                        {
+                            resultado === null ?
+                                <Button variant="contained" color="inherit" onClick={cashOut} >Cashout</Button>
+                                : resultado ?
+                                    <CheckIcon fontSize="large" color="success" />
+                                    : <CloseIcon fontSize="large" color="error" />
                         }
                     </Grid>
                 </Grid>

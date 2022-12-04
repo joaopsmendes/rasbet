@@ -61,10 +61,12 @@ function Apostas(props) {
             let array = props.ativas ? apostasMap["ativas"] : apostasMap["finalizadas"];
             array = props.simples ? array["simples"] : array["multiplas"];
             console.log("ARRAY", array);
+            array = array.filter(filterByDate);
+            console.log("ARRAY", array);
             setIndex(getIndex())
             setApostas(array);
         }
-    }, [props.ativas, props.simples, apostasMap])
+    }, [props.ativas, props.simples, apostasMap,props.filtro,props.dataInicial,props.dataFinal])
 
     const hasnext = () => {
         return index < apostas.length - 1;
@@ -111,6 +113,20 @@ function Apostas(props) {
         );
     }
 
+    const filterByDate = (aposta) => {
+        if (!props.filtro) return true;
+        if (props.dataInicial === undefined || props.dataFinal === undefined) {
+            return true;
+        }
+        else {
+            let dataJogo = new Date(aposta.dataAposta);
+            dataJogo.setHours(0, 0, 0, 0);
+            let dataInicialDate = new Date(props.dataInicial);
+            let dataFinalDate = new Date(props.dataFinal);
+            return dataJogo >= dataInicialDate && dataJogo <= dataFinalDate;
+        }
+    }
+
 
     return (
         <div className="Apostas">
@@ -121,7 +137,7 @@ function Apostas(props) {
                 <Grid item xs={12} md={10}>
                     {
                         apostas.length > 0 &&
-                        <Aposta index={index} aposta={apostas[index]} />
+                        <Aposta update={getApostas} index={index} aposta={apostas[index]} map={apostasMap} />
                     }
                 </Grid>
 

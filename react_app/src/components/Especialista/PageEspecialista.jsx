@@ -25,7 +25,7 @@ function PageEspecialista(props) {
   const [desportos, setDesportos] = useState([]);
   const [desportoAtivo, setDesportoAtivo] = useState('futebol');
   const [toAdd, setToAdd] = useState(false);
-  const [ativos, setAtivos] = useState(false);
+  const [ativos, setAtivos] = useState(true);
   const [open, setOpen] = useState(false);
   const [jogoAlterado, setJogoAlterado] = useState();
 
@@ -78,12 +78,18 @@ function PageEspecialista(props) {
 
 
   const removeJogo = (id) => {
-    setJogos(jogos.filter((jogo) => jogo.id !== id));
+    console.log(jogos);
+    setJogos(jogos.filter((jogo) => jogo.idJogo !== id));
+    console.log(jogos);
   }
 
   const handleJogosAtivos = () => {
     setAtivos(!ativos);
     setToAdd(false);
+  }
+
+  const update = () => {
+    window.location.reload();
   }
 
 
@@ -100,9 +106,7 @@ function PageEspecialista(props) {
       body: JSON.stringify(jogo)
     });
     alert("Jogo adicionado com sucesso!");
-    const data = await response.json();
     removeJogo(idJogo);
-
   }
 
   const handleClick = (odd) => {
@@ -113,90 +117,12 @@ function PageEspecialista(props) {
   }
 
 
-  const dialogoAlterarOdd = (open, texto, buttons) => {
-    return (
-      <Dialog open={open} >
-        <DialogTitle>Alteração de Odd - Jogo Ativo</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {texto}
-          </DialogContentText>
-          <DialogActions>
-            {buttons}
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-    );
-  };
-
-
-
-
-  const getTitulo = () => {
-    return jogoAlterado.titulo;
-  }
-
-  const button = (texto, onClick) => {
-    return <Button variant="contained" color="inherit" sx={{ border: 1, borderRadius: '10px' }} onClick={onClick}>{texto}</Button>
-  }
-
-  //TODO
-  const alterarOdd = async (odd) => {
-    const response = await fetch('http://localhost:8080/alterarOdd', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(odd)
-    });
-  }
-
-  //TODO
-  const alterarEstadoJogo = async (idJogo, estado) => {
-    const response = await fetch('http://localhost:8080/alterarEstadoJogo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ idJogo: idJogo, estado: estado })
-    });
-  }
-
-  const handleAlterarOdd = async () => {
-    //alterarOdd(jogoAlterado);
-    setOpen([false, false, true]);
-  }
-
-
-
-  const ativarJogo = async () => {
-    alterarEstadoJogo(jogoAlterado.idJogo, 'ativo');
-  }
-
   const setAlignment = (alignment) => {
     return null;
   }
 
 
-  const cancelarAlteracao = () => {
-    setOpen([true, false, false]);
-    //ativarJogo();
-  }
 
-
-  const action = (event) => {
-    console.log(event.target.value);
-  }
-
-  const suspenderJogo = async () => {
-    //alterarEstadoJogo(jogoAlterado.idJogo, 'suspenso');
-    setOpen([false, true, false]);
-  }
-
-
-  const suspensoList = (jogo) => {
-    return (<li>{jogo.titulo}<Button  onClick={action} value={jogo.idJogo} sx={{ml:"2%"}}  variant="contained" color="inherit" >Ativar</Button></li>);
-  }
 
   return (
     <div className="App">
@@ -208,9 +134,9 @@ function PageEspecialista(props) {
         settings={settingsOptions}
         isLogin={props.isLogin} />
 
-      {open && <AlteracaoOdd jogo={jogoAlterado} setMaster={setOpen} />}
+      {open && <AlteracaoOdd jogo={jogoAlterado} setMaster={setOpen} update={update} />}
 
-      
+
 
       <Box sx={{ display: 'flex' }}>
         <Grid
@@ -229,16 +155,13 @@ function PageEspecialista(props) {
           <Divider />
           <Grid item xs={12}>
             {ativos && <Jogos setAlignment={setAlignment} showBoletim={false} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClick} />}
-            {toAdd &&
-              !load ? <CircularProgress /> :
-              <div>
-                {load && jogos.length > 0 && jogos.map((jogo) => (
-                  <Box sx={{ border: 1, borderRadius: '10px', m: '5%' }}>
-                    <h1>{jogo.titulo}</h1>
-                    <Mercados mercados={jogo['mapMercados']} addJogo={addJogo} idJogo={jogo.idJogo} jogos={jogos} />
-                  </Box>))
-                }
-              </div>
+            {toAdd && !load && <CircularProgress />}
+            {toAdd && load && jogos.length === 0 && <h1>Não existem jogos para adicionar</h1>}
+            {toAdd && load && jogos.length > 0 && jogos.map((jogo) => (
+              <Box sx={{ border: 1, borderRadius: '10px', m: '5%' }}>
+                <h1>{jogo.titulo}</h1>
+                <Mercados mercados={jogo['mapMercados']} addJogo={addJogo} idJogo={jogo.idJogo} jogos={jogos} />
+              </Box>))
             }
           </Grid>
 

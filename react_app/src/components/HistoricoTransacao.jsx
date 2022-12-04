@@ -92,12 +92,32 @@ function HistoricoTransacoes(props) {
         } else if (operacao === 'CRIACAO_CONTA') {
             return 'Criação de conta';
         }
+        return operacao;
     }
 
     const getValor = (transacao) => {
         let valor = transacao.saldo + transacao.freebets;
         return (valor > 0 ? "+" + valor : valor) + "€";
     }
+
+    const filterByDate = (transacao) => {
+        if (!props.filtro) return true;
+        if (props.dataInicial === undefined || props.dataFinal === undefined) {
+            return true;
+        }
+        else {
+            let dataJogo = new Date(transacao.data);
+            dataJogo.setHours(0, 0, 0, 0);
+            let dataInicialDate = new Date(props.dataInicial);
+            let dataFinalDate = new Date(props.dataFinal);
+            return dataJogo >= dataInicialDate && dataJogo <= dataFinalDate;
+        }
+    }
+
+    const isOutro = (transacao) => {
+        return transacao.saldo === 0 && transacao.freebets === 0;
+    }
+
 
     return (
         <Container maxWidth="xl" sx={{ p: '1%' }}>
@@ -117,13 +137,13 @@ function HistoricoTransacoes(props) {
                         <TableBody>
                             {/** preencher a tabela */}
                             {transacoes.map((transacao) => (
-
+                                filterByDate(transacao) &&
                                 <TableRow
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell align="right">{dateString(transacao.data)}</TableCell>
-                                    <TableCell align="right">{getOpercaoNome(transacao.tipo)}</TableCell>
-                                    <TableCell align="right">{getValor(transacao)}</TableCell>
+                                    <TableCell align="right">{getOpercaoNome(transacao.tipo) }</TableCell>
+                                    <TableCell align="right">{!isOutro(transacao) ? getValor(transacao) : "OUTRO"}</TableCell>
                                     <TableCell align="right">{saldoAposMovimento(transacao)}</TableCell>
                                     <TableCell align="right">{freebetsAposMovimento(transacao)}</TableCell>
                                 </TableRow>

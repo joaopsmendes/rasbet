@@ -84,6 +84,7 @@ function Pagamento(props) {
 
   const handleCloseMbway = () => {
     setMbway(false);
+    close();
   };
 
   React.useEffect(() => {
@@ -200,7 +201,7 @@ function Pagamento(props) {
           }
         </DialogContent>
       </Dialog>
-      {mbway && <MBWAY mbway={mbway} close={handleCloseMbway} />}
+      {mbway && <MBWAY mbway={mbway} close={handleCloseMbway} submit={submit} />}
 
     </div >
   );

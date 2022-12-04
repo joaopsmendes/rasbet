@@ -28,8 +28,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [fav, setFav] = useState(false);
   const [not, setNot] = useState(false);
-  
+
+
+
   const getNotifications = async (email) => {
     console.log(email)
     const response = await fetch('http://localhost:8080/getNotifications?' + new URLSearchParams({
@@ -45,10 +48,26 @@ function ResponsiveAppBar(props) {
     setNot(data['not']);
   }
 
+  const getFavoritos = async (email) => {
+    console.log(email)
+    const response = await fetch('http://localhost:8080/getNotifications?' + new URLSearchParams({
+      userId: email
+    })
+      , {
+        method: 'GET',
+      });
 
-  const handleOpenNotifications = () => {
-   //fazer
+    console.log("Notificações");
+    let data = await response.json();
+    console.log(data);
+    setFav(data['fav']);
   }
+
+  const handleOpenNotifications = (event) => {
+    //setAnchorElUser(event.currentTarget);
+    //getFavoritos(props.user.email);
+  };
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
