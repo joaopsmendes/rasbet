@@ -197,6 +197,7 @@ public class DBJogos {
         ps.setInt(1, estado);
         ps.setString(2, idJogo);
         ps.execute();
+        System.out.println("UPDATED");
     }
 
     public boolean existeJogo(String gameId, Desporto desporto) throws SQLException {

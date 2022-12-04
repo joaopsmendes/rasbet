@@ -68,7 +68,10 @@ public interface IRasbetLN {
 
     Map<String, String> infoUser(String userId)throws SQLException;
 
-    void alterarEstado(String idJogo, int estado) throws SQLException;
+    void suspenderJogo(String idJogo) throws SQLException;
+
+    void ativarJogo(String idJogo) throws SQLException;
+
 
     void updateEstadoJogos() throws SQLException;
 }

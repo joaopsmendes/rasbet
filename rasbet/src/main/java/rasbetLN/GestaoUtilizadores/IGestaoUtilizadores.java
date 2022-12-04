@@ -33,5 +33,7 @@ public interface IGestaoUtilizadores {
 
     void transacao(String userId, Transacao transacao)throws SQLException;;
 
-    void updateStreak(String id,float valor);
+    int updateStreak(String id, float valor) throws SQLException;
+
+    float bonusStreak(String key)throws SQLException;
 }

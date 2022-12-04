@@ -338,10 +338,21 @@ public class RasbetApplication {
 		}
 	}
 
-	@PostMapping(path="alterarEstado")
-	public void alterarEstado(@RequestParam(name = "idJogo") String idJogo, @RequestParam(name = "estado") int estado){
+	@PostMapping(path="suspenderJogo")
+	public void suspenderJogo(@RequestBody Map<String, String> myJsonRequest){
+		String idJogo = myJsonRequest.get("idJogo");
 		try {
-			rasbetLN.alterarEstado(idJogo, estado);
+			rasbetLN.suspenderJogo(idJogo);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@PostMapping(path="ativarJogo")
+	public void ativarJogo(@RequestBody Map<String, String> myJsonRequest){
+		String idJogo = myJsonRequest.get("idJogo");
+		try {
+			rasbetLN.ativarJogo(idJogo);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -351,15 +362,17 @@ public class RasbetApplication {
 
 	//TODO
 	@PostMapping(path="cashout")
-	public void cashout(@RequestBody Map<String, String> myJsonRequest){
+	public String cashout(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		//String idUser = myJsonRequest.get("idUser");
 		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
 		String userId = myJsonRequest.get("userId");
+		System.out.println(userId);
 		try {
 			rasbetLN.cashout(idAposta,userId);
+			return "Sucessso";
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			return e.getMessage();
 		}
 	}
 

@@ -180,7 +180,7 @@ public class DBUtilizadores {
 
 
     public void addFavorito(String userId, Favorito favorito) throws SQLException {
-        String query = "INSERT INTO Favorito(favorito, Utilizador_email, Desporto_idDesporto)VALUES (?,?,?) ";
+        String query = "INSERT INTO Favorito(Participante_idParticipante, Utilizador_email, Participante_Desporto_idDesporto)VALUES (?,?,?) ";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setString(1, favorito.getNome());
         pstmt.setString(2, userId);
@@ -189,7 +189,7 @@ public class DBUtilizadores {
     }
 
     public void removeFavorito(String userId, Favorito favorito) throws SQLException {
-        String query = "DELETE FROM Favorito WHERE favorito = ? AND  Utilizador_email=? AND Desporto_idDesporto = ?";
+        String query = "DELETE FROM Favorito WHERE Participante_idParticipante = ? AND  Utilizador_email=? AND Participante_Desporto_idDesporto = ?";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setString(1, favorito.getNome());
         pstmt.setString(2, userId);
@@ -359,7 +359,7 @@ public class DBUtilizadores {
         return map;
     }
 
-    public void updateStreak(String id, float valor) throws SQLException{
+    public int updateStreak(String id, float valor) throws SQLException{
         String query ="SELECT * FROM Apostador Where Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1,id);
@@ -368,14 +368,31 @@ public class DBUtilizadores {
             int streak = rs.getInt("seguidas");
             float ganhos = rs.getFloat("ganhos");
             streak++;
-            ganhos+= valor;
             String query2 = "UPDATE Apostador SET seguidas = ?, ganhos = ? WHERE Utilizador_email=?";
             PreparedStatement ps2 = c.prepareStatement(query2);
             ps2.setInt(1,streak);
             ps2.setFloat(2,ganhos);
             ps2.setString(3,id);
             ps2.executeUpdate();
+            return streak;
         }
+        throw new SQLException("Apostador não encontrado");
 // TODO Verificar se ganhou 5, caso sim -> dar o bonus e dar reset aos ganhos e seguidas
+    }
+
+    public float bonusStreak(String id) throws SQLException {
+        String query ="SELECT * FROM Apostador Where Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1,id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            float ganhos = rs.getFloat("ganhos");
+            String query2 = "UPDATE Apostador SET seguidas = 0, ganhos = 0 WHERE Utilizador_email=?";
+            PreparedStatement ps2 = c.prepareStatement(query2);
+            ps2.setString(1,id);
+            ps2.executeUpdate();
+            return ganhos;
+        }
+        throw new SQLException("Apostador não encontrado");
     }
 }

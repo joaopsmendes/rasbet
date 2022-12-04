@@ -27,6 +27,10 @@ public class RasbetLN implements IRasbetLN{
     private IGestaoUtilizadores gestaoUtilizadores;
     private IGestaoApostas gestaoApostas;
 
+    static double BONUS_PERCENTAGEM = 0.05;
+    static int BONUS_STREAK = 5;
+    static int BONUS_MAX = 10;
+
     public RasbetLN() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost/rasbet","root","root");
@@ -157,8 +161,16 @@ public class RasbetLN implements IRasbetLN{
         Map<String,List<Float>> mapSaldos = gestaoApostas.updateResultados(res);
         for (Map.Entry<String, List<Float>> entry: mapSaldos.entrySet()){
             for (float valor : entry.getValue()){
+                Transacao t = new Transacao(valor,0,LocalDateTime.now(), Transacao.Tipo.GANHO_APOSTA);
+                gestaoUtilizadores.transacao(entry.getKey(),t);
                 gestaoUtilizadores.updateSaldo(entry.getKey(),valor);
-                gestaoUtilizadores.updateStreak(entry.getKey());
+                int streak = gestaoUtilizadores.updateStreak(entry.getKey(),valor);
+                if (streak == BONUS_STREAK){
+                    float bonus = (float) (gestaoUtilizadores.bonusStreak(entry.getKey()) * BONUS_PERCENTAGEM);
+                    if (bonus > BONUS_MAX) bonus = BONUS_MAX;
+                    Transacao transacao = new Transacao(0,bonus,LocalDateTime.now(), Transacao.Tipo.BONUS_SEGUIDAS);
+                    gestaoUtilizadores.transacao(entry.getKey(),transacao);
+                }
             }
         }
     }
@@ -211,7 +223,8 @@ public class RasbetLN implements IRasbetLN{
     public void cashout(int idAposta,String userId) throws SQLException {
         float montante = gestaoApostas.cashout(idAposta);
         gestaoUtilizadores.updateSaldoFreebets(userId,0,montante);
-
+        Transacao transacao = new Transacao(0,montante,LocalDateTime.now(), Transacao.Tipo.CASHOUT);
+        gestaoUtilizadores.transacao(userId,transacao);
     }
 
     public List<Desporto> getDesporto(){
@@ -233,8 +246,13 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public void alterarEstado(String idJogo, int estado) throws SQLException {
-        gestaoJogos.alteraEstado(idJogo,estado);
+    public void suspenderJogo(String idJogo) throws SQLException {
+        gestaoJogos.suspenderJogo(idJogo);
+    }
+
+    @Override
+    public void ativarJogo(String idJogo) throws SQLException {
+        gestaoJogos.ativarJogo(idJogo);
     }
 
     @Override

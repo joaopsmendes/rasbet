@@ -12,7 +12,6 @@ public interface IGestaoJogos {
 
     public Map<String, Desporto> getDesportos () throws SQLException;
 
-    void alteraEstado(String idJogo, int estado) throws SQLException;
 
     Map<String, Jogo> getJogos(Desporto desporto) throws SQLException;
 
@@ -24,6 +23,10 @@ public interface IGestaoJogos {
     void alterarOdd(int idOdd, float valor) throws SQLException;
 
     void updateEstadoJogos() throws SQLException;
+
+    void suspenderJogo(String idJogo) throws SQLException;
+
+    void ativarJogo(String idJogo) throws SQLException;
 
 
 //    Desporto getDesporto(String idJogo) throws SQLException;

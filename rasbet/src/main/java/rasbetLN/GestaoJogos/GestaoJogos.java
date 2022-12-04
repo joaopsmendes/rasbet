@@ -26,9 +26,6 @@ public class GestaoJogos implements IGestaoJogos {
         return jogos.getDesportos();
     }
 
-    public void alteraEstado(String idJogo, int estado) throws SQLException{
-        jogos.alteraEstado(idJogo, estado);
-    }
 
     public Map<String, Jogo> getJogos(Desporto desporto) throws SQLException{
         return this.jogos.getJogos(desporto);
@@ -68,6 +65,16 @@ public class GestaoJogos implements IGestaoJogos {
     public void updateEstadoJogos() throws SQLException {
         jogos.updateEstadoJogos();
 
+    }
+
+    @Override
+    public void suspenderJogo(String idJogo) throws SQLException {
+        jogos.alteraEstado(idJogo, Jogo.Estado.SUSPENSO.value);
+    }
+
+    @Override
+    public void ativarJogo(String idJogo) throws SQLException {
+        jogos.alteraEstado(idJogo, Jogo.Estado.ATIVO.value);
     }
 
 

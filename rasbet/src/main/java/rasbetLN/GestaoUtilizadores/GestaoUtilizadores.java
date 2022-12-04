@@ -110,8 +110,13 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     @Override
-    public void updateStreak(String id, float valor) {
-        utilizadores.updateStreak(id, valor);
+    public int updateStreak(String id, float valor) throws SQLException {
+        return utilizadores.updateStreak(id, valor);
+    }
+
+    @Override
+    public float bonusStreak(String key) throws SQLException {
+        return utilizadores.bonusStreak(key);
     }
 
     public float getSaldo(String userId) throws SQLException {

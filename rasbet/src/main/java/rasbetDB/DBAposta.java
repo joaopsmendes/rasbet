@@ -207,28 +207,47 @@ public class DBAposta {
         return valor*montante;
     }
 
+    private boolean isSimples (int idAposta) throws SQLException{
+        String query = "SELECT * FROM Simples WHERE Aposta_idAposta=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, idAposta);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+    }
+
     public void cashout(int idAposta) throws SQLException {
-        /*
-        LocalDateTime now = LocalDateTime.now();
-        if (isSimples){
+        if (isSimples(idAposta)){
             String query = "SELECT Aposta_idAposta,Estado_idEstado FROM Simples INNER JOIN Odd ON Odd_idOdd=idOdd " +
                     "INNER JOIN ApostaJogo ON ApostaJogo_idApostaJogo=idApostaJogo " +
                     "INNER JOIN Jogo ON Jogo_IdJogo=idJogo " +
                     "WHERE Aposta_idAposta= ? AND  Estado_idEstado=?";
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setInt(1, idAposta);
-            ps.setInt(2, Jogo.Estado.FECHADO.value);
-            ps.execute();
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                throw new SQLException("Existem Jogos a decorrer");
-            }
+            haJogosAtivos(idAposta, query);
         }
-
-         */
-
+        else{
+            String query = "SELECT Multipla_Aposta_idAposta,Estado_idEstado FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd " +
+                    "INNER JOIN ApostaJogo ON ApostaJogo_idApostaJogo=idApostaJogo " +
+                    "INNER JOIN Jogo ON Jogo_IdJogo=idJogo " +
+                    "WHERE Aposta_idAposta= ? AND  Estado_idEstado=?";
+            haJogosAtivos(idAposta, query);
+        }
+        String query = "UPDATE Aposta SET resultado=0 WHERE idAposta=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,idAposta);
+        ps.executeUpdate();
     }
-    
+
+    private void haJogosAtivos(int idAposta, String query) throws SQLException {
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, idAposta);
+        ps.setInt(2, Jogo.Estado.FECHADO.value);
+        ps.execute();
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            throw new SQLException("Existem Jogos a decorrer");
+        }
+    }
+
     public float getMontante(int idAposta) throws SQLException {
         String query = "SELECT montante FROM Aposta WHERE idAposta= ?";
         PreparedStatement ps = c.prepareStatement(query);

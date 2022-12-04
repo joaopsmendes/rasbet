@@ -17,7 +17,8 @@ public class Transacao {
         APOSTA(3),
         GANHO_APOSTA(4),
         PROMOCAO(5),
-        BONUS_SEGUIDAS(6);
+        BONUS_SEGUIDAS(6),
+        CASHOUT(7);
 
         public final int value;
         Tipo(int i) {
