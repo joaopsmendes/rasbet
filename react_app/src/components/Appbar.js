@@ -28,6 +28,22 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [not, setNot] = useState();
+  
+  const getNotifications = async (email) => {
+    console.log(email)
+    const response = await fetch('http://localhost:8080/getNotifications?' + new URLSearchParams({
+      userId: email
+    })
+      , {
+        method: 'GET',
+      });
+
+    console.log("Notificações");
+    let data = await response.json();
+    console.log(data);
+    setNot(data['not']);
+  }
 
 
   const handleOpenNotifications = () => {
