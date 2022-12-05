@@ -132,12 +132,11 @@ function PageEspecialista(props) {
         setDesportoAtivo={setDesportoAtivo}
         pages={desportos}
         settings={settingsOptions}
-        isLogin={props.isLogin} />
+        isLogin={props.isLogin}
+        showFavoritos={false}
+        />
 
       {open && <AlteracaoOdd jogo={jogoAlterado} setMaster={setOpen} update={update} />}
-
-
-
       <Box sx={{ display: 'flex' }}>
         <Grid
           container

@@ -15,7 +15,6 @@ function ApostaJogo(props) {
 
 
     useEffect(() => {
-        console.log("NOME",props.name)
         setNome(props.name)
         setOdds(props.odds)
     }, []);

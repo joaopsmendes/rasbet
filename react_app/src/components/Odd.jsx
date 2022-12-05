@@ -10,8 +10,6 @@ function Odd(props) {
     const[idOdd,setIdOdd]=useState();
     
     useEffect(()=>{
-        console.log("ODD");
-        console.log(props.odd);
         setValor(props.odd.valor)
         setNome(props.odd.opcao)
         setIdOdd(props.odd.valor)

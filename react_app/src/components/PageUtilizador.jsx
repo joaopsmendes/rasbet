@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Favoritos from './Favoritos';
 
 
+
 function PageUtilizador(props) {
 
 
@@ -24,7 +25,7 @@ function PageUtilizador(props) {
   const [desportoAtivo, setDesportoAtivo] = useState('futebol');
   const [aposta, setAposta] = useState([])
   const [notificacoes, setNotificacoes] = useState(false);
-  const [favoritos,setFavoritos] = useState({});
+  const [favoritos, setFavoritos] = useState({});
 
 
 
@@ -60,7 +61,9 @@ function PageUtilizador(props) {
   }, []);
 
 
-
+  useEffect(() => {
+    getFavoritos();
+  }, [desportoAtivo, props.isLogin]);
 
 
   const handleHistorico = () => {
@@ -91,7 +94,7 @@ function PageUtilizador(props) {
   }
 
   const handleNotifcacoes = () => {
-    
+
   }
 
 
@@ -122,16 +125,26 @@ function PageUtilizador(props) {
   }
 
   const getFavoritos = async () => {
-
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) return;
     const response = await fetch('http://localhost:8080/favoritos?' + new URLSearchParams({
-      userId: props.user
-    }));
+      userId: user
+    }), {
+      method: 'GET'
+    }
+    );
     const data = await response.json();
     //array to map
-    console.log("DATA");
-    console.log(data);
-    //setFavoritos(data);
+    let obj = []
+    data.forEach((favorito) => {
+      if (favorito.desporto.modalidade === desportoAtivo) {
+        obj.push(String(favorito.nome));
+      }
+    });
+    setFavoritos(obj);
   }
+
+
 
 
   return (
@@ -146,9 +159,12 @@ function PageUtilizador(props) {
             isLogin={props.isLogin}
             login={props.login}
             settings={settingsOptions}
+            setFavoritos={setFavoritos} 
+            favoritos={favoritos} 
+            showFavoritos={true}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showJogos && <Jogos showFavoritos={true} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={props.isLogin} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
           {showHistorico && <Historico nome={props.user} />}
         </div>
         :
@@ -159,6 +175,7 @@ function PageUtilizador(props) {
 
 
       }
+
     </div>
   );
 }

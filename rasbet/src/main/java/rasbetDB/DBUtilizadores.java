@@ -189,6 +189,7 @@ public class DBUtilizadores {
     }
 
     public void removeFavorito(String userId, Favorito favorito) throws SQLException {
+        System.out.println("REMOVE");
         String query = "DELETE FROM Favorito WHERE Participante_idParticipante = ? AND  Utilizador_email=? AND Participante_Desporto_idDesporto = ?";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setString(1, favorito.getNome());
@@ -326,7 +327,6 @@ public class DBUtilizadores {
     }
 
     public List<Favorito> getFavoritos(String userId) throws SQLException{
-        Map<String,List<Favorito>> map = new HashMap<>();
         List<Favorito> lista = new ArrayList<>();
         String query ="SELECT * FROM Favorito INNER JOIN Desporto ON Participante_Desporto_idDesporto=idDesporto Where Utilizador_email = ?";
         PreparedStatement ps = c.prepareStatement(query);

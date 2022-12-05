@@ -24,6 +24,7 @@ import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import { Select } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Favoritos from "./Favoritos";
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -108,7 +109,6 @@ function ResponsiveAppBar(props) {
         <Toolbar disableGutters>
           <Link href="/">
             <Box
-
               component="img"
               sx={{
                 display: 'flex',
@@ -134,85 +134,100 @@ function ResponsiveAppBar(props) {
                     style={{ borderRadius: "20px", padding: ' 2% 15%', }}
                     color="secondary"
                     sx={{
-                      ml: 5, mr: 5, p: 2, display: 'block', color:"#FFFFFF",
+                      ml: 5, mr: 5, p: 2, display: 'block', color: "#FFFFFF",
                       "&.Mui-selected, &.Mui-selected:hover": {
                         color: "#000000",
                         backgroundColor: '#FFFFFF'
                       },
                     }}
                   >
-                {page}
-              </ToggleButton>
+                    {page}
+                  </ToggleButton>
                 ))}
-          </ToggleButtonGroup>
+              </ToggleButtonGroup>
             }
-        </Box>
-        <Box sx={{ flexGrow: 1, display: { md: 'none', xs: 'flex' }, overflow: 'auto' }}>
-          {props.showDesportos &&
-            <FormControl fullWidth>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={props.desportoAtivo}
-                onChange={handleChangeSelect}
-              >
-                {props.pages.map((page) => (
-                  <MenuItem value={page} color="secondary">{String(page).toUpperCase()}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { md: 'none', xs: 'flex' }, overflow: 'auto' }}>
+            {props.showDesportos &&
+              <FormControl fullWidth>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={props.desportoAtivo}
+                  onChange={handleChangeSelect}
+                >
+                  {props.pages.map((page) => (
+                    <MenuItem value={page} color="secondary">{String(page).toUpperCase()}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            }
+          </Box>
+          {props.showFavoritos &&
+            <Box >
+              <Favoritos
+                participantes={props.favoritos}
+                setFavoritos={props.setFavoritos}
+                favoritos={props.favoritos}
+                desporto={props.desportoAtivo}
+                showFavoritos={true} />
+            </Box>
           }
-        </Box>
-
-        {
-          props.isLogin ?
+          {
+            props.isLogin && props.showFavoritos &&
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open notifications">
                 <IconButton onClick={handleOpenNotifications} size="large" color="inherit" aria-label="notifications" sx={{ p: 0 }}>
                   <NotificationsIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
-                  <MenuIcon />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {Object.keys(props.settings).map((setting) => (
-                  <MenuItem key={setting} onClick={handleSettings}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
             </Box>
-            : <Box sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              flexDirection: {xs: 'column', md:'row'},
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-              <Dialogo form={<Login login={props.login}/>} title="Iniciar Sessão" />
-              <Dialogo form={<Registo login={props.login} />} title="Registo" />
-            </Box>
-        }
-      </Toolbar>
-    </Container>
+          }
+          {
+            props.isLogin ?
+              <Box sx={{ flexGrow: 0 }}>
+
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} size="large" color="inherit" aria-label="menu" sx={{ p: 0 }}>
+                    <MenuIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {Object.keys(props.settings).map((setting) => (
+                    <MenuItem key={setting} onClick={handleSettings}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+              : <Box sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexDirection: { xs: 'column', md: 'row' },
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <Dialogo form={<Login login={props.login} />} title="Iniciar Sessão" />
+                <Dialogo form={<Registo login={props.login} />} title="Registo" />
+              </Box>
+          }
+        </Toolbar>
+      </Container>
     </AppBar >
   );
 }

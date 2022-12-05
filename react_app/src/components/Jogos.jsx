@@ -24,6 +24,7 @@ function Jogos(props) {
     const [dataInicial, setDataInicial] = useState()
     const [dataFinal, setDataFinal] = useState()
     const [filtro, setFiltro] = useState(false)
+    const [filtroFav, setFiltroFav] = useState(false)
 
 
 
@@ -133,13 +134,29 @@ function Jogos(props) {
     }
 
 
-
-
     const changeDataInicial = (event) => {
         setDataInicial(event.target.value);
     }
     const changeDataFinal = (event) => {
         setDataFinal(event.target.value);
+    }
+
+
+    const filtroFavorites = (jogo) => {
+        if (!props.showFavoritos) return true;
+        let favs = Array.from(props.favoritos);
+        if (!filtroFav) return true;
+        else {
+            for (let i = 0; i < favs.length; i++) {
+                for (let u = 0; u < jogo.participantes.length; u++) {
+                    if (favs[i] === jogo.participantes[u]){
+                        return true;
+                    }
+                }
+            }
+        }
+        console.log("FALSE");
+        return false;
     }
 
 
@@ -169,6 +186,11 @@ function Jogos(props) {
                                 {dateField("Data Final", changeDataFinal)}
                             </Grid>
                         }
+                        { props.showBoletim &&
+                        <Grid item xs={12} md={2}>
+                            <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroFav ? "primary" : "inherit"} onClick={() => (setFiltroFav(!filtroFav))} >Filtrar por Favoritos</Button>
+                        </Grid>
+                        }
                     </Grid>
                 }
             </Box>
@@ -176,7 +198,7 @@ function Jogos(props) {
             <Grid container spacing={2}>
                 <Grid item xs={12} md={9} xl={9}>
                     {jogos.length > 0 ?
-                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && <Jogo favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
+                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo) && <Jogo setFavoritos={props.setFavoritos} favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&

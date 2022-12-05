@@ -86,7 +86,7 @@ function Jogo(props) {
 
 
     const addFavorito =async (nome) => {
-        const user = sessionStorage.getItem('user');
+        const user = JSON.parse(sessionStorage.getItem('user'));
         const response = await fetch('http://localhost:8080/addFavorito', {
             method: 'POST',
             headers: {
@@ -101,7 +101,8 @@ function Jogo(props) {
     }
 
     const removeFavorito =async (nome) => {
-        const user = sessionStorage.getItem('user');
+        const user = JSON.parse(sessionStorage.getItem('user'));
+
         const response = await fetch('http://localhost:8080/removeFavorito', {
             method: 'POST',
             headers: {
@@ -122,18 +123,18 @@ function Jogo(props) {
         if (isInFav(participante)) {
             console.log("REMOVE");
             removeFavorito(participante);
-            obj.splice(obj.indexOf(participante), 1);
+            obj = obj.filter((item) => item !== participante);
         } else {
             console.log("ADD");
             addFavorito(participante);
             obj.push(event.currentTarget.value);
         }
-        setFavs(obj);
+        props.setFavoritos(obj);
     }
 
     const isInFav = (participante) => {
         for (let i = 0; i < props.favoritos.length; i++) {
-            if (props.favoritos[i] == participante) {
+            if (props.favoritos[i] === participante) {
                 return true;
             }
         }
@@ -168,7 +169,6 @@ function Jogo(props) {
                             </Grid>
                         }
                     </Grid>
-
                     <p>{time}</p>
                     <div className="Container">
                         {
