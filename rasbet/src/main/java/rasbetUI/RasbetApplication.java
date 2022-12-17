@@ -393,8 +393,28 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 	}
+/*
+	public void sendNotificao(@RequestBody Notificacao notificacao) {
+		try {
+			rasbetLN.sendNotificao(notificacao);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 
+ */
+	public void sendNotificao(@RequestBody Map<String, String> myJsonRequest){
+		//Get List of favorites
+		String conteudo = myJsonRequest.get("conteudo");
+		try {
+			rasbetLN.sendNotificao(conteudo);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 
 

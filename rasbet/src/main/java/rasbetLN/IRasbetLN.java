@@ -74,4 +74,8 @@ public interface IRasbetLN {
 
 
     void updateEstadoJogos() throws SQLException;
+
+    //void sendNotificao(Notificacao notificacao) throws SQLException;
+
+    void sendNotificao(String conteudo) throws SQLException;
 }

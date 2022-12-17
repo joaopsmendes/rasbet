@@ -395,4 +395,18 @@ public class DBUtilizadores {
         }
         throw new SQLException("Apostador não encontrado");
     }
+
+    public List<String> getIdApostadores() throws SQLException{
+        List<String> lista = new ArrayList<>();
+        String query ="SELECT Utilizador_email FROM Apostador";
+        PreparedStatement ps  = c.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            String email = rs.getString("Utilizador_email");
+            lista.add(email);
+        }
+        return lista;
+    }
+
+
 }

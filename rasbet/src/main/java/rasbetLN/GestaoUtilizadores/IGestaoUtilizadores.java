@@ -36,4 +36,8 @@ public interface IGestaoUtilizadores {
     int updateStreak(String id, float valor) throws SQLException;
 
     float bonusStreak(String key)throws SQLException;
+
+    //void sendNotificao(Notificacao notificacao) throws SQLException;
+
+    void sendNotificao(String conteudo) throws SQLException;
 }

@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoApostas.GestaoApostas;
 import rasbetLN.GestaoApostas.IGestaoApostas;
@@ -246,7 +247,7 @@ public class RasbetLN implements IRasbetLN{
     }
 
     @Override
-    public void suspenderJogo(String idJogo) throws SQLException {
+        public void suspenderJogo(String idJogo) throws SQLException {
         gestaoJogos.suspenderJogo(idJogo);
     }
 
@@ -258,6 +259,17 @@ public class RasbetLN implements IRasbetLN{
     @Override
     public void updateEstadoJogos() throws SQLException {
         gestaoJogos.updateEstadoJogos();
+    }
+/*
+    public void sendNotificao(Notificacao notificacao) throws SQLException{
+        gestaoUtilizadores.sendNotificao(notificacao);
+
+    }
+
+ */
+    public void sendNotificao(String conteudo) throws SQLException{
+        gestaoUtilizadores.sendNotificao(conteudo);
+
     }
 
 

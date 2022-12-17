@@ -1,6 +1,7 @@
 package rasbetLN.GestaoUtilizadores;
 
 import rasbetDB.DBUtilizadores;
+import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -131,6 +132,25 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     @Override
     public Map<String, String> info(String userId) throws SQLException{
         return utilizadores.info(userId);
+    }
+
+    /*
+    public void sendNotificao(Notificacao notificacao) throws SQLException {
+
+        List<String> lista = utilizadores.getIdApostadores();
+        for (String email : lista){
+            utilizadores.addNotificacao(email, notificacao);
+        }
+    }
+
+     */
+
+    public void sendNotificao(String conteudo) throws SQLException {
+        Notificacao notificacao = new Notificacao(conteudo,false);
+        List<String> lista = utilizadores.getIdApostadores();
+        for (String email : lista){
+            utilizadores.addNotificacao(email, notificacao);
+        }
     }
 
 
