@@ -272,5 +272,15 @@ public class RasbetLN implements IRasbetLN{
 
     }
 
+    @Override
+    public void removeNotificacao(String userId, int idNotificacao) throws SQLException {
+        gestaoUtilizadores.removeNotificacao(userId, idNotificacao);
+    }
+
+    @Override
+    public void vistaNotificacao(String userId, int notificacao) throws SQLException {
+        gestaoUtilizadores.vistaNotificacao(userId, notificacao);
+    }
+
 
 }

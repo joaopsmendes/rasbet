@@ -40,4 +40,8 @@ public interface IGestaoUtilizadores {
     //void sendNotificao(Notificacao notificacao) throws SQLException;
 
     void sendNotificao(String conteudo) throws SQLException;
+
+    void removeNotificacao(String idUser, int notificacao) throws SQLException;
+
+    void vistaNotificacao(String idUser, int notificacao) throws SQLException;
 }

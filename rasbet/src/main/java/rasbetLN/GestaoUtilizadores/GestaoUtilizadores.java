@@ -153,5 +153,16 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         }
     }
 
+    @Override
+    public void removeNotificacao(String idUser, int notificacao) throws SQLException {
+        utilizadores.removeNotificacao(idUser, notificacao);
+    }
+
+
+
+    public void vistaNotificacao(String idUser, int notificacao) throws SQLException {
+        utilizadores.vistaNotificacao(idUser, notificacao);
+    }
+
 
 }

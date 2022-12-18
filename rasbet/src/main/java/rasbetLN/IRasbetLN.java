@@ -78,4 +78,8 @@ public interface IRasbetLN {
     //void sendNotificao(Notificacao notificacao) throws SQLException;
 
     void sendNotificao(String conteudo) throws SQLException;
+
+    void removeNotificacao(String userId, int notificacao) throws SQLException;
+
+    void vistaNotificacao(String userId, int notificacao) throws SQLException;
 }

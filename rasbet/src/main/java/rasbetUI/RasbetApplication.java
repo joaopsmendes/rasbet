@@ -243,6 +243,29 @@ public class RasbetApplication {
 			System.out.println(e.getMessage());
 		}
 	}
+
+	@PostMapping(path="removeNotificacao")
+	public void removeNotificacao(@RequestBody Map<String, String> myJsonRequest){
+		String id = myJsonRequest.get("id");
+		int notificacao = Integer.parseInt(myJsonRequest.get("notificacao"));
+		try {
+			rasbetLN.removeNotificacao(id,notificacao);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@PostMapping(path="vistaNotificacao")
+	public void vistaNotificacao(@RequestBody Map<String, String> myJsonRequest){
+		String id = myJsonRequest.get("id");
+		int notificacao = Integer.parseInt(myJsonRequest.get("notificacao"));
+		try {
+			rasbetLN.vistaNotificacao(id,notificacao);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	@PostMapping(path="notificacao")
 	public void addNotificacao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites

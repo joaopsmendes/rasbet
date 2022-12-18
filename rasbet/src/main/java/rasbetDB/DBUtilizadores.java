@@ -299,15 +299,21 @@ public class DBUtilizadores {
     }
 
 
-    public void removeNotificacao(String userId, Notificacao notificacao) throws SQLException{
-        String query = "DELETE FROM Notificacao WHERE idNotificacao = ? AND  conteudo = ? AND vista = ? AND Utilizador_email = ?";
+    public void removeNotificacao(String userId, int notificacao) throws SQLException{
+        String query = "DELETE FROM Notificacao WHERE idNotificacao = ?AND Utilizador_email = ?";
         PreparedStatement pstmt = c.prepareStatement(query);
-        pstmt.setInt(1, notificacao.getIdNotificacao());
-        pstmt.setString(2, notificacao.getConteudo());
-        pstmt.setBoolean(3, notificacao.isVista());
-        pstmt.setString(4, userId);
+        pstmt.setInt(1, notificacao);
+        pstmt.setString(2, userId);
         pstmt.execute();
 
+    }
+
+    public void vistaNotificacao(String userId, int notificacao) throws SQLException{
+        String query = "UPDATE Notificacao SET vista = 1 WHERE idNotificacao = ? AND Utilizador_email = ?";
+        PreparedStatement pstmt = c.prepareStatement(query);
+        pstmt.setInt(1, notificacao);
+        pstmt.setString(2, userId);
+        pstmt.execute();
     }
 
     public List<Notificacao> getListaNotificacao(String userId) throws SQLException{
@@ -320,8 +326,8 @@ public class DBUtilizadores {
             int idNotificacao = rs.getInt("idNotificacao");
             String conteudo = rs.getString("conteudo");
             boolean vista = rs.getBoolean("vista");
-            //Notificacao noti = new Notificacao( idNotificacao,conteudo,  vista);
-            //lista.add(noti);
+            Notificacao noti = new Notificacao( idNotificacao,conteudo, vista);
+            lista.add(noti);
         }
         return lista;
     }

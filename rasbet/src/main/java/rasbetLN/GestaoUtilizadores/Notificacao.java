@@ -10,6 +10,12 @@ public class Notificacao {
         this.vista = vista;
     }
 
+    public Notificacao(int idNotificacao, String conteudo, boolean vista){
+        this.idNotificacao = idNotificacao;
+        this.conteudo = conteudo;
+        this.vista = vista;
+    }
+
     public Notificacao(Notificacao n){
         this.idNotificacao = n.getIdNotificacao();
         this.conteudo = n.getConteudo();
