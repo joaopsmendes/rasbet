@@ -41,13 +41,14 @@ function Favoritos(props) {
           horizontal: 'left',
         }}
       >
-        {props.participantes.length > 0 && props.participantes.map((participante) => {
+        {props.participantes.length > 0 ? props.participantes.map((participante) => {
           return (<div>
             {participante}{fav(participante)}
           </div>
           )
+        })
+        : <div>Não tem favoritos</div>
         }
-        )}
       </Popover>
     )
   }

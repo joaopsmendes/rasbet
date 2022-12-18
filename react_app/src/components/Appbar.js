@@ -25,6 +25,8 @@ import NativeSelect from '@mui/material/NativeSelect';
 import { Select } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Favoritos from "./Favoritos";
+import Badge from '@mui/material/Badge';
+import Notificacoes from "./Notificacoes";
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -163,7 +165,7 @@ function ResponsiveAppBar(props) {
               </FormControl>
             }
           </Box>
-          {props.showFavoritos &&
+          {props.isLogin && props.showFavoritos &&
             <Box >
               <Favoritos
                 participantes={props.favoritos}
@@ -175,14 +177,8 @@ function ResponsiveAppBar(props) {
           }
           {
             props.isLogin && props.showFavoritos &&
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open notifications">
-                <IconButton onClick={handleOpenNotifications} size="large" color="inherit" aria-label="notifications" sx={{ p: 0 }}>
-                  <NotificationsIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          }
+            <Notificacoes />
+          }            
           {
             props.isLogin ?
               <Box sx={{ flexGrow: 0 }}>

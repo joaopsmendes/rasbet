@@ -2,20 +2,16 @@ import Login from '././Login';
 import ResponsiveAppBar from './Appbar';
 import Jogos from './Jogos';
 import { useEffect, useState } from 'react';
-import Registo from './Registo';
-import Pagamento from './Pagamento';
 import Historico from './Historico';
-import Dialogo from './Dialogo';
 import Perfil from './Perfil';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import SearchIcon from '@mui/icons-material/Search';
-import Favoritos from './Favoritos';
+import Notificacoes from './Notificacoes';
 
 
 
 function PageUtilizador(props) {
 
+  const maxApostas =20;
 
   const [showJogos, setShowJogos] = useState(true);
   const [showHistorico, setShowHistorico] = useState(false);
@@ -42,6 +38,10 @@ function PageUtilizador(props) {
         console.log("ja existe");
         return;
       }
+    }
+    if(newApostaArray.length>= maxApostas){
+      alert("Aposta maxima de "+maxApostas+" odds");
+      return;
     }
     newApostaArray.push(odd);
     console.log(odd);
@@ -106,6 +106,7 @@ function PageUtilizador(props) {
 
 
   const setAlignment = (newAlignment) => {
+    if(aposta.length >= maxApostas) return null;
     return newAlignment;
   }
 
@@ -164,7 +165,7 @@ function PageUtilizador(props) {
             showFavoritos={true}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos showFavoritos={true} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={props.isLogin} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showJogos && <Jogos showFavoritos={props.isLogin} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
           {showHistorico && <Historico nome={props.user} />}
         </div>
         :

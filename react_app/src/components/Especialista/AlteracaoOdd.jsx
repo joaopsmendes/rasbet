@@ -94,10 +94,16 @@ function AlteracaoOdd(props) {
     console.log(event.target.value);
   }
 
+ {/*} const sendNotification = () => {
+      new Notification('A odd do jogo foi alterada');
+  }*/}
+
   const finish = () => {
     ativarJogo();
     props.setMaster(false);
     props.update();
+    //enviar a notificação
+    //sendNotification();
   }
 
 

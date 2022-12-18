@@ -10,12 +10,14 @@ import Boletim from "./Boletim";
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-
-
+import Pagination from '@mui/material/Pagination';
+import { Container } from "@mui/material";
 
 
 
 function Jogos(props) {
+
+    const jogosPerPage = 5;
     //passar os desportos no props
     //passar desporto ativo no props
 
@@ -25,6 +27,8 @@ function Jogos(props) {
     const [dataFinal, setDataFinal] = useState()
     const [filtro, setFiltro] = useState(false)
     const [filtroFav, setFiltroFav] = useState(false)
+    const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1)
 
 
 
@@ -45,6 +49,9 @@ function Jogos(props) {
         console.log("JOGOS");
         console.log(data)
         setJogos(result);
+        setMaxPage(Math.ceil(jogos.length / jogosPerPage));
+        console.log("MAX PAGE");
+        console.log(Number(maxPage));
 
     }
 
@@ -149,16 +156,40 @@ function Jogos(props) {
         else {
             for (let i = 0; i < favs.length; i++) {
                 for (let u = 0; u < jogo.participantes.length; u++) {
-                    if (favs[i] === jogo.participantes[u]){
+                    if (favs[i] === jogo.participantes[u]) {
                         return true;
                     }
                 }
             }
         }
-        console.log("FALSE");
         return false;
     }
 
+    const handleChangePage = (event, value) => {
+        console.log("Page changed" + value);
+        setPage(value);
+    };
+
+
+    
+    
+    const jogosFilter = Object.entries(jogos).slice().map(entry => entry[1]).filter(jogo => isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo));
+    
+    const jogosPage= jogosFilter.slice((page - 1) * jogosPerPage, page * jogosPerPage);
+    /*
+    const jogosPage = () => {
+        console.log("JOGOS");
+        console.log(typeof (jogos));
+        let min = (page - 1) * jogosPerPage;
+        let max = page * jogosPerPage;
+        console.log(min + " - " + max)
+        let array = Object.entries(jogos).slice(min, max).map(entry => entry[1]);
+        array = array.filter(jogo => isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo));
+        console.log(array.length);
+        return array;
+    }
+
+    */
 
     return (
         <div>
@@ -186,10 +217,10 @@ function Jogos(props) {
                                 {dateField("Data Final", changeDataFinal)}
                             </Grid>
                         }
-                        { props.showBoletim &&
-                        <Grid item xs={12} md={2}>
-                            <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroFav ? "primary" : "inherit"} onClick={() => (setFiltroFav(!filtroFav))} >Filtrar por Favoritos</Button>
-                        </Grid>
+                        {props.showBoletim &&
+                            <Grid item xs={12} md={2}>
+                                <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroFav ? "primary" : "inherit"} onClick={() => (setFiltroFav(!filtroFav))} >Filtrar por Favoritos</Button>
+                            </Grid>
                         }
                     </Grid>
                 }
@@ -197,14 +228,19 @@ function Jogos(props) {
 
             <Grid container spacing={2}>
                 <Grid item xs={12} md={9} xl={9}>
-                    {jogos.length > 0 ?
-                        jogos.map((jogo) => (isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo) && <Jogo setFavoritos={props.setFavoritos} favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showBoletim} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
+                    {jogosPage.length > 0 ?
+                        jogosPage.map((jogo) => (<Jogo setFavoritos={props.setFavoritos} favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showFavoritos} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&
                     <Boletim handleClick={handleClick} user={props.user} login={props.login} jogos={jogos} apostas={props.aposta} setAposta={props.setAposta} />
                 }
             </Grid>
+            {jogosPage.length > 0 &&
+                <Container maxWidth="sm">
+                    <Pagination color="primary" onChange={handleChangePage} count={Math.ceil(jogosFilter.length / jogosPerPage)} />
+                </Container>
+            }
 
         </div>
     );
