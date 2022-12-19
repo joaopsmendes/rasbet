@@ -21,10 +21,10 @@ public class GestaoApostas implements IGestaoApostas {
     }
 
 
-
     public void createAposta(String userId,float montante, float ganhos, List<Integer> listaOdd) throws SQLException{
         if (listaOdd.size() == 1) this.apostas.createSimples(userId,montante,ganhos,listaOdd.get(0));
-        else this.apostas.createMultipla(userId,montante,ganhos,listaOdd);
+        else if (listaOdd.size() < 21) this.apostas.createMultipla(userId, montante, ganhos, listaOdd);
+        else System.out.println("Nâo é possivel realizar a aposta");
     }
 
     @Override

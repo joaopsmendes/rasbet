@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IRasbetLN {
 
@@ -75,11 +76,21 @@ public interface IRasbetLN {
 
     void updateEstadoJogos() throws SQLException;
 
-    //void sendNotificao(Notificacao notificacao) throws SQLException;
+    void sendNotificacao(Notificacao notificacao) throws SQLException;
 
-    void sendNotificao(String conteudo) throws SQLException;
+    void sendNotificacao(String conteudo) throws SQLException;
 
     void removeNotificacao(String userId, int notificacao) throws SQLException;
 
     void vistaNotificacao(String userId, int notificacao) throws SQLException;
+
+    Set<String> getUtilizadoresOddS(int idOdd) throws SQLException;
+
+    Set<String> getUtilizadoresOddM(int idOdd) throws SQLException;
+
+    void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
+
+    void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException;
+
+//    void alterarOdd(int idOdd, float valor, String conteudo) throws SQLException;
 }

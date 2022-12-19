@@ -279,6 +279,38 @@ public class DBJogos {
         ps.executeUpdate();
     }
 
+    public List<Integer> getOddsJogo(int idOdd) throws SQLException{
+        List<Integer> listaOdds = new ArrayList<>();
+        String query1 = "SELECT idJogo FROM Odd INNER JOIN ApostaJogo ON idApostaJogo=ApostaJogo_idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idOdd = ?";
+        PreparedStatement ps = c.prepareStatement(query1);
+        ps.setInt(1, idOdd);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            String idJogo = rs.getString("idJogo");
+
+            String query2 = "SELECT idOdd FROM Odd INNER JOIN ApostaJogo ON idApostaJogo=ApostaJogo_idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idJogo = ?";
+            PreparedStatement pst = c.prepareStatement(query1);
+            ps.setString(1, idJogo);
+            ResultSet rst = ps.executeQuery();
+            while (rst.next()){
+                int Odd = rst.getInt("idOdd");
+                listaOdds.add(Odd);
+            }
+        }
+        return listaOdds;
+    }
+
+    public String getTituloJogo(int idOdd) throws SQLException{
+        String titulo="";
+        String query = "SELECT titulo FROM Odd INNER JOIN ApostaJogo ON idApostaJogo=ApostaJogo_idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idOdd=?;";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1, idOdd);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()) {
+            titulo = rs.getString("titulo");
+        }
+        return titulo;
+    }
 
 //    public Desporto getDesporto(String idJogo) throws SQLException {
 //        String query = "SELECT * FROM Jogo INNER JOIN Desporto ON idDesporto = Desporto_idDesporto WHERE idJogo = ?";
