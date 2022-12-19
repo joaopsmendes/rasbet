@@ -298,7 +298,7 @@ public class DBUtilizadores {
 
 
     public void removeNotificacao(String userId, int notificacao) throws SQLException{
-        String query = "DELETE FROM Notificacao WHERE idNotificacao = ?AND Utilizador_email = ?";
+        String query = "DELETE FROM Notificacao WHERE idNotificacao = ? AND Utilizador_email = ?";
         PreparedStatement pstmt = c.prepareStatement(query);
         pstmt.setInt(1, notificacao);
         pstmt.setString(2, userId);
@@ -449,5 +449,64 @@ public class DBUtilizadores {
         return listaUtilizadores;
     }
 
+    public void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException{
+        String query = "INSERT INTO Jogo_a_Seguir(Jogo_idJogo,Jogo_Desporto_idDesporto,Apostador_Utilizador_email) VALUES(?,?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, idJogo);
+        ps.setInt(2, idDesporto);
+        ps.setString(3, idUser);
+        ps.executeQuery();
+    }
 
+    public void removeJogoASeguir (String idJogo, int idDesporto, String idUser) throws SQLException{
+        String query = "DELETE FROM Jogo_a_Seguir WHERE Jogo_idJogo=? AND Jogo_Desporto_idDesporto=? AND Apostador_Utilizador_email=?";
+        PreparedStatement ps  = c.prepareStatement(query);
+        ps.setString(1,idJogo);
+        ps.setInt(2, idDesporto);
+        ps.setString(3, idUser);
+        ps.executeQuery();
+    }
+
+    public Map<Integer, List<String>> getJogosASeguir (String idUser) throws SQLException{
+        Map<Integer, List<String>> mapa = new HashMap<>();
+        String query = "SELECT * FROM Jogo_a_Seguir WHERE Apostador_Utilizador_email=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, idUser);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int idDesporto = rs.getInt("Jogo_Desporto_idDesporto");
+            String idJogo = rs.getString("Jogo_idJogo");
+            mapa.putIfAbsent(idDesporto, new ArrayList<>());
+            mapa.get(idDesporto).add(idJogo);
+        }
+        return mapa;
+    }
+
+    public void createSessao(Sessao s) throws SQLException{
+        String query = "INSERT INTO Sessao(idUser, idSession) VALUES(?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, s.getIdUser());
+        ps.setString(2, s.getIdSession());
+        ps.execute();
+    }
+
+    public void updateSessao(Sessao s) throws SQLException{
+        String query = "UPDATE Sessao SET idSessao = ? WHERE Utilizador_email = ?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, s.getIdSession());
+        ps.setString(2, s.getIdUser());
+        ps.executeUpdate();
+    }
+
+    public String getUtilizadorSessao(String idSessao) throws SQLException{
+        String user = "";
+        String query = "Select Utilizador_email FROM Sessao WHERE idSessao=?;";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, idSessao);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()) {
+            user = rs.getString("Utilizador_email");
+        }
+        return user;
+    }
 }

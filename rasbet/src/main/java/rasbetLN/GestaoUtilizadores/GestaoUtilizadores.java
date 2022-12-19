@@ -17,11 +17,19 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         this.utilizadores = new DBUtilizadores(connection);
     }
 
-    public void newApostador(Apostador apostador) throws SQLException {
-        utilizadores.createApostador(apostador );
+    public String getUtilizadorSessao(String idSessao) throws SQLException{
+        return utilizadores.getUtilizadorSessao(idSessao);
     }
 
-    public String logIn(String email, String password) throws SQLException{
+    public void newApostador(Apostador apostador) throws SQLException {
+        Sessao s = new Sessao(apostador.getEmail());
+        this.utilizadores.createSessao(s);
+        utilizadores.createApostador(apostador);
+    }
+
+    public String logIn(String email, String password) throws SQLException {
+        Sessao s = new Sessao(email);
+        this.utilizadores.updateSessao(s);
         return utilizadores.logIn(email, password);
     }
 
@@ -174,4 +182,19 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return utilizadores.getUtilizadoresFav(favorito, desporto);
     }
 
+    public void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException{
+        this.utilizadores.addJogoASeguir(idJogo,idDesporto,idUser);
+    }
+
+    public void removeJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException{
+        this.utilizadores.removeJogoASeguir(idJogo, idDesporto, idUser);
+    }
+
+    public Map<Integer, List<String>> getJogosASeguir(String idUser) throws SQLException{
+        return this.utilizadores.getJogosASeguir(idUser);
+    }
+
+    public String getUserid(String idSessao) throws SQLException{
+        return utilizadores.getUtilizadorSessao(idSessao);
+    }
 }

@@ -5,19 +5,19 @@ import java.util.List;
 
 public class ApostaRequest {
 
-    String userId;
+    String sessionId;
     float valor;
     float saldo;
     float freebets;
     float ganhoPossivel;
     Integer []odds;
 
-    public String getUserId() {
-        return userId;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public float getValor() {

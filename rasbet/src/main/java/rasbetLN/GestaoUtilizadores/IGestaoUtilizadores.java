@@ -55,4 +55,12 @@ public interface IGestaoUtilizadores {
     void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
 
     public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException;
+
+    void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
+
+    void removeJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
+
+    Map<Integer, List<String>> getJogosASeguir(String idUser) throws SQLException;
+
+    String getUserid(String idSessao) throws SQLException;
 }

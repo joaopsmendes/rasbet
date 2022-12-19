@@ -188,7 +188,7 @@ public class RasbetApplication {
 	//TODO
 	@PostMapping(path ="changeProfile")
 	public void changeProfileInfo(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("email");
+		String id = myJsonRequest.get("sessionId");
 		try{
 			rasbetLN.alterarPerfil(id,myJsonRequest);
 		} catch (SQLException e) {
@@ -199,7 +199,7 @@ public class RasbetApplication {
 	//pre-condition: deposit was valid
 	@PostMapping(path = "deposito")
 	public void deposit(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		float value = Float.parseFloat(myJsonRequest.get("value"));
 		try {
 			rasbetLN.deposito(id,value);
@@ -211,7 +211,7 @@ public class RasbetApplication {
 
 	@PostMapping(path = "levantamento")
 	public void withdraw(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		float value = Float.parseFloat(myJsonRequest.get("value"));
 		try {
 			rasbetLN.levantamento(id,value);
@@ -222,7 +222,7 @@ public class RasbetApplication {
 
 	@PostMapping(path = "addFavorito")
 	public void addFavorito(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		String fav= myJsonRequest.get("value");
 		String desporto = myJsonRequest.get("desporto");
 		try {
@@ -234,7 +234,7 @@ public class RasbetApplication {
 
 	@PostMapping(path = "removeFavorito")
 	public void removeFavorito(@RequestBody Map<String, String> myJsonRequest) {
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		String fav= myJsonRequest.get("value");
 		String desporto = myJsonRequest.get("desporto");
 		try {
@@ -246,7 +246,7 @@ public class RasbetApplication {
 
 	@PostMapping(path="removeNotificacao")
 	public void removeNotificacao(@RequestBody Map<String, String> myJsonRequest){
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		int notificacao = Integer.parseInt(myJsonRequest.get("notificacao"));
 		try {
 			rasbetLN.removeNotificacao(id,notificacao);
@@ -257,7 +257,7 @@ public class RasbetApplication {
 
 	@PostMapping(path="vistaNotificacao")
 	public void vistaNotificacao(@RequestBody Map<String, String> myJsonRequest){
-		String id = myJsonRequest.get("id");
+		String id = myJsonRequest.get("sessionId");
 		int notificacao = Integer.parseInt(myJsonRequest.get("notificacao"));
 		try {
 			rasbetLN.vistaNotificacao(id,notificacao);
@@ -269,7 +269,7 @@ public class RasbetApplication {
 	@PostMapping(path="notificacao")
 	public void addNotificacao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
-		String id = myJsonRequest.get("userId");
+		String id = myJsonRequest.get("sessionId");
 		String notificacao = myJsonRequest.get("conteudo");
 		try {
 			rasbetLN.addNotificacao(id, notificacao);
@@ -279,7 +279,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="notificacoes")
-	public List<Notificacao> getNotifications(@RequestParam(name = "userId") String userId){
+	public List<Notificacao> getNotifications(@RequestParam(name = "sessionId") String userId){
 		//Get List of notifications
 		try {
 			return rasbetLN.getNotifications(userId);
@@ -289,7 +289,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="favoritos")
-	public List<Favorito> getFavorites(@RequestParam(name = "userId") String userId){
+	public List<Favorito> getFavorites(@RequestParam(name = "sessionId") String userId){
 		//Get List of favorites
 		try {
 			return rasbetLN.getFavorites(userId);
@@ -300,7 +300,7 @@ public class RasbetApplication {
 
 	@PostMapping(path="fecharAposta")
 	public void fecharAposta(@RequestBody Map<String, String> myJsonRequest){
-		String idUser = myJsonRequest.get("userId");
+		String idUser = myJsonRequest.get("sessionId");
 		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
 		boolean resultado = Boolean.parseBoolean(myJsonRequest.get("resultado"));
 		try {
@@ -331,7 +331,7 @@ public class RasbetApplication {
 
 	// TODO
 	@RequestMapping(path= "historicoAposta")
-	public List<Aposta> historicoAposta(@RequestParam(name = "userId") String userId){
+	public List<Aposta> historicoAposta(@RequestParam(name = "sessionId") String userId){
 		try {
 			return rasbetLN.historicoApostas(userId);
 		} catch (SQLException e) {
@@ -340,7 +340,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path= "historicoTransacoes")
-	public List<Transacao> historicoTransacoes(@RequestParam(name = "userId") String userId){
+	public List<Transacao> historicoTransacoes(@RequestParam(name = "sessionId") String userId){
 		try {
 			return rasbetLN.historicoTransacoes(userId);
 		} catch (SQLException e) {
@@ -389,7 +389,7 @@ public class RasbetApplication {
 		//Get List of favorites
 		//String idUser = myJsonRequest.get("idUser");
 		int idAposta = Integer.parseInt(myJsonRequest.get("idAposta"));
-		String userId = myJsonRequest.get("userId");
+		String userId = myJsonRequest.get("sessionId");
 		System.out.println(userId);
 		try {
 			rasbetLN.cashout(idAposta,userId);
@@ -400,7 +400,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="saldo")
-	public Map<String, Float > getSaldo(@RequestParam(name = "userId") String userId) {
+	public Map<String, Float > getSaldo(@RequestParam(name = "sessionId") String userId) {
 		try {
 			return rasbetLN.getSaldo(userId);
 		} catch (SQLException e) {
@@ -409,7 +409,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="info")
-	public Map<String, String> info(@RequestParam(name = "userId") String userId) {
+	public Map<String, String> info(@RequestParam(name = "sessionId") String userId) {
 		try {
 			return rasbetLN.infoUser(userId);
 		} catch (SQLException e) {
@@ -428,6 +428,7 @@ public class RasbetApplication {
 
 
  */
+@RequestMapping(path="sendNotificacao")
 	public void sendNotificao(@RequestBody Map<String, String> myJsonRequest){
 		//Get List of favorites
 		String conteudo = myJsonRequest.get("conteudo");
@@ -437,6 +438,40 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@RequestMapping(path="addJogoASeguir")
+	public void addJogoASeguir(@RequestBody Map<String, String> myJsonRequest){
+		String idJogo = myJsonRequest.get("idJogo");
+		String desporto = myJsonRequest.get("desporto"); ;
+		String idUser = myJsonRequest.get("sessionId"); ;
+		try {
+			rasbetLN.addJogoASeguir(idJogo, desporto, idUser );
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@RequestMapping(path="removeJogoASeguir")
+	public void removeJogoASeguir(@RequestBody Map<String, String> myJsonRequest){
+		String idJogo = myJsonRequest.get("idJogo");
+		String desporto = myJsonRequest.get("desporto"); ;
+		String idUser = myJsonRequest.get("sessionId"); ;
+		try {
+			rasbetLN.removeJogoASeguir(idJogo, desporto, idUser );
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@RequestMapping(path="jogosAseguir")
+	public Map<String, List<String>> jogosAseguir(@RequestBody Map<String, String> myJsonRequest) {
+		String idUser = myJsonRequest.get("sessionId"); ;
+		try {
+			return rasbetLN.getJogosASeguir(idUser);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

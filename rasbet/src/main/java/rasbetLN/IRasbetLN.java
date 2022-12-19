@@ -90,7 +90,16 @@ public interface IRasbetLN {
 
     void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
 
-    void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException;
+
+    void addJogoASeguir(String idJogo, String desporto, String idUser) throws SQLException;
+
+    void removeJogoASeguir(String idJogo, String desporto, String idUser) throws SQLException;
 
 //    void alterarOdd(int idOdd, float valor, String conteudo) throws SQLException;
+
+    void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
+
+    void removeJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
+
+    Map<String, List<String>> getJogosASeguir(String idUser) throws SQLException;
 }
