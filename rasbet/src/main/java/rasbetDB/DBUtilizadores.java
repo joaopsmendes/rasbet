@@ -4,14 +4,12 @@ import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoUtilizadores.*;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DBUtilizadores {
     private Connection c;
@@ -412,6 +410,43 @@ public class DBUtilizadores {
             lista.add(email);
         }
         return lista;
+    }
+
+    public Set<String> getUtilizadoresOddS(int idOdd) throws SQLException{
+        Set<String> listaUtilizadores = new HashSet<>();
+        String query = "SELECT Utilizador_email FROM Simples INNER JOIN Aposta ON idAposta=Aposta_idAposta WHERE Odd_idOdd = ?";
+        return getStrings(idOdd, listaUtilizadores, query);
+    }
+
+    public Set<String> getUtilizadoresOddM(int idOdd) throws SQLException{
+        Set<String> listaUtilizadores = new HashSet<>();
+        String query = "SELECT Utilizador_email FROM Aposta_tem_Odd INNER JOIN Aposta ON idAposta=Multipla_Aposta_idAposta WHERE Odd_idOdd = ?";
+        return getStrings(idOdd, listaUtilizadores, query);
+    }
+
+    private Set<String> getStrings(int idOdd, Set<String> listaUtilizadores, String query) throws SQLException {
+        PreparedStatement ps  = c.prepareStatement(query);
+        ps.setInt(1, idOdd);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            String email = rs.getString("Utilizador_email");
+            listaUtilizadores.add(email);
+        }
+        return listaUtilizadores;
+    }
+
+    public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException {
+        List<String> listaUtilizadores = new ArrayList<>();
+        String query = "SELECT Utilizador_email FROM Favorito WHERE Participante_idParticipante=? AND Participante_Desporto_idDesporto=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, favorito);
+        ps.setInt(2, desporto.getIdDesporto());
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            String userId = rs.getString("Utilizador_email");
+            listaUtilizadores.add(userId);
+        }
+        return listaUtilizadores;
     }
 
 

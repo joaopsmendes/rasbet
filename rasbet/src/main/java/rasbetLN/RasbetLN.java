@@ -1,5 +1,6 @@
 package rasbetLN;
 
+import jdk.jshell.execution.Util;
 import org.springframework.web.bind.annotation.RequestBody;
 import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoApostas.GestaoApostas;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RasbetLN implements IRasbetLN{
 
@@ -72,7 +74,12 @@ public class RasbetLN implements IRasbetLN{
         }
 
         gestaoJogos.adicionarJogo(jogo);
-        // Adicionar à estrutura e BD
+        for(String participante : game.getParticipantes()) {
+            for(String user : gestaoUtilizadores.getUtilizadoresFav(participante, d)) {
+                String str = "Foi adicionado um jogo da equipa " + participante + " dos seus favoritos.";
+                sendNotificacaoUtilizador(user, str);
+            }
+        }
     }
 
     @Override
@@ -114,10 +121,39 @@ public class RasbetLN implements IRasbetLN{
         return gestaoUtilizadores.getHistTransacoes(userId);
     }
 
+//    public List<Integer> getOddsJogo(int idOdd) throws SQLException{
+       //        return gestaoJogos.getOddsJogo(idOdd);
+       //    }
+
+    public void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException {
+        gestaoUtilizadores.sendNotificacaoUtilizador(userId, conteudo);
+    }
+
+    public void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException {
+        for(String userId : utilizadores) {
+            sendNotificacaoUtilizador(userId, conteudo);
+        }
+    }
 
     @Override
     public void alterarOdd(int idOdd, float valor) throws SQLException {
+        List<String> utilizadores = new ArrayList<>();
         gestaoJogos.alterarOdd(idOdd,valor);
+
+        String tituloJogo = gestaoJogos.getTituloJogo(idOdd);
+
+        // Enviar not aos utilizadores
+        for(Integer i : gestaoJogos.getOddsJogo(idOdd)) {
+            for(String userId: gestaoUtilizadores.getUtilizadoresOddS(i)) {
+                utilizadores.add(userId);
+            }
+
+            for(String userId: gestaoUtilizadores.getUtilizadoresOddM(i)) {
+                utilizadores.add(userId);
+            }
+        }
+        StringBuilder str = new StringBuilder("A Odd do jogo" + tituloJogo + "foi alterada");
+        sendNotificacaoUtilizadores(utilizadores, str.toString());
     }
 
     public void deposito(String userId, float valor) throws SQLException {
@@ -142,6 +178,9 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.newApostador(apostador);
         Transacao transacao = new Transacao(0,5,LocalDateTime.now(), Transacao.Tipo.CRIACAO_CONTA);
         gestaoUtilizadores.transacao(email,transacao);
+
+        String conteudo = "Bem-vindo/a " + nome + ", aproveite já os 5 freebets disponíveis. FUI";
+        sendNotificacaoUtilizador(email, conteudo);
     }
 
     @Override
@@ -162,18 +201,29 @@ public class RasbetLN implements IRasbetLN{
         Map<String,List<Float>> mapSaldos = gestaoApostas.updateResultados(res);
         for (Map.Entry<String, List<Float>> entry: mapSaldos.entrySet()){
             for (float valor : entry.getValue()){
+                String str = "Parabéns! Ganhou uma aposta no valor de " + valor + "€." ;
+                sendNotificacaoUtilizador(entry.getKey(), str);
+
                 Transacao t = new Transacao(valor,0,LocalDateTime.now(), Transacao.Tipo.GANHO_APOSTA);
+
                 gestaoUtilizadores.transacao(entry.getKey(),t);
                 gestaoUtilizadores.updateSaldo(entry.getKey(),valor);
+
                 int streak = gestaoUtilizadores.updateStreak(entry.getKey(),valor);
                 if (streak == BONUS_STREAK){
+
                     float bonus = (float) (gestaoUtilizadores.bonusStreak(entry.getKey()) * BONUS_PERCENTAGEM);
                     if (bonus > BONUS_MAX) bonus = BONUS_MAX;
+                    if (bonus > BONUS_MAX) bonus = BONUS_MAX;
+                    String s = "Parabéns! Ganhou" + BONUS_STREAK + "apostas no valor de " + bonus;
+                    sendNotificacaoUtilizador(entry.getKey(), s);
                     Transacao transacao = new Transacao(0,bonus,LocalDateTime.now(), Transacao.Tipo.BONUS_SEGUIDAS);
                     gestaoUtilizadores.transacao(entry.getKey(),transacao);
                 }
+
             }
         }
+
     }
 
     public void addNotificacao(String userId, String conteudo) throws SQLException {
@@ -260,15 +310,15 @@ public class RasbetLN implements IRasbetLN{
     public void updateEstadoJogos() throws SQLException {
         gestaoJogos.updateEstadoJogos();
     }
-/*
-    public void sendNotificao(Notificacao notificacao) throws SQLException{
-        gestaoUtilizadores.sendNotificao(notificacao);
+
+    public void sendNotificacao(Notificacao notificacao) throws SQLException{
+        gestaoUtilizadores.sendNotificacao(notificacao);
 
     }
 
- */
-    public void sendNotificao(String conteudo) throws SQLException{
-        gestaoUtilizadores.sendNotificao(conteudo);
+
+    public void sendNotificacao(String conteudo) throws SQLException{
+        gestaoUtilizadores.sendNotificacao(conteudo);
 
     }
 
@@ -282,5 +332,12 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.vistaNotificacao(userId, notificacao);
     }
 
+    public Set<String> getUtilizadoresOddS(int idOdd) throws SQLException {
+        return gestaoUtilizadores.getUtilizadoresOddS(idOdd);
+    }
+
+    public Set<String> getUtilizadoresOddM(int idOdd) throws SQLException {
+        return gestaoUtilizadores.getUtilizadoresOddM(idOdd);
+    }
 
 }

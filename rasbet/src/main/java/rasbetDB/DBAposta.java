@@ -285,18 +285,18 @@ public class DBAposta {
     private Map<String,List<Float>> updateVencedores(List<Integer> list) throws SQLException {
         Set<Integer> vencedores = new HashSet<>();
         Set<Integer> losers = new HashSet<>();
-        Map<String,List<Float>>  mapSaldos = new HashMap<>();
+        Map<String, List<Float>> mapSaldos = new HashMap<>();
         for (int id : list) {
             String query = "UPDATE Aposta SET resultado=1 WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             PreparedStatement ps = c.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             ps.executeUpdate();
 
             query = "SELECT Utilizador_email,ganhoPossivel WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             ps = c.prepareStatement(query);
-            ps.setInt(1,id);
-            ResultSet rs=  ps.executeQuery();
-            while (rs.next()){
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 String userId = rs.getString("Utilizador_email");
                 float ganho = rs.getFloat("ganhoPossivel");
                 mapSaldos.putIfAbsent(userId, new ArrayList<>());
@@ -305,36 +305,35 @@ public class DBAposta {
 
             query = "SELECT Multipla_Aposta_idAposta,Resultado FROM Aposta_tem_Odd INNER JOIN Odd ON Odd_idOdd=idOdd WHERE idOdd = ?";
             ps = c.prepareStatement(query);
-            ps.setInt(1,id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 int resultado = rs.getInt("resultado");
                 System.out.println(resultado);
                 int idAposta = rs.getInt("Multipla_Aposta_idAposta");
-                if (resultado == 1){
-                    if(!losers.contains(idAposta))
+                if (resultado == 1) {
+                    if (!losers.contains(idAposta))
                         vencedores.add(idAposta);
-                }
-                else{
-                    if(!vencedores.contains(idAposta))
+                } else {
+                    if (!vencedores.contains(idAposta))
                         vencedores.remove(idAposta);
                     losers.add(idAposta);
                 }
             }
-            for (int idAposta : vencedores){
+            for (int idAposta : vencedores) {
                 query = "UPDATE Aposta set resultado=1 WHERE idAposta= ?";
                 ps = c.prepareStatement(query);
-                ps.setInt(1,idAposta);
+                ps.setInt(1, idAposta);
                 ps.executeUpdate();
 
                 query = "SELECT Utilizador_email,ganhoPossivel  FROM Aposta WHERE idAposta= ?";
                 ps = c.prepareStatement(query);
-                ps.setInt(1,idAposta);
+                ps.setInt(1, idAposta);
                 ps.executeQuery();
-                if(rs.next()){
+                if (rs.next()) {
                     String userId = rs.getString("Utilizador_email");
                     float ganho = rs.getFloat("ganhoPossivel");
-                    mapSaldos.putIfAbsent(userId,new ArrayList<>());
+                    mapSaldos.putIfAbsent(userId, new ArrayList<>());
                     mapSaldos.get(userId).add(ganho);
                 }
             }

@@ -1,12 +1,14 @@
 package rasbetLN.GestaoUtilizadores;
 
 import rasbetDB.DBUtilizadores;
+import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GestaoUtilizadores implements IGestaoUtilizadores {
     private DBUtilizadores utilizadores;
@@ -54,10 +56,6 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     public void removeFavorito(String id, Favorito fav) throws SQLException {
         utilizadores.removeFavorito(id, fav);
     }
-
-
-
-
 
     public void updateFreebets(float freebets, String userId) throws SQLException{
         this.utilizadores.updateFreebets(freebets,userId);
@@ -134,18 +132,15 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return utilizadores.info(userId);
     }
 
-    /*
-    public void sendNotificao(Notificacao notificacao) throws SQLException {
 
+    public void sendNotificacao(Notificacao notificacao) throws SQLException {
         List<String> lista = utilizadores.getIdApostadores();
         for (String email : lista){
             utilizadores.addNotificacao(email, notificacao);
         }
     }
 
-     */
-
-    public void sendNotificao(String conteudo) throws SQLException {
+    public void sendNotificacao(String conteudo) throws SQLException {
         Notificacao notificacao = new Notificacao(conteudo,false);
         List<String> lista = utilizadores.getIdApostadores();
         for (String email : lista){
@@ -153,16 +148,30 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         }
     }
 
+    public void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException{
+        Notificacao not = new Notificacao(conteudo, false);
+        utilizadores.addNotificacao(userId, not);
+    }
+
     @Override
     public void removeNotificacao(String idUser, int notificacao) throws SQLException {
         utilizadores.removeNotificacao(idUser, notificacao);
     }
 
-
-
     public void vistaNotificacao(String idUser, int notificacao) throws SQLException {
         utilizadores.vistaNotificacao(idUser, notificacao);
     }
 
+    public Set<String> getUtilizadoresOddS(int idOdd) throws SQLException {
+        return utilizadores.getUtilizadoresOddS(idOdd);
+    }
+
+    public Set<String> getUtilizadoresOddM(int idOdd) throws SQLException {
+        return utilizadores.getUtilizadoresOddM(idOdd);
+    }
+
+    public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException {
+        return utilizadores.getUtilizadoresFav(favorito, desporto);
+    }
 
 }

@@ -432,7 +432,7 @@ public class RasbetApplication {
 		//Get List of favorites
 		String conteudo = myJsonRequest.get("conteudo");
 		try {
-			rasbetLN.sendNotificao(conteudo);
+			rasbetLN.sendNotificacao(conteudo);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

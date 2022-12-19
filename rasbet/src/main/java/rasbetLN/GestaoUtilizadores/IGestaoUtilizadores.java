@@ -1,8 +1,11 @@
 package rasbetLN.GestaoUtilizadores;
 
+import rasbetLN.GestaoJogos.Desporto;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IGestaoUtilizadores {
     void newApostador(Apostador apostador) throws SQLException;
@@ -31,17 +34,25 @@ public interface IGestaoUtilizadores {
 
     void updateSaldo(String userId, float value)throws SQLException;
 
-    void transacao(String userId, Transacao transacao)throws SQLException;;
+    void transacao(String userId, Transacao transacao)throws SQLException;
 
     int updateStreak(String id, float valor) throws SQLException;
 
     float bonusStreak(String key)throws SQLException;
 
-    //void sendNotificao(Notificacao notificacao) throws SQLException;
+    void sendNotificacao(Notificacao notificacao) throws SQLException;
 
-    void sendNotificao(String conteudo) throws SQLException;
+    void sendNotificacao(String conteudo) throws SQLException;
 
     void removeNotificacao(String idUser, int notificacao) throws SQLException;
 
     void vistaNotificacao(String idUser, int notificacao) throws SQLException;
+
+    Set<String> getUtilizadoresOddS(int idOdd) throws SQLException;
+
+    Set<String> getUtilizadoresOddM(int idOdd) throws SQLException;
+
+    void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
+
+    public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException;
 }
