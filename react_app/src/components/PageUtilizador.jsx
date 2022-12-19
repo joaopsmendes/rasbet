@@ -22,6 +22,7 @@ function PageUtilizador(props) {
   const [aposta, setAposta] = useState([])
   const [notificacoes, setNotificacoes] = useState(false);
   const [favoritos, setFavoritos] = useState({});
+  const [jogosAseguir,setJogosAseguir] = useState([]);
 
 
 

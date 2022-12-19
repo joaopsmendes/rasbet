@@ -37,7 +37,7 @@ function Notificacoes(props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id : user,
+        id: user,
         notificacao: idNotificacao,
       }),
     });
@@ -55,7 +55,7 @@ function Notificacoes(props) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id : user,
+        id: user,
         notificacao: idNotificacao,
       }),
     });
@@ -64,12 +64,12 @@ function Notificacoes(props) {
     }
   }
 
-
+  
   const handleClickRemove = (event) => {
     let idNotificacao = event.currentTarget.value;
     removeNotificacao(idNotificacao);
     getNotifications();
-  } 
+  }
 
 
   const handleClickVista = (event) => {
@@ -81,7 +81,6 @@ function Notificacoes(props) {
 
 
   const notificacao = () => {
-
     return (
       <Popover
         id={idPop}
@@ -97,13 +96,15 @@ function Notificacoes(props) {
         {notificacoes.length > 0 ? notificacoes.map((notificacao) => (
           <Container sx={{ m: 2 }}>
             <Grid container spacing={2}>
-              <Grid item xs={10}>
-                <Button  sx={{border: 2, borderColor: notificacao.vista ? "standard" :"secondary.main" }} value={notificacao.idNotificacao} color="inherit" fullWidth variant="contained" onClick={handleClickVista}>
+              <Grid item xs={9}>
+                <Button sx={{ border: 2, borderColor: notificacao.vista ? "standard" : "secondary.main" }} value={notificacao.idNotificacao} color="inherit" fullWidth variant="contained" onClick={handleClickVista}>
                   {notificacao.conteudo}
                 </Button>
               </Grid>
-              <Grid>
-                <DeleteIcon sx={{ mt: 2 }} onClick={handleClickRemove} />
+              <Grid item xs={3}>
+                <IconButton onClick={handleClickRemove} value={notificacao.idNotificacao}>
+                  <DeleteIcon  />
+                </IconButton>
               </Grid>
             </Grid>
           </Container>
@@ -115,7 +116,6 @@ function Notificacoes(props) {
   }
 
   const getNotifications = async () => {
-
     const email = JSON.parse(sessionStorage.getItem('user'));
     const response = await fetch('http://localhost:8080/notificacoes?' + new URLSearchParams({
       userId: email

@@ -9,6 +9,9 @@ import { Grid } from "@mui/material";
 import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
 import IconButton from "@mui/material/IconButton";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+
 
 function Jogo(props) {
 
@@ -17,6 +20,7 @@ function Jogo(props) {
     const [participantes, setParticipantes] = useState([]);
     const [id, setID] = useState('');
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [seguir, setSeguir] = useState(false);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -85,33 +89,33 @@ function Jogo(props) {
     }
 
 
-    const addFavorito =async (nome) => {
+    const addFavorito = async (nome) => {
         const user = JSON.parse(sessionStorage.getItem('user'));
         const response = await fetch('http://localhost:8080/addFavorito', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-              },
+            },
             body: JSON.stringify({
-                id: user, 
-                value : nome,
-                desporto : props.desporto
+                id: user,
+                value: nome,
+                desporto: props.desporto
             }),
         });
     }
 
-    const removeFavorito =async (nome) => {
+    const removeFavorito = async (nome) => {
         const user = JSON.parse(sessionStorage.getItem('user'));
 
         const response = await fetch('http://localhost:8080/removeFavorito', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-              },
+            },
             body: JSON.stringify({
-                id: user, 
-                value : nome,
-                desporto : props.desporto
+                id: user,
+                value: nome,
+                desporto: props.desporto
             }),
         });
 
@@ -151,13 +155,29 @@ function Jogo(props) {
         );
     }
 
+    const handleClickASeguir = (event) => {
+        setSeguir(!seguir);
+        console.log("Seguir a este jogo" + id);
+    }
+
 
     return (
         <div className="Jogo">
             <Box size="md" sx={{ m: '2%', p: '1%', border: 2, borderRadius: '30px' }} >
                 <Container sx={{ maxWidth: '80%', margin: 'auto' }} maxWidth="false">
                     <Grid container spacing={2}>
-                        <Grid item xs={props.showFavoritos ? 10 : 12}>
+                        {props.showFavoritos &&
+                            <Grid item xs={2}>
+                                Seguir Jogo
+                                <IconButton color="primary" onClick={handleClickASeguir}>
+                                    {seguir ?
+                                        <CheckBoxIcon />
+                                        : < CheckBoxOutlineBlankIcon />
+                                    }
+                                </IconButton>
+                            </Grid>
+                        }
+                        <Grid item xs={props.showFavoritos ? 8 : 12}>
                             <h2>{props.jogo.titulo}</h2>
                         </Grid>
                         {props.showFavoritos &&
