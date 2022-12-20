@@ -483,7 +483,7 @@ public class DBUtilizadores {
     }
 
     public void createSessao(Sessao s) throws SQLException{
-        String query = "INSERT INTO Sessao(idUser, idSession) VALUES(?,?)";
+        String query = "INSERT INTO Sessao(Utilizador_email, idSessao) VALUES(?,?)";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, s.getIdUser());
         ps.setString(2, s.getIdSession());
