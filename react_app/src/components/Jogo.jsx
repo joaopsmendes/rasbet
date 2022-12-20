@@ -155,10 +155,53 @@ function Jogo(props) {
         );
     }
 
+
+    const addASeguir = async () => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const response = await fetch('http://localhost:8080/addJogoASeguir', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                idUser: user,
+                idJogo: id,
+                desporto: props.desporto
+            }),
+        });
+    }
+
+    const removeASeguir = async () => {
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const response = await fetch('http://localhost:8080/removeJogoASeguir', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                idUser: user,
+                idJogo: id,
+                desporto: props.desporto
+            }),
+        });
+    }
+
+
+
     const handleClickASeguir = (event) => {
+        if (seguir){
+            addASeguir();
+        }
+        else{
+            removeASeguir();
+        }
+    
         setSeguir(!seguir);
         console.log("Seguir a este jogo" + id);
     }
+
+
+
 
 
     return (

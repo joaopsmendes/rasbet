@@ -31,40 +31,7 @@ import Notificacoes from "./Notificacoes";
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [fav, setFav] = useState(false);
-  const [not, setNot] = useState(false);
 
-
-
-  const getNotifications = async (email) => {
-    console.log(email)
-    const response = await fetch('http://localhost:8080/getNotifications?' + new URLSearchParams({
-      userId: email
-    })
-      , {
-        method: 'GET',
-      });
-
-    console.log("Notificações");
-    let data = await response.json();
-    console.log(data);
-    setNot(data['not']);
-  }
-
-  const getFavoritos = async (email) => {
-    console.log(email)
-    const response = await fetch('http://localhost:8080/getNotifications?' + new URLSearchParams({
-      userId: email
-    })
-      , {
-        method: 'GET',
-      });
-
-    console.log("Notificações");
-    let data = await response.json();
-    console.log(data);
-    setFav(data['fav']);
-  }
 
   const handleOpenNotifications = (event) => {
     //setAnchorElUser(event.currentTarget);

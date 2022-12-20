@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Historico from './Historico';
 import Perfil from './Perfil';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
-import Notificacoes from './Notificacoes';
 
 
 
@@ -59,11 +58,13 @@ function PageUtilizador(props) {
   useEffect(() => {
     getDesportos();
     getFavoritos();
+    getJogosAseguir();
   }, []);
 
 
   useEffect(() => {
     getFavoritos();
+    getJogosAseguir();
   }, [desportoAtivo, props.isLogin]);
 
 
@@ -147,8 +148,27 @@ function PageUtilizador(props) {
   }
 
 
+  const  getJogosAseguir = async () => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!user) return;
+    const response = await fetch('http://localhost:8080/jogosAseguir?' + new URLSearchParams({
+      userId: user
+    }), {
+      method: 'GET'
+    }
+    );
+    const data = await response.json();
+    //array to map
+    let obj = []
+    data.forEach((jogo) => {
+      obj.push(jogo);
+    });
+    setJogosAseguir(obj);
+  }
 
 
+
+  
   return (
     <div className="App">
       {!isDown ?

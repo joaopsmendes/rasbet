@@ -27,6 +27,7 @@ function Jogos(props) {
     const [dataFinal, setDataFinal] = useState()
     const [filtro, setFiltro] = useState(false)
     const [filtroFav, setFiltroFav] = useState(false)
+    const [filtroAseguir, setFiltroAseguir] = useState(false)
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1)
 
@@ -171,11 +172,11 @@ function Jogos(props) {
     };
 
 
-    
-    
+
+
     const jogosFilter = Object.entries(jogos).slice().map(entry => entry[1]).filter(jogo => isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo));
-    
-    const jogosPage= jogosFilter.slice((page - 1) * jogosPerPage, page * jogosPerPage);
+
+    const jogosPage = jogosFilter.slice((page - 1) * jogosPerPage, page * jogosPerPage);
     /*
     const jogosPage = () => {
         console.log("JOGOS");
@@ -188,7 +189,6 @@ function Jogos(props) {
         console.log(array.length);
         return array;
     }
-
     */
 
     return (
@@ -220,6 +220,11 @@ function Jogos(props) {
                         {props.showBoletim &&
                             <Grid item xs={12} md={2}>
                                 <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroFav ? "primary" : "inherit"} onClick={() => (setFiltroFav(!filtroFav))} >Filtrar por Favoritos</Button>
+                            </Grid>
+                        }
+                        {props.showBoletim &&
+                            <Grid item xs={12} md={2}>
+                                <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroAseguir ? "primary" : "inherit"} onClick={() => (setFiltroAseguir(!filtroAseguir))} >Filtrar por Jogos a seguir</Button>
                             </Grid>
                         }
                     </Grid>

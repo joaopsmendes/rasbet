@@ -65,16 +65,18 @@ function Notificacoes(props) {
   }
 
   
-  const handleClickRemove = (event) => {
+  const handleClickRemove = async (event) => {
     let idNotificacao = event.currentTarget.value;
     removeNotificacao(idNotificacao);
+    await new Promise(r => setTimeout(r, 100));
     getNotifications();
   }
 
 
-  const handleClickVista = (event) => {
+  const handleClickVista = async (event) => {
     let idNotificacao = event.currentTarget.value;
     setNotificaoVista(idNotificacao);
+    await new Promise(r => setTimeout(r, 100));
     getNotifications();
   }
 
@@ -102,7 +104,7 @@ function Notificacoes(props) {
                 </Button>
               </Grid>
               <Grid item xs={3}>
-                <IconButton onClick={handleClickRemove} value={notificacao.idNotificacao}>
+                <IconButton value={notificacao.idNotificacao} onClick={handleClickRemove} >
                   <DeleteIcon  />
                 </IconButton>
               </Grid>
