@@ -498,13 +498,13 @@ public class DBUtilizadores {
         ps.executeUpdate();
     }
 
-    public String getUtilizadorSessao(String idSessao) throws SQLException{
+    public String getUtilizadorSessao(String idSessao) throws SQLException {
         String user;
         String query = "Select Utilizador_email FROM Sessao WHERE idSessao=?;";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, idSessao);
         ResultSet rs = ps.executeQuery();
-        if(rs.next()) {
+        if (rs.next()) {
             user = rs.getString("Utilizador_email");
             return user;
         }
