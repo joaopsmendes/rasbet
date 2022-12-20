@@ -510,4 +510,30 @@ public class DBUtilizadores {
         }
         throw new SQLException("Utilizador não encontrado");
     }
+
+    public List<String> getPromocoesUser(String userId) throws SQLException {
+        List<String> lista = new ArrayList<>();
+        String query = "SELECT * FROM Promocao INNER JOIN  Apostador_hasPromocao ON idPromocao = Promocao_idPromocao WHERE Apostador_Utilizador_email = ?"; // ?
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            String promo = rs.getString("idPromocao");
+            lista.add(promo);
+        }
+        return lista;
+    }
+
+    public List<String> getUsersPromocao(String promoId) throws SQLException{
+        List<String> lista = new ArrayList<>();
+        String query = "SELECT * FROM Apostador INNER JOIN  Apostador_hasPromocao ON Utilizador_email = Apostador_Utilizador_email WHERE Promocao_idPromocao = ?"; // ?
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, promoId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            String user = rs.getString("Utilizador_email");
+            lista.add(user);
+        }
+        return lista;
+    }
 }

@@ -395,5 +395,7 @@ public class RasbetLN implements IRasbetLN{
         return novoMapa;
     }
 
-
+    public void sendNotPromo(List<String> users, String conteudo) throws SQLException {
+        sendNotificacaoUtilizadores(users, conteudo);
+    }
 }
