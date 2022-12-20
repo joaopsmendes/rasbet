@@ -1,7 +1,5 @@
 package rasbetLN;
 
-import jdk.jshell.execution.Util;
-import org.springframework.web.bind.annotation.RequestBody;
 import rasbetLN.GestaoApostas.Aposta;
 import rasbetLN.GestaoApostas.GestaoApostas;
 import rasbetLN.GestaoApostas.IGestaoApostas;
@@ -189,18 +187,19 @@ public class RasbetLN implements IRasbetLN{
     }
 
 
-    public String validateLogin (String email, String password) throws SQLException {
+    public Map<String, String> validateLogin (String email, String password) throws SQLException {
         return gestaoUtilizadores.logIn(email,password);
     }
 
-    public void registarApostador(String email, String password, String nome,String nif,LocalDate date, String morada, String telemovel) throws SQLException {
+    public String registarApostador(String email, String password, String nome,String nif,LocalDate date, String morada, String telemovel) throws SQLException {
         Apostador apostador = new Apostador(email,password,date,nif,nome,telemovel,morada);
-        gestaoUtilizadores.newApostador(apostador);
+        String sessionId = gestaoUtilizadores.newApostador(apostador);
         Transacao transacao = new Transacao(0,5,LocalDateTime.now(), Transacao.Tipo.CRIACAO_CONTA);
         gestaoUtilizadores.transacao(email,transacao);
 
         String conteudo = "Bem-vindo/a " + nome + ", aproveite já os 5 freebets disponíveis.";
         sendNotificacaoUtilizador(email, conteudo);
+        return sessionId;
     }
 
     @Override

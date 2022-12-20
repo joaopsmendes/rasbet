@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 public interface IGestaoUtilizadores {
-    void newApostador(Apostador apostador) throws SQLException;
-    String logIn(String email, String password) throws SQLException;
+    String newApostador(Apostador apostador) throws SQLException;
+    Map<String, String> logIn(String email, String password) throws SQLException;
     void logOut(String email) throws SQLException;
     void replace(String email, Utilizador user) throws SQLException;
     Utilizador getByEmail(String email) throws SQLException;

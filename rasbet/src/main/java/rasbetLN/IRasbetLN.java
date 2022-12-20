@@ -18,7 +18,7 @@ import java.util.Set;
 
 public interface IRasbetLN {
 
-    String validateLogin (String email, String password) throws SQLException;
+    Map<String, String> validateLogin (String email, String password) throws SQLException;
     void addGame(Game game, String bookmaker, String desporto) throws SQLException;
 
     void addGame(GameOutput game) throws SQLException;
@@ -32,7 +32,7 @@ public interface IRasbetLN {
 
     void levantamento(String userId, float valor)throws SQLException;
 
-    void registarApostador(String email, String password,String nome, String nif, LocalDate date, String morada, String telemovel) throws SQLException;
+    String registarApostador(String email, String password,String nome, String nif, LocalDate date, String morada, String telemovel) throws SQLException;
 
     boolean existsGame(String gameId, String desporto) throws SQLException;
 

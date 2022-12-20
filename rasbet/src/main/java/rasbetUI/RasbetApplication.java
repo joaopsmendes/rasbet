@@ -104,27 +104,29 @@ public class RasbetApplication {
 		String morada = myJsonRequest.get("morada");
 		String telemovel = myJsonRequest.get("telemovel");
 		try {
-			rasbetLN.registarApostador(email,password,nome,nif,date,morada,telemovel);
-			return new ResponseEntity<>("Apostador registado", HttpStatus.OK);
+			String sessionId = rasbetLN.registarApostador(email,password,nome,nif,date,morada,telemovel);
+			return new ResponseEntity<>(sessionId, HttpStatus.OK);
 		} catch (SQLException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PostMapping(path = "login")
-	public ResponseEntity<String> login(@RequestBody Map<String, String> myJsonRequest) {
+	public ResponseEntity<Map<String,String>> login(@RequestBody Map<String, String> myJsonRequest) {
 		String email = myJsonRequest.get("email");
 		String password = myJsonRequest.get("password");
 		System.out.println(email);
 		System.out.println(password);
 
 		try {
-			String tipo = rasbetLN.validateLogin(email,password);
+			Map<String, String> tipo = rasbetLN.validateLogin(email,password);
 			return new ResponseEntity<>(tipo, HttpStatus.OK);
 		}
 		catch (SQLException e){
 			System.out.println(e.getMessage());
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			Map<String, String> map = new HashMap<>();
+			map.put("error",e.getMessage());
+			return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
 
 		}
 	}

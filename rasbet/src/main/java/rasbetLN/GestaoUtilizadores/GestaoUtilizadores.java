@@ -2,10 +2,10 @@ package rasbetLN.GestaoUtilizadores;
 
 import rasbetDB.DBUtilizadores;
 import rasbetLN.GestaoJogos.Desporto;
-import rasbetLN.GestaoJogos.Jogo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,16 +21,20 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return utilizadores.getUtilizadorSessao(idSessao);
     }
 
-    public void newApostador(Apostador apostador) throws SQLException {
+    public String newApostador(Apostador apostador) throws SQLException {
         Sessao s = new Sessao(apostador.getEmail());
         this.utilizadores.createSessao(s);
         utilizadores.createApostador(apostador);
+        return s.getIdSession();
     }
 
-    public String logIn(String email, String password) throws SQLException {
+    public Map<String, String> logIn(String email, String password) throws SQLException {
         Sessao s = new Sessao(email);
         this.utilizadores.updateSessao(s);
-        return utilizadores.logIn(email, password);
+        Map<String,String> res = new HashMap<>();
+        res.put("sessionId",s.getIdSession());
+        res.put("tipo",utilizadores.logIn(email, password));
+        return res;
     }
 
     public void logOut(String email) throws SQLException{
