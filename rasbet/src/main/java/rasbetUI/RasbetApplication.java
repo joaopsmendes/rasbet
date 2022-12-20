@@ -467,8 +467,7 @@ public class RasbetApplication {
 	}
 
 	@RequestMapping(path="jogosAseguir")
-	public Map<String, List<String>> jogosAseguir(@RequestBody Map<String, String> myJsonRequest) {
-		String idUser = myJsonRequest.get("sessionId"); ;
+	public Map<String, List<String>> jogosAseguir(@RequestParam(name = "sessionId") String idUser) {
 		try {
 			return rasbetLN.getJogosASeguir(idUser);
 		} catch (SQLException e) {

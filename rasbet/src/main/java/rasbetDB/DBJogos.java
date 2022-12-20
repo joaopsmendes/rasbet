@@ -301,15 +301,15 @@ public class DBJogos {
     }
 
     public String getTituloJogo(int idOdd) throws SQLException{
-        String titulo="";
         String query = "SELECT titulo FROM Odd INNER JOIN ApostaJogo ON idApostaJogo=ApostaJogo_idApostaJogo INNER JOIN Jogo ON idJogo=Jogo_idJogo WHERE idOdd=?;";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1, idOdd);
         ResultSet rs = ps.executeQuery();
         if(rs.next()) {
-            titulo = rs.getString("titulo");
+            String titulo = rs.getString("titulo");
+            return titulo;
         }
-        return titulo;
+        throw new SQLException("Titulo do jogo não encontrado");
     }
 
 //    public Desporto getDesporto(String idJogo) throws SQLException {

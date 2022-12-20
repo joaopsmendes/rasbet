@@ -499,14 +499,15 @@ public class DBUtilizadores {
     }
 
     public String getUtilizadorSessao(String idSessao) throws SQLException{
-        String user = "";
+        String user;
         String query = "Select Utilizador_email FROM Sessao WHERE idSessao=?;";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, idSessao);
         ResultSet rs = ps.executeQuery();
         if(rs.next()) {
             user = rs.getString("Utilizador_email");
+            return user;
         }
-        return user;
+        throw new SQLException("Utilizador não encontrado");
     }
 }
