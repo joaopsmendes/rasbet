@@ -125,9 +125,8 @@ public class RasbetLN implements IRasbetLN{
        //        return gestaoJogos.getOddsJogo(idOdd);
        //    }
 
-    public void sendNotificacaoUtilizador(String sessionId, String conteudo) throws SQLException {
-        String userId = gestaoUtilizadores.getUserid(sessionId);
-        gestaoUtilizadores.sendNotificacaoUtilizador(userId, conteudo);
+    public void sendNotificacaoUtilizador(String email, String conteudo) throws SQLException {
+        gestaoUtilizadores.sendNotificacaoUtilizador(email, conteudo);
     }
 
     private void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException {
