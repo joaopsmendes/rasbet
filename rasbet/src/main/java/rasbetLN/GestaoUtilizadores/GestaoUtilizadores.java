@@ -23,8 +23,8 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
 
     public String newApostador(Apostador apostador) throws SQLException {
         Sessao s = new Sessao(apostador.getEmail());
-        this.utilizadores.createSessao(s);
         utilizadores.createApostador(apostador);
+        this.utilizadores.createSessao(s);
         return s.getIdSession();
     }
 
