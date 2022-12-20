@@ -29,10 +29,11 @@ function HistoricoTransacoes(props) {
     let valorSaldo = 0;
     let valorFreebets = 0;
 
-    const getHistoricoTransacao = async (email) => {
-
+    const getHistoricoTransacao = async () => {
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+        console.log(sessionId);
         const response = await fetch('http://localhost:8080/historicoTransacoes?' + new URLSearchParams({
-            userId: email
+            sessionId: sessionId
         })
             , {
                 method: 'GET',
@@ -41,11 +42,11 @@ function HistoricoTransacoes(props) {
                 }
             });
         const data = await response.json();
+        console.log("HISTORICO TRANSACOES");
         console.log(data);
         data.forEach(element => {
             element['data'] = new Date(Date.parse(element['data']));
         });
-
         data.sort((a, b) => a['data'] - b['data']);
         setTransacoes(data);
 
@@ -53,8 +54,7 @@ function HistoricoTransacoes(props) {
 
 
     useEffect(() => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        getHistoricoTransacao(user);
+        getHistoricoTransacao();
     }, [])
 
     const rows = []

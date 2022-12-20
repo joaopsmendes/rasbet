@@ -18,9 +18,10 @@ function Apostas(props) {
 
 
 
-    const getApostas = async (email) => {
+    const getApostas = async () => {
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
         const response = await fetch('http://localhost:8080/historicoAposta?' + new URLSearchParams({
-            userId: email
+            sessionId: sessionId
         })
             , {
                 method: 'GET',
@@ -51,8 +52,7 @@ function Apostas(props) {
 
 
     useEffect(() => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
-        getApostas(user);
+        getApostas();
     }, [])
 
     useEffect(() => {

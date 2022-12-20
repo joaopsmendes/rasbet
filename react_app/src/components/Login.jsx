@@ -45,9 +45,13 @@ function Copyright(props) {
         }),
     });
     if(response.status === 200){
-        const tipoUtilizador = await response.text();
+        
+        // Change this to receive session id and user type
+        const json = await response.json();
+        let tipoUtilizador = json.tipo;
+        let sessionId = json.sessionId;
         console.log("Login Success")
-        props.login(email,tipoUtilizador);
+        props.login(sessionId,tipoUtilizador);
     }
     else{
         setError(true);

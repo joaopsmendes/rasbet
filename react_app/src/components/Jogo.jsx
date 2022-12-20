@@ -90,14 +90,14 @@ function Jogo(props) {
 
 
     const addFavorito = async (nome) => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
         const response = await fetch('http://localhost:8080/addFavorito', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id: user,
+                sessionId: sessionId,
                 value: nome,
                 desporto: props.desporto
             }),
@@ -105,15 +105,14 @@ function Jogo(props) {
     }
 
     const removeFavorito = async (nome) => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
-
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
         const response = await fetch('http://localhost:8080/removeFavorito', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id: user,
+                sessionId: sessionId,
                 value: nome,
                 desporto: props.desporto
             }),
@@ -157,14 +156,16 @@ function Jogo(props) {
 
 
     const addASeguir = async () => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+
+        
         const response = await fetch('http://localhost:8080/addJogoASeguir', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                idUser: user,
+                sessionId: sessionId,
                 idJogo: id,
                 desporto: props.desporto
             }),
@@ -172,14 +173,15 @@ function Jogo(props) {
     }
 
     const removeASeguir = async () => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+
         const response = await fetch('http://localhost:8080/removeJogoASeguir', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                idUser: user,
+                sessionId: sessionId,
                 idJogo: id,
                 desporto: props.desporto
             }),

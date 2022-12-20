@@ -217,12 +217,12 @@ function Jogos(props) {
                                 {dateField("Data Final", changeDataFinal)}
                             </Grid>
                         }
-                        {props.showBoletim &&
+                        {props.showBoletim && props.login &&
                             <Grid item xs={12} md={2}>
                                 <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroFav ? "primary" : "inherit"} onClick={() => (setFiltroFav(!filtroFav))} >Filtrar por Favoritos</Button>
                             </Grid>
                         }
-                        {props.showBoletim &&
+                        {props.showBoletim && props.login &&
                             <Grid item xs={12} md={2}>
                                 <Button sx={{ mt: 3 }} fullWidth variant="contained" color={filtroAseguir ? "primary" : "inherit"} onClick={() => (setFiltroAseguir(!filtroAseguir))} >Filtrar por Jogos a seguir</Button>
                             </Grid>
@@ -238,7 +238,7 @@ function Jogos(props) {
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&
-                    <Boletim handleClick={handleClick} user={props.user} login={props.login} jogos={jogos} apostas={props.aposta} setAposta={props.setAposta} />
+                    <Boletim handleClick={handleClick} login={props.login} jogos={jogos} apostas={props.aposta} setAposta={props.setAposta} />
                 }
             </Grid>
             {jogosPage.length > 0 &&

@@ -46,8 +46,10 @@ import FormControl from '@mui/material/FormControl';
             "telemovel":telemovel
         }),
     });
+    // Change this to receive session id 
     if (response.status === 200) {
-      props.login(email,"Apostador");
+      const sessionId = await response.text();
+      props.login(sessionId,"Apostador");
       
     }
     else{

@@ -17,14 +17,13 @@ function Perfil(props) {
   const [saldo, setSaldo] = useState(0)
   const [freeBets, setFreeBets] = useState(0)
   const [alterarInfo, setAlterarInfo] = useState(false)
-  const [user, setUser] = useState('')
   const [info, setInfo] = useState('')
 
 
-  const getSaldo = async (email) => {
-    console.log(email)
+  const getSaldo = async () => {
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/saldo?' + new URLSearchParams({
-      userId: email
+      sessionId: sessionId
     })
       , {
         method: 'GET',
@@ -42,10 +41,10 @@ function Perfil(props) {
   }
 
 
-  const getInfo = async (email) => {
-
+  const getInfo = async () => {
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/info?' + new URLSearchParams({
-      userId: email
+      sessionId : sessionId
     })
       , {
         method: 'GET',
@@ -60,10 +59,8 @@ function Perfil(props) {
 
 
   useEffect(() => {
-    const username = JSON.parse(sessionStorage.getItem('user'));
-    getSaldo(username);
-    getInfo(username);
-    setUser(username);
+    getSaldo();
+    getInfo();
   }, [alterarInfo]);
 
 
@@ -89,7 +86,7 @@ function Perfil(props) {
           <Transacoes getSaldo={getSaldo} saldo={saldo} />
         </Box>
         <Button sx={{ mt: 10, mb: 4 }} color={alterarInfo ? "primary" : "inherit"} onClick={handleAlterarInfo} variant="contained" size="md" value="AlterarInfo">Alterar Informações</Button>
-        {alterarInfo && <AlterarInformacaoUser update={alterarInfo} user={user} altera={handleAlterarInfo} />}
+        {alterarInfo && <AlterarInformacaoUser update={alterarInfo}  altera={handleAlterarInfo} />}
       </Container>
     </div>
 

@@ -52,24 +52,32 @@ function AlteracaoOdd(props) {
   }
 
   const suspenderJogo = async () => {
+    const sessionId = sessionStorage.getItem('sessionId');
     const response = await fetch('http://localhost:8080/suspenderJogo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ idJogo: props.jogo.desJogo })
+      body: JSON.stringify({ 
+        idJogo: props.jogo.desJogo,
+        sessionId: sessionId
+      })
     });
     setOpen([false, true, false]);
 
   }
 
   const ativarJogo = async () => {
+    const sessionId = sessionStorage.getItem('sessionId');
     const response = await fetch('http://localhost:8080/ativarJogo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ idJogo: props.jogo.desJogo })
+      body: JSON.stringify({ 
+        idJogo: props.jogo.desJogo,
+        sessionId: sessionId
+       })
     });
   }
 
@@ -108,12 +116,17 @@ function AlteracaoOdd(props) {
 
 
   const alterarOdd = async (idOdd) => {
+    const sessionId = sessionStorage.getItem('sessionId');
     const response = await fetch('http://localhost:8080/alterarOdd', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ idOdd: idOdd, valor: valor })
+      body: JSON.stringify({ 
+        idOdd: idOdd, 
+        valor: valor ,
+        sessionId: sessionId
+      })
     });
   }
 

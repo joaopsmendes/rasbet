@@ -55,14 +55,14 @@ function Favoritos(props) {
 
 
   const addFavorito = async (nome) => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/addFavorito', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: user,
+        id: sessionId,
         value: nome,
         desporto: props.desporto
       }),
@@ -70,7 +70,7 @@ function Favoritos(props) {
   }
 
   const removeFavorito = async (nome) => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
 
     const response = await fetch('http://localhost:8080/removeFavorito', {
       method: 'POST',
@@ -78,7 +78,7 @@ function Favoritos(props) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: user,
+        sessionId: sessionId,
         value: nome,
         desporto: props.desporto
       }),

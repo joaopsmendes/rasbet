@@ -34,10 +34,10 @@ function Pagamento(props) {
 
 
 
-  const getSaldo = async (email) => {
-    console.log(email)
+  const getSaldo = async () => {
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/saldo?' + new URLSearchParams({
-      userId: email
+      sessionId: sessionId
     })
       , {
         method: 'GET',
@@ -89,8 +89,7 @@ function Pagamento(props) {
 
   React.useEffect(() => {
     setOpen(true);
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    getSaldo(user);
+    getSaldo();
   }, [props.pagamento]);
 
 

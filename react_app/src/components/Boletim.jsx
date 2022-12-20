@@ -64,10 +64,10 @@ function Boletim(props) {
     }
 
     const doAposta = async (montanteSaldo, montanteFreeBets, setSucesso) => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
 
         const ganhos = getMontanteTotal();
-        if (user === null) {
+        if (sessionId === null) {
             alert("Tem de fazer login para apostar");
             return;
         }
@@ -79,7 +79,7 @@ function Boletim(props) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: user,
+                sessionId: sessionId,
                 valor: montante,
                 saldo: montanteSaldo,
                 freebets: montanteFreeBets,

@@ -30,14 +30,14 @@ function Notificacoes(props) {
   const idPop = open ? 'simple-popover' : undefined;
 
   const setNotificaoVista = async (idNotificacao) => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     let response = await fetch("http://localhost:8080/vistaNotificacao", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: user,
+        sessionId: sessionId,
         notificacao: idNotificacao,
       }),
     });
@@ -48,14 +48,14 @@ function Notificacoes(props) {
 
 
   const removeNotificacao = async (idNotificacao) => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     let response = await fetch("http://localhost:8080/removeNotificacao", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: user,
+        sessionId: sessionId,
         notificacao: idNotificacao,
       }),
     });
@@ -118,9 +118,10 @@ function Notificacoes(props) {
   }
 
   const getNotifications = async () => {
-    const email = JSON.parse(sessionStorage.getItem('user'));
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+
     const response = await fetch('http://localhost:8080/notificacoes?' + new URLSearchParams({
-      userId: email
+      sessionId: sessionId
     })
       , {
         method: 'GET',

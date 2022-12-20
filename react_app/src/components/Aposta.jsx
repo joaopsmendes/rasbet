@@ -47,7 +47,7 @@ function Aposta(props) {
     }
 
     const cashOut = async () => {
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
         const response = await fetch('http://localhost:8080/cashout',
             {
                 method: 'POST',
@@ -55,13 +55,13 @@ function Aposta(props) {
                     'Content-Type': 'application/json',
                   },
                 body: JSON.stringify({
-                    userId: user,
+                    sessionId: sessionId,
                     idAposta: idAposta
                 })
             });
         const data = await response.text();
         console.log(data);
-        props.update(user);
+        props.update();
     }
 
     const formatDate = (date) => {

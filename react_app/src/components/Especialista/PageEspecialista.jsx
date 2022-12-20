@@ -57,7 +57,6 @@ function PageEspecialista(props) {
 
 
   useEffect(() => {
-    //getJogosAdd();
     getDesportos();
   }
     , []);
@@ -97,6 +96,8 @@ function PageEspecialista(props) {
   const addJogo = async (idJogo, mercado) => {
     const jogo = jogos.find((jogo) => jogo.idJogo === idJogo);
     jogo['escolhido'] = mercado;
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+    jogo['sessionId'] = sessionId;
     console.log(jogo);
     const response = await fetch('http://localhost:8080/adicionarJogo', {
       method: 'POST',
@@ -121,9 +122,7 @@ function PageEspecialista(props) {
     return null;
   }
 
-
-
-
+  
   return (
     <div className="App">
       <ResponsiveAppBar

@@ -71,33 +71,30 @@ function App() {
   const [isAdmin, setAdmin] = useState(false);
   const [isEspecialista, setEspecialista] = useState(false);
   const [login, setLogin] = useState(false);
-  const [username, setUsername] = useState("");
 
 
   useEffect(() => {
-    if (sessionStorage.getItem('user') && !login) {
-      const user = JSON.parse(sessionStorage.getItem('user'));
+    if (sessionStorage.getItem('sessionId') && !login) {
+      const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
       const tipo = JSON.parse(sessionStorage.getItem('tipo'));
-      handleLogin(user, tipo);  
+      handleLogin(sessionId, tipo);  
     }
   }, []);
 
 
-  const handleLogin = (user, tipo) => {
+  const handleLogin = (sessionId, tipo) => {
     setLogin(true);
     handleUser(tipo);
-    sessionStorage.setItem('user', JSON.stringify(user));
-    setUsername(user);
+    sessionStorage.setItem('sessionId', JSON.stringify(sessionId));
   }
 
   const handleLogout = () => {
     console.log("LOGOUT");
     setLogin(false);
-    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('sessionId');
     sessionStorage.removeItem('tipo');
     setFalse();
     setUser(true);
-    setUsername(null);
   }
 
 
@@ -114,7 +111,7 @@ function App() {
     if (tipo === "Apostador") setUser(true);
     if (tipo === "Especialista") setEspecialista(true);
     if (tipo === "Adminstrador") setAdmin(true);
-    if (!sessionStorage.getItem('user')) {
+    if (!sessionStorage.getItem('sessionId')) {
       sessionStorage.setItem('tipo', JSON.stringify(tipo));
     }
 
@@ -125,7 +122,7 @@ function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {isUser && <PageUtilizador user={username} isLogin={login} login={handleLogin} loggout={handleLogout} />}
+        {isUser && <PageUtilizador isLogin={login} login={handleLogin} loggout={handleLogout} />}
         {isEspecialista && <PageEspecialista isLogin={login} loggout={handleLogout} />}
       </ThemeProvider>
     </div>

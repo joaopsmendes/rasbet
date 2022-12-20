@@ -10,7 +10,6 @@ import Button from '@mui/material/Button';
 function AlterarInformacaoUser(props) {
 
 
-  const [email, setEmail] = useState("")
   const [username, setUsername] = useState()
   const [morada, setMorada] = useState()
   const [password, setPassword] = useState()
@@ -21,7 +20,8 @@ function AlterarInformacaoUser(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const body = { email: email }
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+    const body = { sessionId: sessionId }
 
     if (username) {
       body['username'] = username;
@@ -59,8 +59,6 @@ function AlterarInformacaoUser(props) {
 
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem('user'))
-    setEmail(user)
   }, [props.update]);
 
 

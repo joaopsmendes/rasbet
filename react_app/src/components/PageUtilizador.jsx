@@ -128,10 +128,11 @@ function PageUtilizador(props) {
   }
 
   const getFavoritos = async () => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    if (!user) return;
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+
+    if (!sessionId) return;
     const response = await fetch('http://localhost:8080/favoritos?' + new URLSearchParams({
-      userId: user
+      sessionId: sessionId
     }), {
       method: 'GET'
     }
@@ -149,19 +150,23 @@ function PageUtilizador(props) {
 
 
   const  getJogosAseguir = async () => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    if (!user) return;
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+
+    if (!sessionId) return;
     const response = await fetch('http://localhost:8080/jogosAseguir?' + new URLSearchParams({
-      userId: user
+      sessionId: sessionId
     }), {
       method: 'GET'
     }
     );
     const data = await response.json();
+    console.log("JOGOS A SEGUIR");
+    console.log(data);
+    if (Object.keys(data).length === 0) return;
     //array to map
     let obj = []
-    data.forEach((jogo) => {
-      obj.push(jogo);
+    Object.keys(data).forEach((key) => {
+      obj.push(data[key]);
     });
     setJogosAseguir(obj);
   }
@@ -186,8 +191,8 @@ function PageUtilizador(props) {
             showFavoritos={true}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos showFavoritos={props.isLogin} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClickOdd} />}
-          {showHistorico && <Historico nome={props.user} />}
+          {showJogos && <Jogos showFavoritos={props.isLogin} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showHistorico && <Historico />}
         </div>
         :
         <div>
