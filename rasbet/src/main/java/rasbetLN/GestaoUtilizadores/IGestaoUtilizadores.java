@@ -9,9 +9,13 @@ import java.util.Set;
 
 public interface IGestaoUtilizadores {
     String newApostador(Apostador apostador) throws SQLException;
+
     Map<String, String> logIn(String email, String password) throws SQLException;
+
     void logOut(String email) throws SQLException;
+
     void replace(String email, Utilizador user) throws SQLException;
+
     Utilizador getByEmail(String email) throws SQLException;
 
     void addFavorito(String userId, Favorito favorito) throws SQLException;
@@ -30,15 +34,15 @@ public interface IGestaoUtilizadores {
 
     Map<String, Float> getSaldoFreeBets(String userId) throws SQLException;
 
-    Map<String, String> info(String userId)throws SQLException;
+    Map<String, String> info(String userId) throws SQLException;
 
-    void updateSaldo(String userId, float value)throws SQLException;
+    void updateSaldo(String userId, float value) throws SQLException;
 
-    void transacao(String userId, Transacao transacao)throws SQLException;
+    void transacao(String userId, Transacao transacao) throws SQLException;
 
     int updateStreak(String id, float valor) throws SQLException;
 
-    float bonusStreak(String key)throws SQLException;
+    float bonusStreak(String key) throws SQLException;
 
     void sendNotificacao(Notificacao notificacao) throws SQLException;
 
@@ -54,7 +58,7 @@ public interface IGestaoUtilizadores {
 
     void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
 
-    public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException;
+    List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException;
 
     void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
 
@@ -63,4 +67,16 @@ public interface IGestaoUtilizadores {
     Map<Integer, List<String>> getJogosASeguir(String idUser) throws SQLException;
 
     String getUserid(String idSessao) throws SQLException;
+
+    List<Promocao> getPromoApostaSegura(String userId) throws SQLException;
+
+    List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException;
+
+    List<String> getUsersPromocao(int promoId) throws SQLException;
+
+    void createPromocaoApostaSegura (int limite) throws SQLException;
+
+    void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException;
+
+    List<String> getIdApostadores() throws SQLException;
 }

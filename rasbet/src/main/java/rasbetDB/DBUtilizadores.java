@@ -511,29 +511,66 @@ public class DBUtilizadores {
         throw new SQLException("Utilizador não encontrado");
     }
 
-    public List<String> getPromocoesUser(String userId) throws SQLException {
-        List<String> lista = new ArrayList<>();
-        String query = "SELECT * FROM Promocao INNER JOIN  Apostador_hasPromocao ON idPromocao = Promocao_idPromocao WHERE Apostador_Utilizador_email = ?"; // ?
+    public List<Promocao> getPromoApostaSegura(String userId) throws SQLException {
+        List<Promocao> lista = new ArrayList<>();
+        String query = "SELECT ApostaSegura.Promocao_idPromocao, limite FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.PromocaoidPromocao WHERE Apostador\n" +
+                "Utilizador_email=?";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
-            String promo = rs.getString("idPromocao");
-            lista.add(promo);
+            int limite = rs.getInt("limite");
+            int promoID = rs.getInt("Promocao_idPromocao");
+            ApostaSegura as = new ApostaSegura(limite, promoID);
+
+            lista.add(as);
         }
         return lista;
     }
 
-    public List<String> getUsersPromocao(String promoId) throws SQLException{
+    public List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException {
+        List<Promocao> lista = new ArrayList<>();
+        String query = "SELECT ApostaSegura.Promocao_idPromocao, deposito, freebets FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.PromocaoidPromocao WHERE Apostador\n" +
+                "Utilizador_email=?";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, userId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()){
+            int deposito = rs.getInt("deposito");
+            int freebets = rs.getInt("freebets");
+            int promoID = rs.getInt("Promocao_idPromocao");
+
+            FreeBetsDeposito fbd = new FreeBetsDeposito(promoID, deposito, freebets);
+            lista.add(fbd);
+        }
+        return lista;
+    }
+
+    /*public List<String> getUsersPromocao(int promoId) throws SQLException{
         List<String> lista = new ArrayList<>();
         String query = "SELECT * FROM Apostador INNER JOIN  Apostador_hasPromocao ON Utilizador_email = Apostador_Utilizador_email WHERE Promocao_idPromocao = ?"; // ?
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setString(1, promoId);
+        ps.setInt(1, promoId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
             String user = rs.getString("Utilizador_email");
             lista.add(user);
         }
         return lista;
+    }*/
+
+    public void createPromocaoApostaSegura (int limite) throws SQLException{
+        String query = "INSERT INTO ApostaSegura(limite)VALUES(?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,limite);
+        ps.executeQuery();
+    }
+
+    public void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException{
+        String query = "INSERT INTO FreebetsAposDeposito(deposito, freebets)VALUES(?,?)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,deposito);
+        ps.setInt(2, freebets);
+        ps.executeQuery();
     }
 }

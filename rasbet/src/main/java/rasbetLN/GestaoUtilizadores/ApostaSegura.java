@@ -8,6 +8,11 @@ public class ApostaSegura extends Promocao {
         this.limite = limite;
     }
 
+    public ApostaSegura(int limite){
+        this.limite = limite;
+    }
+
+
     public int getLimite() {
         return this.limite;
     }

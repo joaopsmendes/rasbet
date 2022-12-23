@@ -5,6 +5,7 @@ import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetLN.GestaoUtilizadores.Notificacao;
+import rasbetLN.GestaoUtilizadores.Promocao;
 import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetUI.ApostaRequest;
 import rasbetUI.Game;
@@ -102,4 +103,16 @@ public interface IRasbetLN {
     void removeJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
 
     Map<String, List<String>> getJogosASeguir(String idUser) throws SQLException;
+
+    List<Promocao> getPromoApostaSegura(String userId) throws SQLException;
+
+    List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException;
+
+    List<String> getUsersPromocao(int promoId) throws SQLException;
+
+    void sendNotPromo(int idPromo) throws SQLException;
+
+    void createPromocaoFreeBetsDeposito(int deposito, int freeBets) throws SQLException;
+
+    void createPromocaoApostaSegura(int limite) throws SQLException;
 }

@@ -10,6 +10,11 @@ public class FreeBetsDeposito extends Promocao {
         this.freeBets = freeBets;
     }
 
+    public FreeBetsDeposito(int deposito, int freeBets){
+        this.deposito = deposito;
+        this.freeBets = freeBets;
+    }
+
     public int getDeposito() {
         return this.deposito;
     }

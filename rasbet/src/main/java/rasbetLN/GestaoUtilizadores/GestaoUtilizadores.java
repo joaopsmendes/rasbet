@@ -195,10 +195,35 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     }
 
     public Map<Integer, List<String>> getJogosASeguir(String idUser) throws SQLException{
-        return this.utilizadores.getJogosASeguir(idUser);
+        return utilizadores.getJogosASeguir(idUser);
     }
 
     public String getUserid(String idSessao) throws SQLException{
         return utilizadores.getUtilizadorSessao(idSessao);
     }
+
+    public List<Promocao> getPromoApostaSegura(String userId) throws SQLException{
+        return utilizadores.getPromoApostaSegura(userId);
+    }
+
+    public List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException{
+        return utilizadores.getPromoFreeBetsDeposito(userId);
+    }
+
+    public List<String> getUsersPromocao(int promoId) throws SQLException{
+        return utilizadores.getUsersPromocao(promoId);
+    }
+
+    public void createPromocaoApostaSegura (int limite) throws SQLException{
+        utilizadores.createPromocaoApostaSegura(limite);
+    }
+
+    public void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException{
+        utilizadores.createPromocaoFreebetsAposDeposito(deposito, freebets);
+    }
+
+    public List<String> getIdApostadores() throws SQLException{
+        return utilizadores.getIdApostadores();
+    }
+
 }
