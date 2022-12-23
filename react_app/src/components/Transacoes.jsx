@@ -23,6 +23,7 @@ function Transacoes(props) {
   const [deposito, setDeposito] = useState(false)
   const [levantamento, setLevantamento] = useState(false)
   const [montante, setMontante] = useState(1)
+  const [promocoes, setPromocoes] = useState([])
 
 
   //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
@@ -84,6 +85,7 @@ function Transacoes(props) {
   }
 
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (deposito) {
@@ -104,6 +106,25 @@ function Transacoes(props) {
   }
 
 
+
+  // TO CHECK
+  const getListaPromocoes = async () => {
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+    const response = await fetch('http://localhost:8080/promocoesDeposito?' +
+      new URLSearchParams({
+        sessionId: sessionId,
+      }));
+    if (response.status === 200) {
+      const promocoes = await response.json();
+      setPromocoes(promocoes);
+    }
+    else {
+      alert("Erro ao obter lista de promoções");
+    }
+  }
+
+
+  
   return (
     <div className="transacoes">
       <Grid container spacing={2}>
@@ -114,7 +135,6 @@ function Transacoes(props) {
           <Button sx={{ m: 3 }} color={levantamento ? "primary" : "inherit"} onClick={handleClickLevantamento} variant="contained" size="md" value="Levantamento">Levantamento</Button>
         </Grid>
       </Grid>
-
       {(deposito || levantamento) &&
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField margin="normal" required name="Montante" label="Montante" id="Montante"

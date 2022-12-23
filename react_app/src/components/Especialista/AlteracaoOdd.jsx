@@ -52,7 +52,7 @@ function AlteracaoOdd(props) {
   }
 
   const suspenderJogo = async () => {
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/suspenderJogo', {
       method: 'POST',
       headers: {
@@ -68,7 +68,7 @@ function AlteracaoOdd(props) {
   }
 
   const ativarJogo = async () => {
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/ativarJogo', {
       method: 'POST',
       headers: {
@@ -116,7 +116,7 @@ function AlteracaoOdd(props) {
 
 
   const alterarOdd = async (idOdd) => {
-    const sessionId = sessionStorage.getItem('sessionId');
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
     const response = await fetch('http://localhost:8080/alterarOdd', {
       method: 'POST',
       headers: {

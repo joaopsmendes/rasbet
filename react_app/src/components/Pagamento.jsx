@@ -30,6 +30,8 @@ function Pagamento(props) {
   const [freebetsAtual, setFreebetsAtual] = React.useState(0);
   const [pago, setPago] = React.useState(false);
 
+  const [promocoes, setPromocoes] = React.useState([]);
+
 
 
 
@@ -51,6 +53,26 @@ function Pagamento(props) {
     setFreebetsAtual(data['freebets']);
 
   }
+
+
+  // TO CHECK
+  const getPromocoes = async () => {
+    const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
+    const response = await fetch('http://localhost:8080/promocoesAposta?' + new URLSearchParams({
+      sessionId: sessionId
+    })
+      , {
+        method: 'GET',
+      });
+    if (response.status === 200) {
+      const data = await response.json();
+      setPromocoes(data);
+    }
+    else {
+      alert("Erro ao obter as promoções");
+    }
+  }
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -90,6 +112,7 @@ function Pagamento(props) {
   React.useEffect(() => {
     setOpen(true);
     getSaldo();
+    getPromocoes();
   }, [props.pagamento]);
 
 
@@ -137,7 +160,7 @@ function Pagamento(props) {
 
 
   const submit = () => {
-    props.submit(montanteSaldo, montanteFreeBets,setPago);
+    props.submit(montanteSaldo, montanteFreeBets, setPago);
   }
 
   const close = () => {
@@ -155,6 +178,9 @@ function Pagamento(props) {
             <h3>Saldo Atual : {saldoAtual - montanteSaldo}</h3>
             <h3>FreeBets Atual : {freebetsAtual - montanteFreeBets}</h3>
 
+            {promocoes.length > 0 &&
+              <h3>Promoções</h3>
+            }
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Button disabled={!saldo && valorAPagar() == 0} fullWidth variant="contained" color={saldo ? "primary" : "inherit"} onClick={handleClickSaldo}>
