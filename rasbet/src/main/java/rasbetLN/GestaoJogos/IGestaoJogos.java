@@ -28,9 +28,11 @@ public interface IGestaoJogos {
 
     void ativarJogo(String idJogo) throws SQLException;
 
-    List<Integer> getOddsJogo(int idOdd) throws SQLException;
+    List<Integer> getOddsJogo(String idJogo) throws SQLException;
 
-    String getTituloJogo(int idOdd) throws SQLException;
+    String getTituloJogo(String idJogo) throws SQLException;
+
+    String getIdJogoFromOdd(int idOdd) throws SQLException;
 
 
 //    Desporto getDesporto(String idJogo) throws SQLException;

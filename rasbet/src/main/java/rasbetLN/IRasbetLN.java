@@ -24,10 +24,10 @@ public interface IRasbetLN {
 
     void addGame(GameOutput game) throws SQLException;
 
-
     // Class Apostador
     void addFavorito(String id,String desporto,String f) throws SQLException;
 
+    void deposito(String userId, float valor, int promocao) throws SQLException;
 
     void deposito(String userId, float valor) throws SQLException;
 
@@ -38,7 +38,6 @@ public interface IRasbetLN {
     boolean existsGame(String gameId, String desporto) throws SQLException;
 
     void removeFavorito(String id, String desporto, String fav) throws SQLException;
-
 
     Map<String, Jogo> getJogos(String desporto) throws SQLException;
 
@@ -85,22 +84,13 @@ public interface IRasbetLN {
 
     void vistaNotificacao(String userId, int notificacao) throws SQLException;
 
-    Set<String> getUtilizadoresOddS(int idOdd) throws SQLException;
-
-    Set<String> getUtilizadoresOddM(int idOdd) throws SQLException;
-
     void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
-
 
     void addJogoASeguir(String idJogo, String desporto, String idUser) throws SQLException;
 
     void removeJogoASeguir(String idJogo, String desporto, String idUser) throws SQLException;
 
 //    void alterarOdd(int idOdd, float valor, String conteudo) throws SQLException;
-
-    void addJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
-
-    void removeJogoASeguir(String idJogo, int idDesporto, String idUser) throws SQLException;
 
     Map<String, List<String>> getJogosASeguir(String idUser) throws SQLException;
 
@@ -110,9 +100,10 @@ public interface IRasbetLN {
 
     List<String> getUsersPromocao(int promoId) throws SQLException;
 
-    void sendNotPromo(int idPromo) throws SQLException;
+    //void sendNotPromo(int idPromo) throws SQLException;
 
     void createPromocaoFreeBetsDeposito(int deposito, int freeBets) throws SQLException;
 
     void createPromocaoApostaSegura(int limite) throws SQLException;
+
 }

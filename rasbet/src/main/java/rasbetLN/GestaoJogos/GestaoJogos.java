@@ -77,12 +77,19 @@ public class GestaoJogos implements IGestaoJogos {
         jogos.alteraEstado(idJogo, Jogo.Estado.ATIVO.value);
     }
 
-    public List<Integer> getOddsJogo(int idOdd) throws SQLException{
-        return jogos.getOddsJogo(idOdd);
+
+
+    public List<Integer> getOddsJogo(String idJogo) throws SQLException{
+        return jogos.getOddsJogo(idJogo);
     }
 
-    public String getTituloJogo(int idOdd) throws SQLException{
-        return jogos.getTituloJogo(idOdd);
+    public String getTituloJogo(String idJogo) throws SQLException{
+        return jogos.getTituloJogo(idJogo);
+    }
+
+    @Override
+    public String getIdJogoFromOdd(int idOdd) throws SQLException {
+        return jogos.getIdJogoFromOdd(idOdd);
     }
 
 

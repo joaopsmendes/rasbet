@@ -1,8 +1,10 @@
 package rasbetLN.GestaoApostas;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IGestaoApostas {
     Aposta getAposta(int idAposta, String email) throws SQLException;
@@ -17,4 +19,5 @@ public interface IGestaoApostas {
 
     Map<String, List<Float>> updateResultados(Map<Integer, List<Integer>> res) throws SQLException;
 
+    Set<String> getUtilizadoresOdd(int idOdd) throws SQLException;
 }

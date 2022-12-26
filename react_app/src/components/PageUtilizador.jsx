@@ -10,7 +10,7 @@ import PublicOffIcon from '@mui/icons-material/PublicOff';
 
 function PageUtilizador(props) {
 
-  const maxApostas =20;
+  const maxApostas = 20;
 
   const [showJogos, setShowJogos] = useState(true);
   const [showHistorico, setShowHistorico] = useState(false);
@@ -21,7 +21,7 @@ function PageUtilizador(props) {
   const [aposta, setAposta] = useState([])
   const [notificacoes, setNotificacoes] = useState(false);
   const [favoritos, setFavoritos] = useState({});
-  const [jogosAseguir,setJogosAseguir] = useState([]);
+  const [jogosAseguir, setJogosAseguir] = useState([]);
 
 
 
@@ -39,8 +39,8 @@ function PageUtilizador(props) {
         return;
       }
     }
-    if(newApostaArray.length>= maxApostas){
-      alert("Aposta maxima de "+maxApostas+" odds");
+    if (newApostaArray.length >= maxApostas) {
+      alert("Aposta maxima de " + maxApostas + " odds");
       return;
     }
     newApostaArray.push(odd);
@@ -108,7 +108,7 @@ function PageUtilizador(props) {
 
 
   const setAlignment = (newAlignment) => {
-    if(aposta.length >= maxApostas) return null;
+    if (aposta.length >= maxApostas) return null;
     return newAlignment;
   }
 
@@ -149,9 +149,8 @@ function PageUtilizador(props) {
   }
 
 
-  const  getJogosAseguir = async () => {
+  const getJogosAseguir = async () => {
     const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-
     if (!sessionId) return;
     const response = await fetch('http://localhost:8080/jogosAseguir?' + new URLSearchParams({
       sessionId: sessionId
@@ -160,20 +159,12 @@ function PageUtilizador(props) {
     }
     );
     const data = await response.json();
-    console.log("JOGOS A SEGUIR");
-    console.log(data);
-    if (Object.keys(data).length === 0) return;
-    //array to map
-    let obj = []
-    Object.keys(data).forEach((key) => {
-      obj.push(data[key]);
-    });
-    setJogosAseguir(obj);
+    setJogosAseguir(data[desportoAtivo]);
   }
 
 
 
-  
+
   return (
     <div className="App">
       {!isDown ?
@@ -186,12 +177,12 @@ function PageUtilizador(props) {
             isLogin={props.isLogin}
             login={props.login}
             settings={settingsOptions}
-            setFavoritos={setFavoritos} 
-            favoritos={favoritos} 
+            setFavoritos={setFavoritos}
+            favoritos={favoritos}
             showFavoritos={true}
           />
           {showPerfil && <Perfil />}
-          {showJogos && <Jogos showFavoritos={props.isLogin} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} login={props.isLogin} handleClick={handleClickOdd} />}
+          {showJogos && <Jogos seguir={jogosAseguir} updateSeguir={getJogosAseguir} showFavoritos={props.isLogin} setFavoritos={setFavoritos} favoritos={favoritos} setAlignment={setAlignment} showBoletim={true} aposta={aposta} setAposta={setAposta} desportoAtivo={desportoAtivo} login={props.isLogin} handleClick={handleClickOdd} />}
           {showHistorico && <Historico />}
         </div>
         :

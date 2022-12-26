@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GestaoApostas implements IGestaoApostas {
     private DBAposta apostas;
@@ -36,6 +37,10 @@ public class GestaoApostas implements IGestaoApostas {
     @Override
     public Map<String, List<Float>> updateResultados(Map<Integer, List<Integer>> res) throws SQLException {
         return apostas.updateResulados(res);
+    }
+
+    public Set<String> getUtilizadoresOdd(int idOdd) throws SQLException {
+        return apostas.getUtilizadoresOdd(idOdd);
     }
 
     @Override

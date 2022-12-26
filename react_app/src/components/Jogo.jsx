@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import IconButton from "@mui/material/IconButton";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { PropaneSharp } from "@mui/icons-material";
 
 
 function Jogo(props) {
@@ -55,11 +56,15 @@ function Jogo(props) {
 
     useEffect(() => {
         setID(props.jogo.idJogo)
+        if (props.seguir){
+            if (props.seguir.includes(props.jogo.idJogo)) setSeguir(true);
+            else setSeguir(false);
+        }
         setParticipantes(props.jogo.participantes)
         setTime(formatarData(props.jogo.data));
         let apostasArray = Object.keys(props.jogo.apostas).map((key) => [key, props.jogo.apostas[key]]);
         setApostas(apostasArray);
-    }, [])
+    }, [props.seguir])
 
 
 
@@ -156,9 +161,7 @@ function Jogo(props) {
 
 
     const addASeguir = async () => {
-        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-
-        
+        const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));        
         const response = await fetch('http://localhost:8080/addJogoASeguir', {
             method: 'POST',
             headers: {
@@ -170,6 +173,13 @@ function Jogo(props) {
                 desporto: props.desporto
             }),
         });
+        if (response.status === 200) {
+            console.log("Jogo adicionado com sucesso");
+        }
+        else {
+            console.log("Erro ao adicionar jogo");
+        }
+
     }
 
     const removeASeguir = async () => {
@@ -190,16 +200,18 @@ function Jogo(props) {
 
 
 
-    const handleClickASeguir = (event) => {
-        if (seguir){
+    const handleClickASeguir = async (event) => {
+        if (!seguir){
+            console.log("Seguir a este jogo" + id);
             addASeguir();
         }
         else{
+            console.log("Deixar de seguir a este jogo" + id);
             removeASeguir();
         }
-    
-        setSeguir(!seguir);
-        console.log("Seguir a este jogo" + id);
+        await new Promise(r => setTimeout(r, 50));
+        props.updateSeguir();
+        //setSeguir(!seguir);
     }
 
 

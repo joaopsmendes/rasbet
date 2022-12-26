@@ -125,21 +125,12 @@ public class RasbetLN implements IRasbetLN{
        //        return gestaoJogos.getOddsJogo(idOdd);
        //    }
 
-    public void sendNotificacaoUtilizador(String email, String conteudo) throws SQLException {
-        gestaoUtilizadores.sendNotificacaoUtilizador(email, conteudo);
-    }
 
-    private void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException {
-        for(String userId : utilizadores) {
-            sendNotificacaoUtilizador(userId, conteudo);
-        }
-    }
 
     @Override
     public void addJogoASeguir(String idJogo, String desporto, String sessionId) throws SQLException {
         Desporto sport = this.mapDesportos.get(desporto);
         String idUser = gestaoUtilizadores.getUserid(sessionId);
-        this.gestaoUtilizadores.addJogoASeguir(idJogo, sport.getIdDesporto(), idUser);
         this.gestaoUtilizadores.addJogoASeguir(idJogo, sport.getIdDesporto(), idUser);
     }
 
@@ -147,35 +138,45 @@ public class RasbetLN implements IRasbetLN{
         String userId = gestaoUtilizadores.getUserid(sessionId);
         Desporto sport = this.mapDesportos.get(desporto);
         this.gestaoUtilizadores.removeJogoASeguir(idJogo, sport.getIdDesporto(), userId);
-        this.gestaoUtilizadores.removeJogoASeguir(idJogo, sport.getIdDesporto(), userId);
     }
 
     @Override
     public void alterarOdd(int idOdd, float valor) throws SQLException {
-        List<String> utilizadores = new ArrayList<>();
+        Set<String> utilizadores = new HashSet<>();
         gestaoJogos.alterarOdd(idOdd,valor);
 
-        String tituloJogo = gestaoJogos.getTituloJogo(idOdd);
-
+        String idJogo = gestaoJogos.getIdJogoFromOdd(idOdd);
+        String tituloJogo = gestaoJogos.getTituloJogo(idJogo);
         // Enviar not aos utilizadores
-        for(Integer i : gestaoJogos.getOddsJogo(idOdd)) {
-            for(String userId: gestaoUtilizadores.getUtilizadoresOddS(i)) {
-                utilizadores.add(userId);
-            }
-
-            for(String userId: gestaoUtilizadores.getUtilizadoresOddM(i)) {
-                utilizadores.add(userId);
-            }
+        for(Integer i : gestaoJogos.getOddsJogo(idJogo)) {
+            utilizadores.addAll(gestaoApostas.getUtilizadoresOdd(i));
         }
-        StringBuilder str = new StringBuilder("A Odd do jogo" + tituloJogo + "foi alterada");
-        sendNotificacaoUtilizadores(utilizadores, str.toString());
+
+        utilizadores.addAll(gestaoUtilizadores.getUtilizadoresJogoASeguir(idJogo));
+
+        List<String> list = new ArrayList<>(utilizadores);
+        sendNotificacaoUtilizadores(list, "A Odd do jogo" + tituloJogo + "foi alterada");
+    }
+
+    public void deposito(String sessionId, float valor, int promocao) throws SQLException {
+        deposito(sessionId,valor);
+        String userId = gestaoUtilizadores.getUserid(sessionId);
+
+        int freebets = gestaoUtilizadores.getValorPromocaoDeposito(promocao);
+        gestaoUtilizadores.updateSaldoFreebets(userId,0,freebets);
+        Transacao transacao = new Transacao(0,freebets,LocalDateTime.now(), Transacao.Tipo.PROMOCAO);
+        gestaoUtilizadores.transacao(userId,transacao);
+
     }
 
     public void deposito(String sessionId, float valor) throws SQLException {
         String userId = gestaoUtilizadores.getUserid(sessionId);
-        Transacao transacao = new Transacao(valor,0, LocalDateTime.now(), Transacao.Tipo.DEPOSITO);
+
         gestaoUtilizadores.updateSaldo(userId,valor);
+
+        Transacao transacao = new Transacao(valor,0, LocalDateTime.now(), Transacao.Tipo.DEPOSITO);
         gestaoUtilizadores.transacao(userId,transacao);
+
     }
 
     public void levantamento(String sessionId, float valor) throws SQLException{
@@ -337,11 +338,29 @@ public class RasbetLN implements IRasbetLN{
         gestaoJogos.updateEstadoJogos();
     }
 
+
+
+    public Map<String, List<String>> getJogosASeguir(String sessionId) throws SQLException{
+        String userId = gestaoUtilizadores.getUserid(sessionId);
+        Map<Integer, List<String>> mapa = gestaoUtilizadores.getJogosASeguir(userId);
+        Map<String, List<String>> novoMapa = new HashMap<>();
+
+        for (Map.Entry<Integer, List<String>> entry : mapa.entrySet()){
+            for (Map.Entry<String, Desporto> entry2 : mapDesportos.entrySet()){
+                if (entry2.getValue().getIdDesporto() == entry.getKey()){
+                    novoMapa.putIfAbsent(entry2.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        return novoMapa;
+    }
+
+
     public void sendNotificacao(Notificacao notificacao) throws SQLException{
         gestaoUtilizadores.sendNotificacao(notificacao);
 
     }
-
 
     public void sendNotificacao(String conteudo) throws SQLException{
         gestaoUtilizadores.sendNotificacao(conteudo);
@@ -360,40 +379,16 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.vistaNotificacao(userId, notificacao);
     }
 
-    public Set<String> getUtilizadoresOddS(int idOdd) throws SQLException {
-        return gestaoUtilizadores.getUtilizadoresOddS(idOdd);
+    public void sendNotificacaoUtilizador(String email, String conteudo) throws SQLException {
+        gestaoUtilizadores.sendNotificacaoUtilizador(email, conteudo);
     }
 
-    public Set<String> getUtilizadoresOddM(int idOdd) throws SQLException {
-        return gestaoUtilizadores.getUtilizadoresOddM(idOdd);
-    }
-
-    public void addJogoASeguir(String idJogo, int idDesporto, String sessionId) throws SQLException{
-        String idUser = gestaoUtilizadores.getUserid(sessionId);
-        gestaoUtilizadores.addJogoASeguir(idJogo,idDesporto,idUser);
-    }
-
-
-    public void removeJogoASeguir(String idJogo, int idDesporto, String sessionId) throws SQLException{
-        String idUser = gestaoUtilizadores.getUserid(sessionId);
-        gestaoUtilizadores.removeJogoASeguir(idJogo,idDesporto,idUser);
-    }
-
-    public Map<String, List<String>> getJogosASeguir(String sessionId) throws SQLException{
-        String userId = gestaoUtilizadores.getUserid(sessionId);
-        Map<Integer, List<String>> mapa = gestaoUtilizadores.getJogosASeguir(userId);
-        Map<String, List<String>> novoMapa = new HashMap<>();
-
-        for (Map.Entry<Integer, List<String>> entry : mapa.entrySet()){
-            for (Map.Entry<String, Desporto> entry2 : mapDesportos.entrySet()){
-                if (entry2.getValue().getIdDesporto() == entry.getKey()){
-                    novoMapa.putIfAbsent(entry2.getKey(), entry.getValue());
-                }
-            }
+    private void sendNotificacaoUtilizadores(List<String> utilizadores, String conteudo) throws SQLException {
+        for(String userId : utilizadores) {
+            sendNotificacaoUtilizador(userId, conteudo);
         }
-
-        return novoMapa;
     }
+
 
     public List<Promocao> getPromoApostaSegura(String userId) throws SQLException{
         return gestaoUtilizadores.getPromoApostaSegura(userId);
@@ -411,13 +406,14 @@ public class RasbetLN implements IRasbetLN{
         gestaoUtilizadores.createPromocaoApostaSegura(limite);
 
         String conteudo = "Recebeu uma Aposta Segura até " + limite + "€";
-        sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
+        sendNotificacao(conteudo);
+        //sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
     }
 
     public void createPromocaoFreeBetsDeposito(int deposito, int freeBets) throws SQLException{
         gestaoUtilizadores.createPromocaoFreebetsAposDeposito(deposito, freeBets);
-
-        String conteudo = "Recebeu " + freeBets + " FreeBets caso faça um depóstio superior a " + deposito + " €";
-        sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
+        String conteudo = "Receba " + freeBets + " FreeBets caso faça um depóstio superior a " + deposito + " €";
+        sendNotificacao(conteudo);
+        //sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
     }
 }

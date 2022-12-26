@@ -13,6 +13,7 @@ import rasbetLN.GestaoJogos.Desporto;
 import rasbetLN.GestaoJogos.Jogo;
 import rasbetLN.GestaoUtilizadores.Favorito;
 import rasbetLN.GestaoUtilizadores.Notificacao;
+import rasbetLN.GestaoUtilizadores.Promocao;
 import rasbetLN.GestaoUtilizadores.Transacao;
 import rasbetLN.IRasbetLN;
 import rasbetLN.RasbetLN;
@@ -30,6 +31,9 @@ public class RasbetApplication {
 	IRasbetLN rasbetLN;
 	Timer timer ;
 	Set<LocalDateTime> set = new HashSet<>();
+	Map<String, List<GameOutput>> mapJogosAdd;
+	LocalDateTime lastUpdate;
+
 
 
 	{
@@ -43,29 +47,57 @@ public class RasbetApplication {
 	}
 	Map<String,Fornecedor> fornecedorMap = setuFornecedores();
 
+	{
+		try {
+			timerGamesToAdd();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
+
+	private void timerGamesToAdd() throws SQLException {
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				mapJogosAdd = gamesToAdd();
+				lastUpdate = LocalDateTime.now();
+				System.out.println("Games to add: update: " + lastUpdate);
+			}
+		}, 0, 30 * 60 * 1000);
+	}
 
 	private void createTimer (LocalDateTime localDateTime,String desporto) {
 		Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 		if (!set.contains(localDateTime)) {
 			System.out.println(date);
 			set.add(localDateTime);
+
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
 					try {
 						rasbetLN.updateEstadoJogos();
+
 					} catch (SQLException e) {
 						throw new RuntimeException(e);
 					}
 					//System.out.println("yes");
 				}
-			}, date);
+			}, date, 5 * 60 * 1000);
 			LocalDateTime end = localDateTime.plusHours(2).plusMinutes(30);
 			Date dateEnd = Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
-			timer.schedule(new TimerTask() {
+			Timer update = new Timer();
+			update.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					updateResultados(desporto);
+					try {
+						updateResultados(desporto);
+						update.cancel();
+					} catch (SQLException e) {
+						throw new RuntimeException(e);
+					}
 					//System.out.println("NO");
 				}
 			}, dateEnd);
@@ -151,8 +183,24 @@ public class RasbetApplication {
 		return rasbetLN.getJogos(desporto);
 	}
 
-	@RequestMapping(path = "showGamesToAdd")
-	public Map<String,List<GameOutput>> showGamesToAdd() {
+	@RequestMapping(path = "gamesToAdd")
+	public Map<String, List<GameOutput>> IgamesToAdd(@RequestParam(name = "update") boolean update) {
+		System.out.println("Bool: " + update);
+		if (update){
+			mapJogosAdd = gamesToAdd();
+			lastUpdate = LocalDateTime.now();
+		}
+		return mapJogosAdd;
+	}
+
+	@RequestMapping(path = "lastUpdate")
+	public LocalDateTime lastUpdate() {
+		return lastUpdate;
+	}
+
+
+
+	public Map<String,List<GameOutput>> gamesToAdd() {
 		Map<String,List<GameOutput>> map = new HashMap<>();
 		for (Map.Entry<String, Fornecedor> entry : fornecedorMap.entrySet()){
 			Map<String,Game> games = entry.getValue().getGames();
@@ -171,7 +219,7 @@ public class RasbetApplication {
 			}
 			map.putIfAbsent(entry.getKey(), toAdd);
 		}
-		System.out.println(map);
+
 		return map;
 	}
 
@@ -202,9 +250,13 @@ public class RasbetApplication {
 	@PostMapping(path = "deposito")
 	public void deposit(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("sessionId");
+		int promocao = -1;
+		if (myJsonRequest.containsKey("promocao"))
+			promocao = Integer.parseInt(myJsonRequest.get("promocao"));
 		float value = Float.parseFloat(myJsonRequest.get("value"));
 		try {
-			rasbetLN.deposito(id,value);
+			if (promocao == -1) rasbetLN.deposito(id,value);
+			else rasbetLN.deposito(id,value,promocao);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -312,20 +364,16 @@ public class RasbetApplication {
 		}
 	}
 
-	public void updateResultados(String desporto){
+	public void updateResultados(String desporto) throws SQLException {
 		Fornecedor fornecedor = fornecedorMap.get(desporto);
 		Map<String,String> map = fornecedor.updateResultados();
 		if (!map.isEmpty()) {
-			try {
-				rasbetLN.updateResultados(map, desporto);
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
+			rasbetLN.updateResultados(map, desporto);
 		}
 	}
 
 	@RequestMapping(path="updateResultados")
-	public void updateResultados(){
+	public void updateResultados() throws SQLException {
 		for (String entry : fornecedorMap.keySet()){
 			updateResultados(entry);
 		}
@@ -427,8 +475,6 @@ public class RasbetApplication {
 		}
 
 	}
-
-
  */
 @RequestMapping(path="sendNotificacao")
 	public void sendNotificao(@RequestBody Map<String, String> myJsonRequest){
@@ -474,6 +520,48 @@ public class RasbetApplication {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@RequestMapping(path="promosAposta")
+	public List<Promocao> promosAposta(@RequestParam(name = "sessionId") String idUser) {
+		try {
+			return rasbetLN.getPromoApostaSegura(idUser);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@RequestMapping(path="promosDeposito")
+	public List <Promocao> promosDeposito(@RequestParam(name = "sessionId") String idUser) {
+		try {
+			return rasbetLN.getPromoFreeBetsDeposito(idUser);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@PostMapping(path="promoAposta")
+	public void addPromoAposta(@RequestBody Map<String, String> myJsonRequest){
+		int limite = Integer.parseInt(myJsonRequest.get("limite"));
+		try {
+			rasbetLN.createPromocaoApostaSegura(limite);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@PostMapping(path="promoDeposito")
+	public void addPromoDeposito(@RequestBody Map<String, String> myJsonRequest){
+		int deposito = Integer.parseInt(myJsonRequest.get("deposito"));
+		int freebets = Integer.parseInt(myJsonRequest.get("freebets"));
+		try {
+			rasbetLN.createPromocaoFreeBetsDeposito(deposito, freebets);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
+
 
 
 

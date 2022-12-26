@@ -8,11 +8,7 @@ import { Box } from '@mui/system';
 import Grid from '@mui/material/Grid';
 import Jogos from '../Jogos';
 
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContentText from '@mui/material/DialogContentText';
+
 import AlteracaoOdd from './AlteracaoOdd';
 
 import { TextField } from '@mui/material';
@@ -28,10 +24,17 @@ function PageEspecialista(props) {
   const [ativos, setAtivos] = useState(true);
   const [open, setOpen] = useState(false);
   const [jogoAlterado, setJogoAlterado] = useState();
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
 
 
-  const getJogosAdd = async () => {
-    const response = await fetch('http://localhost:8080/showGamesToAdd', {
+
+  const getJogosAdd = async (update) => {
+    setJogos([]);
+    setLoad(false);
+    const response = await fetch('http://localhost:8080/gamesToAdd?' +
+      new URLSearchParams({
+        update: update
+      }), {
       method: 'GET',
     });
     const data = await response.json();
@@ -40,7 +43,21 @@ function PageEspecialista(props) {
     console.log(data);
     setLoad(true);
     setJogos(data['futebol']);
+    getLastUpdate();
   }
+
+  const getLastUpdate = async () => {
+    const response = await fetch('http://localhost:8080/lastUpdate', {
+      method: 'GET',
+    });
+    const data = await response.json();
+    console.log("LAST UPDATE");
+    console.log(data);
+    setLastUpdate(new Date(Date.parse(data)));
+    //const data =response.json();
+  }
+
+
 
   const getDesportos = async () => {
     const response = await fetch('http://localhost:8080/desportos', {
@@ -71,7 +88,7 @@ function PageEspecialista(props) {
     setToAdd(!toAdd);
     setAtivos(false);
     if (!toAdd) {
-      getJogosAdd();
+      getJogosAdd(false);
     }
   }
 
@@ -122,7 +139,7 @@ function PageEspecialista(props) {
     return null;
   }
 
-  
+
   return (
     <div className="App">
       <ResponsiveAppBar
@@ -133,7 +150,7 @@ function PageEspecialista(props) {
         settings={settingsOptions}
         isLogin={props.isLogin}
         showFavoritos={false}
-        />
+      />
 
       {open && <AlteracaoOdd jogo={jogoAlterado} setMaster={setOpen} update={update} />}
       <Box sx={{ display: 'flex' }}>
@@ -151,6 +168,12 @@ function PageEspecialista(props) {
             <Button fullWidth variant="contained" onClick={handleToAdd} color={toAdd ? "secondary" : "inherit"}>Jogos para adicionar</Button>
           </Grid>
           <Divider />
+          {toAdd &&
+            <div>
+              <h3>Ultima Atualização: {lastUpdate.toLocaleString()}</h3>
+              <Button fullWidth variant="contained" color={!load && jogos.length == 0? "primary" : "inherit"} onClick={() => getJogosAdd(true)}>Atualizar</Button>
+            </div>
+          }
           <Grid item xs={12}>
             {ativos && <Jogos setAlignment={setAlignment} showBoletim={false} desportoAtivo={desportoAtivo} userId={props.user} login={props.isLogin} handleClick={handleClick} />}
             {toAdd && !load && <CircularProgress />}

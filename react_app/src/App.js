@@ -5,6 +5,7 @@ import PageUtilizador from './components/PageUtilizador';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { createTheme } from '@mui/material/styles';
 import PageEspecialista from './components/Especialista/PageEspecialista';
+import PageAdmin from './components/Administrador/PageAdmin';
 import { Button, CssBaseline, GlobalStyles } from "@mui/material";
 
 
@@ -124,6 +125,7 @@ function App() {
         <CssBaseline />
         {isUser && <PageUtilizador isLogin={login} login={handleLogin} loggout={handleLogout} />}
         {isEspecialista && <PageEspecialista isLogin={login} loggout={handleLogout} />}
+        {isAdmin && <PageAdmin isLogin={login} loggout={handleLogout} />}
       </ThemeProvider>
     </div>
   );

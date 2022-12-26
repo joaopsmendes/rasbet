@@ -340,4 +340,33 @@ public class DBAposta {
         }
         return mapSaldos;
     }
+
+    private Set<String> getStrings(int idOdd, Set<String> listaUtilizadores, String query) throws SQLException {
+        PreparedStatement ps  = c.prepareStatement(query);
+        ps.setInt(1, idOdd);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            String email = rs.getString("Utilizador_email");
+            listaUtilizadores.add(email);
+        }
+        return listaUtilizadores;
+    }
+
+    public Set<String> getUtilizadoresOdd(int idOdd) throws SQLException {
+        Set<String> listaUtilizadores = getUtilizadoresOddSimples(idOdd);
+        listaUtilizadores.addAll(getUtilizadoresOddMultipla(idOdd));
+        return listaUtilizadores;
+    }
+
+    private Set<String> getUtilizadoresOddSimples(int idOdd) throws SQLException{
+        Set<String> listaUtilizadores = new HashSet<>();
+        String query = "SELECT Utilizador_email FROM Simples INNER JOIN Aposta ON idAposta=Aposta_idAposta WHERE Odd_idOdd = ?";
+        return getStrings(idOdd, listaUtilizadores, query);
+    }
+
+    private Set<String> getUtilizadoresOddMultipla(int idOdd) throws SQLException{
+        Set<String> listaUtilizadores = new HashSet<>();
+        String query = "SELECT Utilizador_email FROM Aposta_tem_Odd INNER JOIN Aposta ON idAposta=Multipla_Aposta_idAposta WHERE Odd_idOdd = ?";
+        return getStrings(idOdd, listaUtilizadores, query);
+    }
 }

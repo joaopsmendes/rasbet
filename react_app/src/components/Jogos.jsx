@@ -43,20 +43,13 @@ function Jogos(props) {
                 method: 'GET',
             });
         const data = await response.json();
-        console.log("DATA");
-        console.log(data);
         //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
-        console.log("JOGOS");
-        console.log(data)
         setJogos(result);
         setMaxPage(Math.ceil(jogos.length / jogosPerPage));
-        console.log("MAX PAGE");
-        console.log(Number(maxPage));
+
 
     }
-
-
 
     useEffect(() => {
         getJogos();
@@ -166,6 +159,17 @@ function Jogos(props) {
         return false;
     }
 
+
+    const filtroByAseguir = (jogo) => {
+        if (!filtroAseguir) return true;
+        if (!props.seguir) return false;
+        let aseguir = Array.from(props.seguir);
+        return aseguir.includes(jogo.idJogo);
+    }
+
+
+
+
     const handleChangePage = (event, value) => {
         console.log("Page changed" + value);
         setPage(value);
@@ -174,7 +178,7 @@ function Jogos(props) {
 
 
 
-    const jogosFilter = Object.entries(jogos).slice().map(entry => entry[1]).filter(jogo => isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo));
+    const jogosFilter = Object.entries(jogos).slice().map(entry => entry[1]).filter(jogo => isSearch(jogo) && filterByDate(jogo) && filtroFavorites(jogo) && filtroByAseguir(jogo));
 
     const jogosPage = jogosFilter.slice((page - 1) * jogosPerPage, page * jogosPerPage);
     /*
@@ -233,8 +237,8 @@ function Jogos(props) {
 
             <Grid container spacing={2}>
                 <Grid item xs={12} md={9} xl={9}>
-                    {jogosPage.length > 0 ?
-                        jogosPage.map((jogo) => (<Jogo setFavoritos={props.setFavoritos} favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showFavoritos} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
+                    {jogosPage != undefined && jogosPage.length > 0 ?
+                        jogosPage.map((jogo) => (<Jogo updateSeguir={props.updateSeguir} seguir={props.seguir} setFavoritos={props.setFavoritos} favoritos={props.favoritos} desporto={props.desportoAtivo} showFavoritos={props.showFavoritos} apostas={props.aposta} setAlignment={props.setAlignment} handleClick={handleClick} key={jogo.idJogo} jogo={jogo} />))
                         : <h1>Não existem jogos disponíveis neste momento</h1>}
                 </Grid>
                 {props.showBoletim &&

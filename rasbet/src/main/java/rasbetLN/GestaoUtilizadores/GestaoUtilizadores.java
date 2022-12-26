@@ -174,13 +174,6 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.vistaNotificacao(idUser, notificacao);
     }
 
-    public Set<String> getUtilizadoresOddS(int idOdd) throws SQLException {
-        return utilizadores.getUtilizadoresOddS(idOdd);
-    }
-
-    public Set<String> getUtilizadoresOddM(int idOdd) throws SQLException {
-        return utilizadores.getUtilizadoresOddM(idOdd);
-    }
 
     public List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException {
         return utilizadores.getUtilizadoresFav(favorito, desporto);
@@ -224,6 +217,16 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
 
     public List<String> getIdApostadores() throws SQLException{
         return utilizadores.getIdApostadores();
+    }
+
+    @Override
+    public int getValorPromocaoDeposito(int promocao) throws SQLException {
+        return utilizadores.getValorPromocaoDeposito(promocao);
+    }
+
+    @Override
+    public List<String> getUtilizadoresJogoASeguir(String idJogo) throws SQLException {
+        return utilizadores.getUtilizadoresJogoASeguir(idJogo);
     }
 
 }

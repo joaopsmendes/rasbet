@@ -3,6 +3,7 @@ package rasbetLN.GestaoUtilizadores;
 import rasbetLN.GestaoJogos.Desporto;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,10 +53,6 @@ public interface IGestaoUtilizadores {
 
     void vistaNotificacao(String idUser, int notificacao) throws SQLException;
 
-    Set<String> getUtilizadoresOddS(int idOdd) throws SQLException;
-
-    Set<String> getUtilizadoresOddM(int idOdd) throws SQLException;
-
     void sendNotificacaoUtilizador(String userId, String conteudo) throws SQLException;
 
     List<String> getUtilizadoresFav(String favorito, Desporto desporto) throws SQLException;
@@ -79,4 +76,8 @@ public interface IGestaoUtilizadores {
     void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException;
 
     List<String> getIdApostadores() throws SQLException;
+
+    int getValorPromocaoDeposito(int promocao) throws SQLException;
+
+    List<String> getUtilizadoresJogoASeguir(java.lang.String idJogo) throws SQLException;
 }
