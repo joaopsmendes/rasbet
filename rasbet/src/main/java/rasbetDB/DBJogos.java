@@ -113,7 +113,6 @@ public class DBJogos {
 
     public Map<String, Jogo> getJogos(Desporto desporto) throws SQLException {
         Map<String, Jogo> map = new HashMap<>();
-        //String query = "SELECT * FROM Jogo where Desporto_idDesporto = ? AND estado = 0";
         String query2 = "SELECT * FROM ApostaJogo " +
                 "INNER JOIN Jogo ON Jogo.idJogo=ApostaJogo.Jogo_idJogo AND Jogo.Desporto_idDesporto=ApostaJogo.Jogo_Desporto_idDesporto " +
                 "INNER JOIN Odd ON Odd.ApostaJogo_idApostaJogo=ApostaJogo.idApostaJogo WHERE Jogo.Desporto_idDesporto = ? and Jogo.Estado_idEstado = ?";

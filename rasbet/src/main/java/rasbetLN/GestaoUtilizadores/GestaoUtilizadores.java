@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class GestaoUtilizadores implements IGestaoUtilizadores {
     private DBUtilizadores utilizadores;
@@ -207,12 +206,16 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         return utilizadores.getUsersPromocao(promoId);
     }
 
-    public void createPromocaoApostaSegura (int limite) throws SQLException{
-        utilizadores.createPromocaoApostaSegura(limite);
+    public int createPromocaoApostaSegura (int limite) throws SQLException{
+        int idPromocao = utilizadores.createPromocao();
+        utilizadores.createPromocaoApostaSegura(idPromocao, limite);
+        return idPromocao;
     }
 
-    public void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException{
-        utilizadores.createPromocaoFreebetsAposDeposito(deposito, freebets);
+    public int createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException{
+        int idPromocao = utilizadores.createPromocao();
+        utilizadores.createPromocaoFreebetsAposDeposito(idPromocao,deposito, freebets);
+        return idPromocao;
     }
 
     public List<String> getIdApostadores() throws SQLException{
@@ -228,5 +231,11 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
     public List<String> getUtilizadoresJogoASeguir(String idJogo) throws SQLException {
         return utilizadores.getUtilizadoresJogoASeguir(idJogo);
     }
+
+    @Override
+    public void addPromocao(String user, int idPromocao) throws SQLException {
+        utilizadores.addPromocao(user, idPromocao);
+    }
+
 
 }

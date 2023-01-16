@@ -16,15 +16,15 @@ public class FornecedorUcras implements Fornecedor{
     }
 
     public Map<String,String> updateResultados(){
-        //Map<String, Game> games = getGames();
+        Map<String, Game> games = getGames();
         Map<String,String> map = new HashMap<>();
-        map.put("f03db53acb1492a8930663127323502e","Pacos de Ferreira");
-        //for (Game g: games.values()){
-        //    if (g.concluido()) {
-        //        String vencedor = g.vencedor();
-        //        map.put(g.getId(),vencedor);
-        //    }
-        //}
+        for (Game g: games.values()){
+            if (g.concluido()) {
+                String vencedor = g.vencedor();
+                map.put(g.getId(),vencedor);
+                System.out.println(g.getId() + " " + vencedor);
+            }
+        }
         return map;
     }
 }

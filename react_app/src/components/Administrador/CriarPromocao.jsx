@@ -8,10 +8,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import ApostaSegura from './ApostaSegura';
+import FreebetsAposDeposito from './FreebetsAposDeposito';
 
 function CriarPromocao(props) {
 
     const [tipo, setTipo] = useState('');
+    const [limite,setLimite] = useState(0);
+    const [freebets,setFreebets] = useState (0);
+    const [deposito,setDeposito] = useState (0);
 
 
 
@@ -19,8 +24,6 @@ function CriarPromocao(props) {
     const handleChangeTipo = (event) => {
         setTipo(event.target.value);
     }
-
-
 
     return (
         <div>
@@ -53,33 +56,8 @@ function CriarPromocao(props) {
                     </Grid>
                 </Grid>
 
-                {tipo === "FreebetsAposDeposito" &&
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                            <TextField id="freebets" label="freebets" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField id="deposito" label="deposito" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="primary" sx={{ m: 2 }} >
-                                Criar Promoção
-                            </Button>
-                        </Grid>
-                    </Grid>
-                }
-                {tipo === "apostaSegura" &&
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField id="limite" label="limite" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="primary" sx={{ m: 2 }} >
-                                Criar Promoção
-                            </Button>
-                        </Grid>
-                    </Grid>
-                }
+                {tipo === "FreebetsAposDeposito" && <FreebetsAposDeposito />}
+                {tipo === "apostaSegura" && <ApostaSegura />}
             </Box>
         </div>
     );

@@ -292,7 +292,7 @@ public class DBAposta {
             ps.setInt(1, id);
             ps.executeUpdate();
 
-            query = "SELECT Utilizador_email,ganhoPossivel WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
+            query = "SELECT Utilizador_email,ganhoPossivel FROM Aposta  WHERE idAposta in (SELECT Aposta_idAposta FROM Simples WHERE odd_idOdd=?)";
             ps = c.prepareStatement(query);
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

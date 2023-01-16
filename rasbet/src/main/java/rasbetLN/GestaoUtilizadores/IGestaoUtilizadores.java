@@ -3,10 +3,8 @@ package rasbetLN.GestaoUtilizadores;
 import rasbetLN.GestaoJogos.Desporto;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface IGestaoUtilizadores {
     String newApostador(Apostador apostador) throws SQLException;
@@ -71,13 +69,15 @@ public interface IGestaoUtilizadores {
 
     List<String> getUsersPromocao(int promoId) throws SQLException;
 
-    void createPromocaoApostaSegura (int limite) throws SQLException;
+    int createPromocaoApostaSegura (int limite) throws SQLException;
 
-    void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException;
+    int createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException;
 
     List<String> getIdApostadores() throws SQLException;
 
     int getValorPromocaoDeposito(int promocao) throws SQLException;
 
     List<String> getUtilizadoresJogoASeguir(java.lang.String idJogo) throws SQLException;
+
+    void addPromocao(String user, int idPromocao) throws SQLException;
 }

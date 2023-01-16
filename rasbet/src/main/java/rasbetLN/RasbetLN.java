@@ -403,17 +403,22 @@ public class RasbetLN implements IRasbetLN{
     }
 
     public void createPromocaoApostaSegura(int limite) throws SQLException{
-        gestaoUtilizadores.createPromocaoApostaSegura(limite);
+        int idPromocao = gestaoUtilizadores.createPromocaoApostaSegura(limite);
 
         String conteudo = "Recebeu uma Aposta Segura até " + limite + "€";
+        for (String user : gestaoUtilizadores.getIdApostadores()){
+            gestaoUtilizadores.addPromocao(user, idPromocao);
+            sendNotificacaoUtilizador(user, conteudo);
+        }
         sendNotificacao(conteudo);
-        //sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
     }
 
     public void createPromocaoFreeBetsDeposito(int deposito, int freeBets) throws SQLException{
-        gestaoUtilizadores.createPromocaoFreebetsAposDeposito(deposito, freeBets);
+        int idPromocao = gestaoUtilizadores.createPromocaoFreebetsAposDeposito(deposito, freeBets);
         String conteudo = "Receba " + freeBets + " FreeBets caso faça um depóstio superior a " + deposito + " €";
-        sendNotificacao(conteudo);
-        //sendNotificacaoUtilizadores(gestaoUtilizadores.getIdApostadores(), conteudo);
+        for (String user : gestaoUtilizadores.getIdApostadores()){
+            gestaoUtilizadores.addPromocao(user, idPromocao);
+            sendNotificacaoUtilizador(user, conteudo);
+        }
     }
 }

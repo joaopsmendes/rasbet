@@ -209,6 +209,8 @@ public class RasbetApplication {
 				if(!g.concluido()) {
 					try {
 						if (!rasbetLN.existsGame(g.getId(),entry.getKey())) {
+							System.out.println("Game: " + g.getId() + " " + entry.getKey());
+							System.out.println(g.getTitulo());
 							GameOutput game = new GameOutput(g);
 							toAdd.add(game);
 						}

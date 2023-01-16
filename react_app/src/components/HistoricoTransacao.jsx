@@ -83,15 +83,10 @@ function HistoricoTransacoes(props) {
     }
 
     const getOpercaoNome = (operacao) => {
-        if (operacao === 'DEPOSITO') {
-            return 'Depósito';
-        } else if (operacao === 'LEVANTAMENTO') {
-            return 'Levantamento';
-        } else if (operacao === 'APOSTA') {
-            return 'Aposta';
-        } else if (operacao === 'CRIACAO_CONTA') {
-            return 'Criação de conta';
-        }
+        operacao = String(operacao);
+        operacao = operacao.replace("_", ' ');
+        operacao = operacao.toLowerCase();
+        operacao = operacao.charAt(0).toUpperCase() + operacao.slice(1);
         return operacao;
     }
 

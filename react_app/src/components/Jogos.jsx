@@ -42,7 +42,13 @@ function Jogos(props) {
             , {
                 method: 'GET',
             });
+        if (response.status !== 200) {
+            console.log("Erro ao obter jogos");
+            return;
+        }
         const data = await response.json();
+        console.log("JOGOS",data);
+        console.log(props.desportoAtivo);
         //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
         setJogos(result);

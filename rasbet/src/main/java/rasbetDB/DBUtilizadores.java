@@ -540,18 +540,33 @@ public class DBUtilizadores {
         return lista;
     }
 
-    public void createPromocaoApostaSegura (int limite) throws SQLException{
-        String query = "INSERT INTO ApostaSegura(limite)VALUES(?)";
+
+    public int createPromocao() throws SQLException{
+        String query = "INSERT INTO Promocao() VALUES()";
+        PreparedStatement ps = c.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+        ps.execute();
+        int idPromocao =0;
+        ResultSet rs = ps.getGeneratedKeys();
+        if (rs.next()) idPromocao = rs.getInt(1);
+        return idPromocao;
+    }
+
+    public void createPromocaoApostaSegura (int idPromocao,int limite) throws SQLException{
+        System.out.println("idPromocao: " + idPromocao);
+        String query = "INSERT INTO ApostaSegura(Promocao_idPromocao,limite)VALUES(?,?)";
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1,limite);
+        ps.setInt(1,idPromocao);
+        ps.setInt(2,limite);
         ps.executeQuery();
     }
 
-    public void createPromocaoFreebetsAposDeposito(int deposito, int freebets) throws SQLException{
-        String query = "INSERT INTO FreebetsAposDeposito(deposito, freebets)VALUES(?,?)";
+    public void createPromocaoFreebetsAposDeposito(int idPromocao,int deposito, int freebets) throws SQLException{
+        System.out.println("idPromocao: " + idPromocao);
+        String query = "INSERT INTO FreebetsAposDeposito(Promocao_idPromocao,deposito, freebets)VALUES(?,?,?)";
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1,deposito);
-        ps.setInt(2, freebets);
+        ps.setInt(1,idPromocao);
+        ps.setInt(2,deposito);
+        ps.setInt(3, freebets);
         ps.executeQuery();
     }
 
@@ -578,5 +593,13 @@ public class DBUtilizadores {
             lista.add(user);
         }
         return lista;
+    }
+
+    public void addPromocao(String user, int idPromocao) throws SQLException {
+        String query = "INSERT INTO Apostador_has_Promocao(Apostador_Utilizador_email, Promocao_idPromocao,ativa) VALUES(?,?,1)";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, user);
+        ps.setInt(2, idPromocao);
+        ps.execute();
     }
 }
