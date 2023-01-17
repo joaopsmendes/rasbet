@@ -63,7 +63,7 @@ function Boletim(props) {
         );
     }
 
-    const doAposta = async (montanteSaldo, montanteFreeBets, setSucesso) => {
+    const doAposta = async (montanteSaldo, montanteFreeBets, setSucesso, promo) => {
         const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
 
         const ganhos = getMontanteTotal();
@@ -85,6 +85,7 @@ function Boletim(props) {
                 freebets: montanteFreeBets,
                 odds: odds,
                 ganhoPossivel: ganhos,
+                promo: promo,
 
             }),
         });
@@ -107,9 +108,7 @@ function Boletim(props) {
 
 
     return (
-
         <Grid item xs={12} md={3} xl={3}>
-
             {pagamento && <Pagamento valor={montante} setPagamento={setPagamento} pagamento={pagamento} submit={doAposta} />}
             {
                 props.apostas.length > 0 ?
@@ -123,7 +122,7 @@ function Boletim(props) {
                                         <b>{getTituloJogo(aposta.desJogo)}</b>
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <DeleteIcon onClick={() => props.handleClick(aposta) } />
+                                        <DeleteIcon onClick={() => props.handleClick(aposta)} />
                                     </Grid>
                                     <Grid item xs={6}>
                                         {aposta.nome}: {aposta.opcao}

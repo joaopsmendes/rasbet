@@ -494,15 +494,15 @@ public class DBUtilizadores {
 
     public List<Promocao> getPromoApostaSegura(String userId) throws SQLException {
         List<Promocao> lista = new ArrayList<>();
-        String query = "SELECT ApostaSegura.Promocao_idPromocao, limite FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.PromocaoidPromocao WHERE Apostador\n" +
-                "Utilizador_email=? AND ativa = 1";
+        String query = "SELECT ApostaSegura.Promocao_idPromocao, limite FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.Promocao_idPromocao WHERE \n" +
+                "Apostador_Utilizador_email=? AND ativa = 1";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()){
             int limite = rs.getInt("limite");
             int promoID = rs.getInt("Promocao_idPromocao");
-            ApostaSegura as = new ApostaSegura(limite, promoID);
+            ApostaSegura as = new ApostaSegura(promoID,limite);
 
             lista.add(as);
         }
@@ -511,7 +511,7 @@ public class DBUtilizadores {
 
     public List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException {
         List<Promocao> lista = new ArrayList<>();
-        String query = "SELECT  FreebetsAposDeposito.Promocao_idPromocao, deposito, freebets FROM FreebetsAposDeposito INNER JOIN Apostador_has_Promocao ON Apostador_has_Promocao.Promocao_idPromocao=FreebetsAposDeposito.Promocao_idPromocao " +
+        String query = "SELECT  FreebetsAposDeposito.Promocao_idPromocao, deposito, freebets FROM FreebetsAposDeposito INNER JOIN Apostador_has_Promocao ON Apostador_has_Promocao.Promocao_idPromocao=FreebetsAposDeposito.Promocao_idPromocao \n" +
                 "WHERE Apostador_Utilizador_email=? AND ativa = 1";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);

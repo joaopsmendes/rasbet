@@ -10,7 +10,10 @@ import Grid from '@mui/material/Grid';
 import MBWAY from './MBWay';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Box from '@mui/material/Box';
+import { Container } from '@mui/system';
 
 
 
@@ -31,6 +34,7 @@ function Pagamento(props) {
   const [pago, setPago] = React.useState(false);
 
   const [promocoes, setPromocoes] = React.useState([]);
+  const [promoSelecionada, setPromoSelecionada] = React.useState(-1)
 
 
 
@@ -58,7 +62,7 @@ function Pagamento(props) {
   // TO CHECK
   const getPromocoes = async () => {
     const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-    const response = await fetch('http://localhost:8080/promocoesAposta?' + new URLSearchParams({
+    const response = await fetch('http://localhost:8080/promosAposta?' + new URLSearchParams({
       sessionId: sessionId
     })
       , {
@@ -66,6 +70,11 @@ function Pagamento(props) {
       });
     if (response.status === 200) {
       const data = await response.json();
+      promocoes.forEach(promo => {
+        promo.idPromocao = parseInt(promo.idPromocao);
+        promo.limite = parseFloat(promo.limite);
+      });
+      console.log(data);
       setPromocoes(data);
     }
     else {
@@ -129,11 +138,6 @@ function Pagamento(props) {
     );
   }
 
-  const handleSubmit = () => {
-
-  }
-
-
 
   const valorPago = () => {
     let valor = 0;
@@ -155,18 +159,28 @@ function Pagamento(props) {
   }
 
   const valorAPagar = () => {
+    if (promoSelecionada !== -1) 
+      return 0;
     return props.valor - valorPago();
   }
 
 
   const submit = () => {
-    props.submit(montanteSaldo, montanteFreeBets, setPago);
+    props.submit(montanteSaldo, montanteFreeBets, setPago,promoSelecionada);
   }
 
   const close = () => {
     handleClose();
     setPago(false);
   }
+
+  const handleClickPromocao = async (event) => {
+    if (event.currentTarget.value === promoSelecionada) {
+      setPromoSelecionada(-1);
+    }
+    else setPromoSelecionada(event.currentTarget.value);
+  }
+
 
 
   return (
@@ -179,7 +193,23 @@ function Pagamento(props) {
             <h3>FreeBets Atual : {freebetsAtual - montanteFreeBets}</h3>
 
             {promocoes.length > 0 &&
-              <h3>Promoções</h3>
+              <Container maxWidth="sm">
+                <Box size="md" sx={{ p: 2, m: 3, border: 2, borderRadius: '10px' }} >
+                  <h3>Promoções</h3>
+                  {promocoes.map((promo) => (
+                    <Grid container spacing={2}>
+                      <Grid item xs={10} >
+                        <p>Aposta Segura até {promo.limite}€</p>
+                      </Grid>
+                      <Grid item xs={2} >
+                        <IconButton value={promo.idPromocao} onClick={handleClickPromocao} disabled={props.valor > promo.limite } >
+                          {promo.idPromocao == promoSelecionada ? <CheckBoxIcon /> : < CheckBoxOutlineBlankIcon />}
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Box>
+              </Container>
             }
             <Grid container spacing={2}>
               <Grid item xs={6}>

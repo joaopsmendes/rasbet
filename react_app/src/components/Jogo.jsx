@@ -49,6 +49,7 @@ function Jogo(props) {
         if (today.getDate() + 1 == dia && today.getMonth() + 1 == mes && today.getFullYear() == ano) {
             return "Amanhã às " + hora + ":" + minuto;
         }
+        if (minuto == 0) minuto = "00";
         return dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto;
     }
 

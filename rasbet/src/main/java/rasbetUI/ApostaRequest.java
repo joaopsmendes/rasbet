@@ -11,6 +11,7 @@ public class ApostaRequest {
     float freebets;
     float ganhoPossivel;
     Integer []odds;
+    Integer promo;
 
     public String getSessionId() {
         return sessionId;
@@ -58,5 +59,13 @@ public class ApostaRequest {
 
     public float getFreebets() {
         return freebets;
+    }
+
+    public Integer getPromo() {
+        return promo;
+    }
+
+    public void setPromo(Integer promo) {
+        this.promo = promo;
     }
 }

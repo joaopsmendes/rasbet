@@ -101,12 +101,14 @@ public class RasbetLN implements IRasbetLN{
         float saldo = apostaRequest.getSaldo();
         float ganhos = apostaRequest.getGanhoPossivel();
         List<Integer> listOdds = List.of(apostaRequest.getOdds());
+        int promo = apostaRequest.getPromo();
 
-
-        gestaoUtilizadores.updateSaldoFreebets(userId,saldo*-1,freebets*-1);
         gestaoApostas.createAposta(userId,montante,ganhos,listOdds);
         Transacao transacao = new Transacao(saldo*-1,freebets*-1,LocalDateTime.now(), Transacao.Tipo.APOSTA);
         gestaoUtilizadores.transacao(userId,transacao);
+        if (promo != -1) {
+            gestaoUtilizadores.promocaoUtilizada(userId, promo);
+        }
     }
 
     @Override
@@ -391,7 +393,8 @@ public class RasbetLN implements IRasbetLN{
     }
 
 
-    public List<Promocao> getPromoApostaSegura(String userId) throws SQLException{
+    public List<Promocao> getPromoApostaSegura(String sessionId) throws SQLException{
+        String userId = gestaoUtilizadores.getUserid(sessionId);
         return gestaoUtilizadores.getPromoApostaSegura(userId);
     }
 
@@ -411,7 +414,6 @@ public class RasbetLN implements IRasbetLN{
             gestaoUtilizadores.addPromocao(user, idPromocao);
             sendNotificacaoUtilizador(user, conteudo);
         }
-        sendNotificacao(conteudo);
     }
 
     public void createPromocaoFreeBetsDeposito(int deposito, int freeBets) throws SQLException{
