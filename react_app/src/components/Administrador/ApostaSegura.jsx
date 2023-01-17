@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { Button, Container, Divider, Box, Grid, TextField } from '@mui/material';
 
-function ApostaSegura() {
+function ApostaSegura(props) {
 
     const [limite, setLimite] = useState(10);
 
@@ -25,6 +25,7 @@ function ApostaSegura() {
                 limite : limite
             }),
         });
+        props.done();
     }
 
 

@@ -5,12 +5,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { Propane } from '@mui/icons-material';
 
-function FreebetsAposDeposito() {
+function FreebetsAposDeposito(props) {
 
     const [freebets, setFreebets] = useState(1);
     const [deposito, setDeposito] = useState(10);
-
 
 
 
@@ -27,6 +27,7 @@ function FreebetsAposDeposito() {
                 freebets: freebets
             }),
         });
+        props.done();
     }
 
 

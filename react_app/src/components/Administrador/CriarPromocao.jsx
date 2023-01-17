@@ -10,20 +10,31 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ApostaSegura from './ApostaSegura';
 import FreebetsAposDeposito from './FreebetsAposDeposito';
+import { Alert, AlertTitle } from '@mui/material';
+
 
 function CriarPromocao(props) {
 
     const [tipo, setTipo] = useState('');
-    const [limite,setLimite] = useState(0);
-    const [freebets,setFreebets] = useState (0);
-    const [deposito,setDeposito] = useState (0);
-
+    const [done, setDone] = useState(false);
 
 
 
     const handleChangeTipo = (event) => {
         setTipo(event.target.value);
     }
+
+    const doneAlert = () => {
+        setTipo('');
+        setDone(true);
+    }
+
+    const close = () => {
+        setTipo('');
+        setDone(false);
+    }
+
+
     return (
         <div>
             <Box sx={{ flexGrow: 1, border: 1, borderRadius: "10px", m: 5 }} >
@@ -53,8 +64,14 @@ function CriarPromocao(props) {
                     </Grid>
                 </Grid>
 
-                {tipo === "FreebetsAposDeposito" && <FreebetsAposDeposito />}
-                {tipo === "apostaSegura" && <ApostaSegura />}
+                {tipo === "FreebetsAposDeposito" && <FreebetsAposDeposito done={doneAlert} />}
+                {tipo === "apostaSegura" && <ApostaSegura done={doneAlert}/>}
+                {done &&
+                    <Alert onClose={close} severity="success">
+                        <AlertTitle>Promoção criada com sucesso!</AlertTitle>
+                    </Alert>
+                }
+
             </Box>
         </div>
     );
