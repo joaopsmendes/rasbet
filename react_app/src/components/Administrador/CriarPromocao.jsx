@@ -24,11 +24,8 @@ function CriarPromocao(props) {
     const handleChangeTipo = (event) => {
         setTipo(event.target.value);
     }
-
     return (
         <div>
-
-
             <Box sx={{ flexGrow: 1, border: 1, borderRadius: "10px", m: 5 }} >
                 <Grid container spacing={2}>
                     <Grid item xs={12} >

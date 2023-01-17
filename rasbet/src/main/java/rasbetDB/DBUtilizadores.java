@@ -495,7 +495,7 @@ public class DBUtilizadores {
     public List<Promocao> getPromoApostaSegura(String userId) throws SQLException {
         List<Promocao> lista = new ArrayList<>();
         String query = "SELECT ApostaSegura.Promocao_idPromocao, limite FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.PromocaoidPromocao WHERE Apostador\n" +
-                "Utilizador_email=?";
+                "Utilizador_email=? AND ativa = 1";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();
@@ -511,8 +511,8 @@ public class DBUtilizadores {
 
     public List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException {
         List<Promocao> lista = new ArrayList<>();
-        String query = "SELECT ApostaSegura.Promocao_idPromocao, deposito, freebets FROM Apostador_has_Promocao INNER JOIN ApostaSegura ON Apostador_has_Promocao.Promocao_idPromocao=ApostaSegura.PromocaoidPromocao WHERE Apostador\n" +
-                "Utilizador_email=?";
+        String query = "SELECT  FreebetsAposDeposito.Promocao_idPromocao, deposito, freebets FROM FreebetsAposDeposito INNER JOIN Apostador_has_Promocao ON Apostador_has_Promocao.Promocao_idPromocao=FreebetsAposDeposito.Promocao_idPromocao " +
+                "WHERE Apostador_Utilizador_email=? AND ativa = 1";
         PreparedStatement ps = c.prepareStatement(query);
         ps.setString(1, userId);
         ResultSet rs = ps.executeQuery();
@@ -601,5 +601,13 @@ public class DBUtilizadores {
         ps.setString(1, user);
         ps.setInt(2, idPromocao);
         ps.execute();
+    }
+
+    public void promocaoUtilizada(String user, int idPromocao) throws SQLException {
+        String query = "UPDATE Apostador_has_Promocao SET ativa=0 WHERE Apostador_Utilizador_email = ? AND Promocao_idPromocao = ? ";
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setString(1, user);
+        ps.setInt(2, idPromocao);
+        ps.executeUpdate();
     }
 }

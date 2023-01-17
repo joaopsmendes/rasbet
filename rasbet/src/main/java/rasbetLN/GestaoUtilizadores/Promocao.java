@@ -8,4 +8,9 @@ public abstract class Promocao {
     public Promocao(int idPromocao) {
         this.idPromocao = idPromocao;
     }
+
+
+    public int getIdPromocao() {
+        return idPromocao;
+    }
 }

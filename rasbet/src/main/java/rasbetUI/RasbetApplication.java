@@ -252,9 +252,7 @@ public class RasbetApplication {
 	@PostMapping(path = "deposito")
 	public void deposit(@RequestBody Map<String, String> myJsonRequest) {
 		String id = myJsonRequest.get("sessionId");
-		int promocao = -1;
-		if (myJsonRequest.containsKey("promocao"))
-			promocao = Integer.parseInt(myJsonRequest.get("promocao"));
+		int promocao = Integer.parseInt(myJsonRequest.get("promocao"));
 		float value = Float.parseFloat(myJsonRequest.get("value"));
 		try {
 			if (promocao == -1) rasbetLN.deposito(id,value);

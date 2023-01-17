@@ -14,6 +14,9 @@ import Dialogo from "./Dialogo";
 import Registo from "./Registo";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { Gif } from "@mui/icons-material";
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 
 
@@ -24,15 +27,14 @@ function Transacoes(props) {
   const [levantamento, setLevantamento] = useState(false)
   const [montante, setMontante] = useState(1)
   const [promocoes, setPromocoes] = useState([])
+  const [promoSelecionada, setPromoSelecionada] = useState(-1)
 
 
   //const paperStyle={padding:'50px 50px', width:600,bmargin:"50px auto", justification: 'center',alignItems: "center"}
-  const paperStyle = { height: "50%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }
-
-
 
   const handleClickDeposito = () => {
     setDeposito(!deposito);
+    getListaPromocoes();
     setLevantamento(false);
   };
 
@@ -52,10 +54,11 @@ function Transacoes(props) {
       body: JSON.stringify({
         sessionId: sessionId,
         value: montante,
+        promocao: promoSelecionada,
       }),
     });
     if (response.status === 200) {
-      props.getSaldo();
+      update();
     }
     else {
       alert("Erro ao depositar");
@@ -76,13 +79,22 @@ function Transacoes(props) {
       }),
     });
     if (response.status === 200) {
-      props.getSaldo();
+      update();
     }
     else {
       alert("Saldo insuficiente");
     }
 
   }
+
+  const update = () => {
+    setPromoSelecionada(-1);
+    setMontante(1);
+    props.getSaldo();
+    setDeposito(false);
+    setLevantamento(false);
+  }
+
 
 
 
@@ -110,12 +122,19 @@ function Transacoes(props) {
   // TO CHECK
   const getListaPromocoes = async () => {
     const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-    const response = await fetch('http://localhost:8080/promocoesDeposito?' +
+    const response = await fetch('http://localhost:8080/promosDeposito?' +
       new URLSearchParams({
         sessionId: sessionId,
       }));
     if (response.status === 200) {
       const promocoes = await response.json();
+      console.log(promocoes);
+      promocoes.forEach(promo => {
+        promo.deposito = parseFloat(promo.deposito);
+        promo.idPromocao = parseInt(promo.idPromocao);
+        promo.freeBets = parseFloat(promo.freeBets);
+      });
+
       setPromocoes(promocoes);
     }
     else {
@@ -123,8 +142,29 @@ function Transacoes(props) {
     }
   }
 
+  const handleClickPromocao = async (event) => {
+    if (event.currentTarget.value === promoSelecionada) {
+      setPromoSelecionada(-1);
+    }
+    else setPromoSelecionada(event.currentTarget.value);
+  }
 
-  
+
+  const changeMontante = (event) => {
+    // get promo selecionada
+    promocoes.forEach(promo => {
+      if (promo.idPromocao == promoSelecionada) {
+        console.log("Montante: " + event.target.value);
+        if (event.target.value < promo.deposito) {
+          setPromoSelecionada(-1);
+          console.log("Montante menor que o minimo");
+        }
+      }
+    });
+    setMontante(event.target.value);
+  }
+
+
   return (
     <div className="transacoes">
       <Grid container spacing={2}>
@@ -135,14 +175,37 @@ function Transacoes(props) {
           <Button sx={{ m: 3 }} color={levantamento ? "primary" : "inherit"} onClick={handleClickLevantamento} variant="contained" size="md" value="Levantamento">Levantamento</Button>
         </Grid>
       </Grid>
-      {(deposito || levantamento) &&
+      {
+        deposito && promocoes.length > 0 &&
+        <Container maxWidth="sm" >
+          <h3>Promoções</h3>
+          <Box size="md" sx={{ m: 3, border: 2, borderRadius: '10px' }} >
+            { promocoes.map((promo) => {
+                return (
+                  <Grid container spacing={2}>
+                    <Grid item xs={10} >
+                      <p>Deposite {promo.deposito}€ e ganhe {promo.freeBets} freebets</p>
+                    </Grid>
+                    <Grid item xs={2} >
+                      <IconButton value={promo.idPromocao} onClick={handleClickPromocao} color="primary" disabled={montante < (promo.deposito)} sx={{ mt: 1 }}  >
+                        {promo.idPromocao == promoSelecionada ? <CheckBoxIcon /> : < CheckBoxOutlineBlankIcon />}
+                      </IconButton>
+                    </Grid>
+                  </Grid>)
+              }
+              )}
+          </Box>
+        </Container >
+      }
+      {
+        (deposito || levantamento) &&
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField margin="normal" required name="Montante" label="Montante" id="Montante"
-            type="number"
+            type=""
             defaultValue={1}
             error={montanteCondition()}
             helperText={montanteCondition() ? 'Valor inválido' : ' '}
-            onChange={(e) => setMontante(e.target.value)}
+            onChange={changeMontante}
             InputProps={{ inputProps: { min: 0.01, max: getMax() } }} />
           <Button
             disabled={montanteCondition()}
@@ -154,7 +217,7 @@ function Transacoes(props) {
           </Button>
         </Box>
       }
-    </div>
+    </div >
   );
 }
 

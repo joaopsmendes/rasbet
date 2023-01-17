@@ -80,4 +80,7 @@ public interface IGestaoUtilizadores {
     List<String> getUtilizadoresJogoASeguir(java.lang.String idJogo) throws SQLException;
 
     void addPromocao(String user, int idPromocao) throws SQLException;
-}
+
+    void promocaoUtilizada (String user, int idPromocao) throws SQLException;
+
+    }

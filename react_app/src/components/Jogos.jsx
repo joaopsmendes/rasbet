@@ -51,6 +51,12 @@ function Jogos(props) {
         console.log(props.desportoAtivo);
         //const data =response.json();
         var result = Object.keys(data).map((key) => data[key]);
+        result.sort((a, b) => {
+            let dataA = new Date(a.data);
+            let dataB = new Date(b.data);
+            return dataA - dataB;
+        });
+        
         setJogos(result);
         setMaxPage(Math.ceil(jogos.length / jogosPerPage));
 

@@ -164,6 +164,7 @@ public class RasbetLN implements IRasbetLN{
 
         int freebets = gestaoUtilizadores.getValorPromocaoDeposito(promocao);
         gestaoUtilizadores.updateSaldoFreebets(userId,0,freebets);
+        gestaoUtilizadores.promocaoUtilizada(userId,promocao);
         Transacao transacao = new Transacao(0,freebets,LocalDateTime.now(), Transacao.Tipo.PROMOCAO);
         gestaoUtilizadores.transacao(userId,transacao);
 
@@ -394,7 +395,8 @@ public class RasbetLN implements IRasbetLN{
         return gestaoUtilizadores.getPromoApostaSegura(userId);
     }
 
-    public List<Promocao> getPromoFreeBetsDeposito(String userId) throws SQLException{
+    public List<Promocao> getPromoFreeBetsDeposito(String sessionId) throws SQLException{
+        String userId = gestaoUtilizadores.getUserid(sessionId);
         return gestaoUtilizadores.getPromoFreeBetsDeposito(userId);
     }
 
@@ -404,7 +406,6 @@ public class RasbetLN implements IRasbetLN{
 
     public void createPromocaoApostaSegura(int limite) throws SQLException{
         int idPromocao = gestaoUtilizadores.createPromocaoApostaSegura(limite);
-
         String conteudo = "Recebeu uma Aposta Segura até " + limite + "€";
         for (String user : gestaoUtilizadores.getIdApostadores()){
             gestaoUtilizadores.addPromocao(user, idPromocao);

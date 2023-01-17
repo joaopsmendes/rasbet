@@ -237,5 +237,9 @@ public class GestaoUtilizadores implements IGestaoUtilizadores {
         utilizadores.addPromocao(user, idPromocao);
     }
 
+    public void promocaoUtilizada (String user, int idPromocao) throws SQLException{
+        utilizadores.promocaoUtilizada(user, idPromocao);
+    }
+
 
 }

@@ -128,9 +128,8 @@ function PageUtilizador(props) {
   }
 
   const getFavoritos = async () => {
+    if (!sessionStorage.getItem('sessionId')) return;
     const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-
-    if (!sessionId) return;
     const response = await fetch('http://localhost:8080/favoritos?' + new URLSearchParams({
       sessionId: sessionId
     }), {
@@ -150,8 +149,8 @@ function PageUtilizador(props) {
 
 
   const getJogosAseguir = async () => {
+    if (!sessionStorage.getItem('sessionId')) return;
     const sessionId = JSON.parse(sessionStorage.getItem('sessionId'));
-    if (!sessionId) return;
     const response = await fetch('http://localhost:8080/jogosAseguir?' + new URLSearchParams({
       sessionId: sessionId
     }), {

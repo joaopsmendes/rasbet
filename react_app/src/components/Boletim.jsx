@@ -113,7 +113,7 @@ function Boletim(props) {
             {pagamento && <Pagamento valor={montante} setPagamento={setPagamento} pagamento={pagamento} submit={doAposta} />}
             {
                 props.apostas.length > 0 ?
-                    <Box size="md" sx={{ m: 3, border: 2, borderRadius: '10%' }} >
+                    <Box size="md" sx={{ m: 3, border: 2, borderRadius: '20px' }} >
                         <Grid item xs={12}>
                             <div>{getTypesApostas()}</div>
                             <div>{props.apostas.length > 0 && props.apostas.map((aposta) =>
