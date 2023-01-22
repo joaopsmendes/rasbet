@@ -11,12 +11,15 @@ public abstract class Aposta {
     private LocalDate dataAposta;
     Boolean resultado;
 
+    private float ganhoPossivel;
 
-    public Aposta(int idAposta, float montante, LocalDate dataAposta, Boolean resultado) {
+
+    public Aposta(int idAposta, float montante, LocalDate dataAposta, Boolean resultado, float ganhoPossivel) {
         this.idAposta = idAposta;
         this.montante = montante;
         this.dataAposta = dataAposta;
         this.resultado = resultado;
+        this.ganhoPossivel = ganhoPossivel;
     }
 
     public Aposta() {
@@ -30,6 +33,7 @@ public abstract class Aposta {
         this.montante = aposta.getMontante();
         this.dataAposta = aposta.getDataAposta();
         this.resultado = aposta.getResultado();
+        this.ganhoPossivel = aposta.getGanhoPossivel();
     }
 
     public int getIdAposta() {
@@ -46,6 +50,10 @@ public abstract class Aposta {
 
     public Boolean getResultado(){
         return resultado;
+    }
+
+    public float getGanhoPossivel() {
+        return ganhoPossivel;
     }
 
 

@@ -79,6 +79,7 @@ public class DBAposta {
             float montante = rs.getFloat("montante");
             LocalDate dataAposta = rs.getDate("data").toLocalDate();
             Boolean resultado = rs.getBoolean("resultado");
+            float ganhoPossivel = rs.getFloat("ganhoPossivel");
             if (rs.wasNull()){
                 resultado = null;
             }
@@ -98,11 +99,11 @@ public class DBAposta {
                 String tema = rs.getString("tema");
                 String titulo = rs.getString("titulo");
                 String s = titulo + " - " + tema;
-                return new Simples(idAposta, montante, dataAposta, resultado,new Odd(idOdd, valor, opcao, s));
+                return new Simples(idAposta, montante, dataAposta, resultado, ganhoPossivel,new Odd(idOdd, valor, opcao, s));
             }
             else{
                 List<Odd> listaOdd = getListaOdd(idAposta);
-                return new Multipla(idAposta, montante, dataAposta, resultado,listaOdd);
+                return new Multipla(idAposta, montante, dataAposta, resultado, ganhoPossivel, listaOdd);
             }
         }
         throw new SQLException("Can't get aposta");
